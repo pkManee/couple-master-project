@@ -73,13 +73,9 @@ fillButton.onclick = function () {
     pic.className = 'resize-image';
     pic.src = 'img/image.jpg';
         
-    //var currentLayerIndex = croquis.getCurrentLayerIndex();
-    //var context = document.getElementsByClassName('croquis-layer-canvas')[currentLayerIndex].getContext('2d');
-    //context.drawImage(pic, 0, 0, 200, 200); 
-
     canvasArea.appendChild(pic);
-    croquis.addLayer();
-    resizeableImage($('.resize-image'));
+    
+    resizeableImage(pic);
 }
 
 //merge button onclick event
@@ -89,7 +85,7 @@ mergeButton.onclick = function (){
 
     var currentLayerIndex = croquis.getCurrentLayerIndex();
     var context = document.getElementsByClassName('croquis-layer-canvas')[currentLayerIndex].getContext('2d');
-    context.drawImage(pic, 0, 0, pic.width, pic.height); 
+    context.drawImage(pic, 0, 0); 
 }
 
 //brush images
@@ -340,7 +336,7 @@ var resizeableImage = function(image_target) {
   // Some variable and settings
   var $container,
       orig_src = new Image(),
-      image_target = $(image_target).get(0),
+      image_target = image_target, //$(image_target).get(0),
       event_state = {},
       constrain = false,
       min_width = 60, // Change as required
@@ -355,14 +351,14 @@ var resizeableImage = function(image_target) {
     orig_src.src=image_target.src;
 
     // Wrap the image with the container and add resize handles
-    $(image_target).wrap('<div class="resize-container"></div>')
+    $(image_target).wrap('<div class="resize-container" style="top:10px; left:10px;"></div>')
     .before('<span class="resize-handle resize-handle-nw"></span>')
     .before('<span class="resize-handle resize-handle-ne"></span>')
     .after('<span class="resize-handle resize-handle-se"></span>')
     .after('<span class="resize-handle resize-handle-sw"></span>');
 
     // Assign the container to a variable
-    $container =  $(image_target).parent('.resize-container');
+    $container = $(image_target).parent('.resize-container');
 
     // Add events
     $container.on('mousedown touchstart', '.resize-handle', startResize);
