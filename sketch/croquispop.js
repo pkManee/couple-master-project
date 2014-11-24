@@ -73,19 +73,22 @@ fillButton.onclick = function () {
     pic.className = 'resize-image';
     pic.src = 'img/image.jpg';
         
-    canvasArea.appendChild(pic);
+    croquisDOMElement.appendChild(pic);
     
     resizeableImage(pic);
 }
 
-//merge button onclick event
+//merge layer and image
+//button onclick event
 var mergeButton = document.getElementById('merge-button');
 mergeButton.onclick = function (){
-    var pic = document.getElementsByClassName('resize-image');
-
+    var pic = new Image();
+    pic = document.getElementsByClassName('resize-image')[0];
+    
     var currentLayerIndex = croquis.getCurrentLayerIndex();
     var context = document.getElementsByClassName('croquis-layer-canvas')[currentLayerIndex].getContext('2d');
-    context.drawImage(pic, 0, 0); 
+    var picRelativePosition = getRelativePosition(pic.x, pic.y);
+    context.drawImage(pic, picRelativePosition.x, picRelativePosition.y); 
 }
 
 //brush images
