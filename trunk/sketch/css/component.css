@@ -3,6 +3,7 @@
     display: inline-block;
     cursor: move;
     margin: 0 auto;
+    z-index: 1000;
 }
 
 .resize-container img {
