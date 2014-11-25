@@ -63,19 +63,42 @@ clearButton.onclick = function () {
 //fill button onclick event
 var fillButton = document.getElementById('fill-button');
 fillButton.onclick = function () {
-    //var rgb = tinycolor(brush.getColor()).toRgb();
-    //croquis.fillLayer(tinycolor({r: rgb.r, g: rgb.g, b: rgb.b,
-    //    a: croquis.getPaintingOpacity()}).toRgbString());
-    
-    //test
-    //fillButton.innerHTML = "test";
-    var pic = document.createElement('img');
+    var rgb = tinycolor(brush.getColor()).toRgb();
+    croquis.fillLayer(tinycolor({r: rgb.r, g: rgb.g, b: rgb.b,
+       a: croquis.getPaintingOpacity()}).toRgbString()); 
+   
+}
+
+//upload button
+//onClicked event
+var uploadButton = document.getElementById('upload-button');
+uploadButton.onchange = function(){
+     var pic = document.createElement('img');
     pic.className = 'resize-image';
     pic.src = 'img/image.jpg';
         
-    croquisDOMElement.appendChild(pic);
-    
+    croquisDOMElement.appendChild(pic);    
     resizeableImage(pic);
+
+    
+    // var pic = document.createElement('img');
+    // var imgFile = uploadButton.files[0];
+    // var reader = new FileReader();
+
+    // reader.onload = function(){        
+    //     pic.src = reader.result;
+    //     pic.width = pic.width * 0.5;
+    //     pic.height = pic.height * 0.5;
+    //     pic.className = 'resize-image';
+    // }
+    
+    // if (imgFile){
+    //     reader.readAsDataURL(imgFile);
+    // }else{
+    //     pic.src = '';
+    // }
+    // croquisDOMElement.appendChild(pic);    
+    // resizeableImage(pic);
 }
 
 //merge layer and image
