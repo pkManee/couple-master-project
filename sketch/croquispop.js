@@ -1,7 +1,7 @@
 // Initialize croquis
 var croquis = new Croquis();
 croquis.lockHistory();
-croquis.setCanvasSize(1024, 768);
+croquis.setCanvasSize(1024, 600);
 croquis.addLayer();
 croquis.fillLayer('#fff');
 croquis.addLayer();
@@ -69,36 +69,20 @@ fillButton.onclick = function () {
    
 }
 
-//upload button
-//onClicked event
-var uploadButton = document.getElementById('upload-button');
-uploadButton.onchange = function(){
-     var pic = document.createElement('img');
-    pic.className = 'resize-image';
-    pic.src = 'img/image.jpg';
-        
-    croquisDOMElement.appendChild(pic);    
-    resizeableImage(pic);
+//upload file
+var imageLoader = document.getElementById('upload-button');
+imageLoader.addEventListener('change', handleImage, false);
 
-    
-    // var pic = document.createElement('img');
-    // var imgFile = uploadButton.files[0];
-    // var reader = new FileReader();
-
-    // reader.onload = function(){        
-    //     pic.src = reader.result;
-    //     pic.width = pic.width * 0.5;
-    //     pic.height = pic.height * 0.5;
-    //     pic.className = 'resize-image';
-    // }
-    
-    // if (imgFile){
-    //     reader.readAsDataURL(imgFile);
-    // }else{
-    //     pic.src = '';
-    // }
-    // croquisDOMElement.appendChild(pic);    
-    // resizeableImage(pic);
+function handleImage(e){
+    var reader = new FileReader();
+    reader.onload = function(event){
+        var img = new Image();       
+        img.src = event.target.result;
+        img.className = 'resize-image';
+        croquisDOMElement.appendChild(img);    
+        resizeableImage(img);
+    }
+    reader.readAsDataURL(e.target.files[0]);     
 }
 
 //merge layer and image
@@ -112,6 +96,12 @@ mergeButton.onclick = function (){
     var context = document.getElementsByClassName('croquis-layer-canvas')[currentLayerIndex].getContext('2d');
     var picRelativePosition = getRelativePosition(pic.x, pic.y);
     context.drawImage(pic, picRelativePosition.x, picRelativePosition.y); 
+
+    var resizeContainer = document.getElementsByClassName('resize-container');
+    for (i=0; i < resizeContainer.length - 1; i++){
+        resizeContainer[i].remove();
+    }
+    imageLoader.value = '';
 }
 
 //brush images
