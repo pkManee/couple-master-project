@@ -49,6 +49,12 @@ root.setup.add(function() {
 			root.exec("redo");
 		}
 	});
+	items.push({
+		label: "eraser",
+		onclick: function(){
+			root.exec("eraser");
+		}
+	});
 	///
 	root.ui.menuSelectDefault = root.ui.contextMenu(items);
 

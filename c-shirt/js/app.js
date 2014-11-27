@@ -39,13 +39,13 @@ sk.addEvent(window, "load", function() {
 //				units: "px"
 			},
 			palette: {
-				blend: true,
+				blend: false,
 				hexInput: true, // enable hex input
 				colorPicker: true, // enable color picker
 				closeButton: true,
-				eyeDropper: true, // enable eye dropper support
+				eyeDropper: false, // enable eye dropper support
 				gradient: true, // enable gradient support
-				pattern: true, 
+				pattern: false, 
 				grid: true // display palette 
 			},
 			canvas: {
@@ -208,4 +208,7 @@ sk.addEvent(window, "load", function() {
 			}
 		}
 	});
+
+	
 });
+
