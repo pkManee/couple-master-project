@@ -35,7 +35,21 @@ body {
   height: 150px;
   overflow: hidden;
   touch-action: none;
-  position: relative;
+  position: relative;  
+}
+
+#color-picker-checker-frame{
+  display: inline-block;
+}
+
+#color-picker-checker {
+    width: 40px;   
+    height: 21px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.3);     
+    float: right;
 }
 
 #color-picker-white {
@@ -56,12 +70,12 @@ body {
   border-width: 2px;
 }
 
-#color-picker-checker {
-  display: inline-block;
+#color-picker-color { 
+  float: right;  
 }
-
-#color-picker-color {
-  margin: 0;
+#input-hex-color{
+  width:60px;
+  float: left;
 }
 
 #circle-brush {

@@ -91,14 +91,16 @@ var mergeButton = document.getElementById('merge-button');
 mergeButton.onclick = function (){
     var pic = new Image();
     pic = document.getElementsByClassName('resize-image')[0];
+    if (pic === undefined) return;
     
     var currentLayerIndex = croquis.getCurrentLayerIndex();
     var context = document.getElementsByClassName('croquis-layer-canvas')[currentLayerIndex].getContext('2d');
     var picRelativePosition = getRelativePosition(pic.x, pic.y);
     context.drawImage(pic, picRelativePosition.x, picRelativePosition.y); 
 
+    //delete image 
     var resizeContainer = document.getElementsByClassName('resize-container');
-    for (i=0; i < resizeContainer.length - 1; i++){
+    for (i=0; i < resizeContainer.length; i++){
         resizeContainer[i].remove();
     }
     imageLoader.value = '';
@@ -186,6 +188,13 @@ colorPickerThumb.id = 'color-picker-thumb';
 colorPickerSb.appendChild(colorPickerThumb);
 colorPickerHueSlider.value = tinycolor(brush.getColor()).toHsv().h;
 
+///color in hex value
+var colorPickerColor = document.getElementById('color-picker-color');
+var inputHexColor = document.getElementById('input-hex-color');
+
+///init run
+pickColor(0, 150);
+
 function setColor() {
     var halfThumbRadius = 7.5;
     var sbSize = 150;
@@ -199,8 +208,12 @@ function setColor() {
     brush.setColor(tinycolor({h: h, s:s, v: b}).toRgbString());
     var a = croquis.getPaintingOpacity();
     var color = tinycolor({h: h, s:s, v: b, a: a});
-    colorPickerColor.style.backgroundColor = color.toRgbString();
-    colorPickerColor.textContent = color.toHexString();
+    //colorPickerColor.style.backgroundColor = color.toRgbString();
+    //colorPickerColor.textContent = color.toHexString();
+    inputHexColor.value = color.toHexString();
+
+    var colorPickerChecker = document.getElementById('color-picker-checker');
+    colorPickerChecker.style.backgroundColor = color.toHexString();
 }
 
 colorPickerHueSlider.onchange = function () {
@@ -250,12 +263,11 @@ var backgroundCheckerImage;
     backgroundImageContext.fillRect(10, 10, 20, 20);
 })();
 
-var colorPickerChecker = document.getElementById('color-picker-checker');
-colorPickerChecker.style.backgroundImage = 'url(' +
-    backgroundCheckerImage.toDataURL() + ')';
-var colorPickerColor = document.getElementById('color-picker-color');
+// var colorPickerChecker = document.getElementById('color-picker-checker');
+// colorPickerChecker.style.backgroundImage = 'url(' + backgroundCheckerImage.toDataURL() + ')';
 
-pickColor(0, 150);
+
+
 
 //stabilizer shelf
 var toolStabilizeLevelSlider =
