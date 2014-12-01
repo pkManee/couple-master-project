@@ -119,3 +119,14 @@ span {
   font-size: 9pt;
   font-family: 'Nanum Gothic', sans-serif;
 }
+
+#brush-image-shelf{
+  width: 300px;
+  display: inline-block;
+}
+
+#geometry-shelf{
+  width: 300px;
+  display: inline-block;
+}
+

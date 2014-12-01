@@ -31,6 +31,7 @@ function canvasPointerDown(e) {
     croquis.down(pointerPosition.x, pointerPosition.y, e.pointerType === "pen" ? e.pressure : 1);
     document.addEventListener('pointermove', canvasPointerMove);
     document.addEventListener('pointerup', canvasPointerUp);
+
 }
 function canvasPointerMove(e) {
     setPointerEvent(e);
@@ -177,6 +178,8 @@ function updatePointer() {
 updatePointer();
 
 //color picker
+var halfThumbRadius = 7.5;              
+var sbSize = 150;                       
 var colorPickerHueSlider = document.getElementById('color-picker-hue-slider');
 var colorPickerSb = document.getElementById('color-picker-sb');
 var colorPickerHSBRect = new HSBRect(150, 150);
@@ -191,27 +194,29 @@ colorPickerHueSlider.value = tinycolor(brush.getColor()).toHsv().h;
 var colorPickerColor = document.getElementById('color-picker-color');
 var inputHexColor = document.getElementById('input-hex-color');
 
+///input hex color on lost focus
 inputHexColor.onblur = function(){
     var color = tinycolor(inputHexColor.value);
-    brush.setColor(color);
+    //brush.setColor(color.toRgbString());
 
-    var rgbaColor = color.toHsv();
+    var hsvColor = color.toHsv();
 
     //set Hue slider
-    colorPickerHueSlider.value = rgbaColor.h;
-    //colorPickerHueSlider.onchange();
+    colorPickerHueSlider.value = hsvColor.h;
+    
+    var s = (hsvColor.s * sbSize) - halfThumbRadius;
+    var v = ((1 - hsvColor.v) * sbSize) - sbSize - halfThumbRadius;
+    colorPickerThumb.style.setProperty('margin-left', s + 'px');
+    colorPickerThumb.style.setProperty('margin-top', v + 'px');
 
-    colorPickerThumb.style.setProperty('margin-left', rgbaColor.s + 'px');
-    colorPickerThumb.style.setProperty('margin-top', rgbaColor.b + 'px');
+    //force set color
+    colorPickerHueSlider.onchange();
 }
-
 
 ///init run
 pickColor(0, 150);
 
-function setColor() {
-    var halfThumbRadius = 7.5;
-    var sbSize = 150;
+function setColor() {    
     var h = colorPickerHueSlider.value;
     var s = parseFloat(colorPickerThumb.style.getPropertyValue('margin-left'));
     var b = parseFloat(colorPickerThumb.style.getPropertyValue('margin-top'));
@@ -252,9 +257,7 @@ function colorPickerPointerMove(e) {
 function minmax(value, min, max) {
     return Math.min(max, Math.max(min, value));
 }
-function pickColor(x, y) {
-    var halfThumbRadius = 7.5;
-    var sbSize = 150;
+function pickColor(x, y) {  
     colorPickerThumb.style.setProperty('margin-left',
         (minmax(x, 0, sbSize) - halfThumbRadius) + 'px');
     colorPickerThumb.style.setProperty('margin-top',
@@ -280,9 +283,6 @@ var backgroundCheckerImage;
 
 // var colorPickerChecker = document.getElementById('color-picker-checker');
 // colorPickerChecker.style.backgroundImage = 'url(' + backgroundCheckerImage.toDataURL() + ')';
-
-
-
 
 //stabilizer shelf
 var toolStabilizeLevelSlider =
@@ -568,3 +568,87 @@ var resizeableImage = function(image_target) {
 
   init();
 };
+
+
+//draw rectangel
+var rectCanvas, rectContext, rectStartX, rectEndX, rectStartY, rectEndY;
+var mouseIsDown = 0;
+
+var btnRectangle = document.getElementById('btn-rectangle');
+btnRectangle.onclick = function (){
+    if (btnRectangle.value === 'rectangle'){
+        btnRectangle.value = 'x';
+    }else{
+        btnRectangle.value = 'rectangle';
+    }
+
+    if (btnRectangle.value !== 'x') return;
+
+    croquis.addLayer();
+    croquis.selectLayer(2);    
+
+    var currentLayerIndex = croquis.getCurrentLayerIndex();
+    var rectCanvas = croquis.getLayerCanvas(currentLayerIndex);
+    var rectContext = rectCanvas.getContext('2d');
+    
+    rectCanvas.addEventListener('mousedown', rectMouseDown, false);
+    rectCanvas.addEventListener('mouseup', rectMouseUp, false);
+    rectCanvas.addEventListener('mousemove', rectMouseMove, false);
+}
+
+function rectMouseUp(e) {
+    if (mouseIsDown !== 0) {
+        mouseIsDown = 0;
+        var pos = rectGetMousePos(rectCanvas, e);
+        rectEndX = pos.x;
+        rectEndY = pos.y;
+        rectDrawSquare(); //update on mouse-up
+    }
+}
+
+function rectMouseDown(e) {
+    mouseIsDown = 1;
+    var pos = rectGetMousePos(rectCanvas, e);
+    rectStartX = rectEndX = pos.x;
+    rectStartY = rectEndY = pos.y;
+    rectDrawSquare(); //update
+}
+
+function rectMouseMove(e) {
+    if (mouseIsDown !== 0) {
+        var pos = rectGetMousePos(rectCanvas, e);
+        rectEndX = pos.x;
+        rectEndY = pos.y;
+
+        rectDrawSquare();
+    }
+}
+
+function rectDrawSquare() {
+    // creating a square
+    var w = rectEndX - rectStartX;
+    var h = rectEndY - rectStartY;
+    var offsetX = (w < 0) ? w : 0;
+    var offsetY = (h < 0) ? h : 0;
+    var width = Math.abs(w);
+    var height = Math.abs(h);
+
+    rectContext.clearRect(0, 0, canvas.width, canvas.height);
+               
+    rectContext.beginPath();
+    rectContext.rect(rectStartX + offsetX, rectStartY + offsetY, width, height);
+    rectContext.fillStyle = "yellow";
+    rectContext.fill();
+    rectContext.lineWidth = 7;
+    rectContext.strokeStyle = 'black';
+    rectContext.stroke();
+
+}
+
+function rectGetMousePos(canvas, e) {
+    var rect = rectCanvas.getBoundingClientRect();
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
