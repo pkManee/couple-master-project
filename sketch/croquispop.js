@@ -177,8 +177,7 @@ function updatePointer() {
 updatePointer();
 
 //color picker
-var colorPickerHueSlider =
-    document.getElementById('color-picker-hue-slider');
+var colorPickerHueSlider = document.getElementById('color-picker-hue-slider');
 var colorPickerSb = document.getElementById('color-picker-sb');
 var colorPickerHSBRect = new HSBRect(150, 150);
 colorPickerHSBRect.DOMElement.id = 'color-picker-hsbrect';
@@ -192,6 +191,21 @@ colorPickerHueSlider.value = tinycolor(brush.getColor()).toHsv().h;
 var colorPickerColor = document.getElementById('color-picker-color');
 var inputHexColor = document.getElementById('input-hex-color');
 
+inputHexColor.onblur = function(){
+    var color = tinycolor(inputHexColor.value);
+    brush.setColor(color);
+
+    var rgbaColor = color.toHsv();
+
+    //set Hue slider
+    colorPickerHueSlider.value = rgbaColor.h;
+    //colorPickerHueSlider.onchange();
+
+    colorPickerThumb.style.setProperty('margin-left', rgbaColor.s + 'px');
+    colorPickerThumb.style.setProperty('margin-top', rgbaColor.b + 'px');
+}
+
+
 ///init run
 pickColor(0, 150);
 
@@ -199,10 +213,8 @@ function setColor() {
     var halfThumbRadius = 7.5;
     var sbSize = 150;
     var h = colorPickerHueSlider.value;
-    var s = parseFloat(
-        colorPickerThumb.style.getPropertyValue('margin-left'));
-    var b = parseFloat(
-        colorPickerThumb.style.getPropertyValue('margin-top'));
+    var s = parseFloat(colorPickerThumb.style.getPropertyValue('margin-left'));
+    var b = parseFloat(colorPickerThumb.style.getPropertyValue('margin-top'));
     s = (s + halfThumbRadius) / sbSize;
     b = 1 - ((b + halfThumbRadius + sbSize) / sbSize);
     brush.setColor(tinycolor({h: h, s:s, v: b}).toRgbString());
@@ -213,7 +225,10 @@ function setColor() {
     inputHexColor.value = color.toHexString();
 
     var colorPickerChecker = document.getElementById('color-picker-checker');
-    colorPickerChecker.style.backgroundColor = color.toHexString();
+    var rgbaColor = color.toRgb();
+    colorPickerChecker.style.backgroundColor = 
+    'rgba(' + rgbaColor.r + ', ' + rgbaColor.g + ', ' + rgbaColor.b + ', ' + rgbaColor.a + ')'; 
+    //inputHexColor.value; //color.toHexString();
 }
 
 colorPickerHueSlider.onchange = function () {
