@@ -373,6 +373,30 @@ function setPointerEvent(e) {
     }
 }
 
+///create rectangle svg
+var btnRect = document.getElementById('btn-rectangle');
+btnRect.onclick = function(){
+    var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    //svgElement.width = 400;
+    //svgElement.height = 400;
+    
+    var rectElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rectElement.setAttribute("fill", "#ff0000");
+    rectElement.setAttribute("width", "200px");
+    rectElement.setAttribute("height", "200px");
+
+    svgElement.appendChild(rectElement);
+     
+    var img = new Image(); 
+    img.className = 'resize-image';
+    img.src = svgToDataURL("image/svg+xml", undefined, svgElement);
+    //img.src = svgToDataURL("image/png", undefined, svgElement);      
+   
+    croquisDOMElement.appendChild(img);  
+    resizeableImage(img);   
+}
+
+
 
 //resizeableImage
 var resizeableImage = function(image_target) {
@@ -568,87 +592,3 @@ var resizeableImage = function(image_target) {
 
   init();
 };
-
-
-//draw rectangel
-var rectCanvas, rectContext, rectStartX, rectEndX, rectStartY, rectEndY;
-var mouseIsDown = 0;
-
-var btnRectangle = document.getElementById('btn-rectangle');
-btnRectangle.onclick = function (){
-    if (btnRectangle.value === 'rectangle'){
-        btnRectangle.value = 'x';
-    }else{
-        btnRectangle.value = 'rectangle';
-    }
-
-    if (btnRectangle.value !== 'x') return;
-
-    croquis.addLayer();
-    croquis.selectLayer(2);    
-
-    var currentLayerIndex = croquis.getCurrentLayerIndex();
-    var rectCanvas = croquis.getLayerCanvas(currentLayerIndex);
-    var rectContext = rectCanvas.getContext('2d');
-    
-    rectCanvas.addEventListener('mousedown', rectMouseDown, false);
-    rectCanvas.addEventListener('mouseup', rectMouseUp, false);
-    rectCanvas.addEventListener('mousemove', rectMouseMove, false);
-}
-
-function rectMouseUp(e) {
-    if (mouseIsDown !== 0) {
-        mouseIsDown = 0;
-        var pos = rectGetMousePos(rectCanvas, e);
-        rectEndX = pos.x;
-        rectEndY = pos.y;
-        rectDrawSquare(); //update on mouse-up
-    }
-}
-
-function rectMouseDown(e) {
-    mouseIsDown = 1;
-    var pos = rectGetMousePos(rectCanvas, e);
-    rectStartX = rectEndX = pos.x;
-    rectStartY = rectEndY = pos.y;
-    rectDrawSquare(); //update
-}
-
-function rectMouseMove(e) {
-    if (mouseIsDown !== 0) {
-        var pos = rectGetMousePos(rectCanvas, e);
-        rectEndX = pos.x;
-        rectEndY = pos.y;
-
-        rectDrawSquare();
-    }
-}
-
-function rectDrawSquare() {
-    // creating a square
-    var w = rectEndX - rectStartX;
-    var h = rectEndY - rectStartY;
-    var offsetX = (w < 0) ? w : 0;
-    var offsetY = (h < 0) ? h : 0;
-    var width = Math.abs(w);
-    var height = Math.abs(h);
-
-    rectContext.clearRect(0, 0, canvas.width, canvas.height);
-               
-    rectContext.beginPath();
-    rectContext.rect(rectStartX + offsetX, rectStartY + offsetY, width, height);
-    rectContext.fillStyle = "yellow";
-    rectContext.fill();
-    rectContext.lineWidth = 7;
-    rectContext.strokeStyle = 'black';
-    rectContext.stroke();
-
-}
-
-function rectGetMousePos(canvas, e) {
-    var rect = rectCanvas.getBoundingClientRect();
-    return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-    };
-}
