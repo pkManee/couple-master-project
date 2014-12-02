@@ -1,4 +1,5 @@
 // Initialize croquis
+var svgNS = "http://www.w3.org/2000/svg";
 var croquis = new Croquis();
 croquis.lockHistory();
 croquis.setCanvasSize(1024, 600);
@@ -91,19 +92,24 @@ function handleImage(e){
 var mergeButton = document.getElementById('merge-button');
 mergeButton.onclick = function (){
     var pic = new Image();
-    pic = document.getElementsByClassName('resize-image')[0];
+    pic = document.getElementsByClassName('resize-image');
     if (pic === undefined) return;
     
     var currentLayerIndex = croquis.getCurrentLayerIndex();
     var context = document.getElementsByClassName('croquis-layer-canvas')[currentLayerIndex].getContext('2d');
-    var picRelativePosition = getRelativePosition(pic.x, pic.y);
-    context.drawImage(pic, picRelativePosition.x, picRelativePosition.y); 
 
+    for(var i = 0; i < pic.length; i++){
+        var picRelativePosition = getRelativePosition(pic[i].x, pic[i].y);
+        context.drawImage(pic[i], picRelativePosition.x, picRelativePosition.y); 
+    }
+    
     //delete image 
     var resizeContainer = document.getElementsByClassName('resize-container');
-    for (i=0; i < resizeContainer.length; i++){
-        resizeContainer[i].remove();
+    while (resizeContainer.length > 0){
+        var index = resizeContainer.length - 1;
+        resizeContainer[index].remove();
     }
+
     imageLoader.value = '';
 }
 
@@ -376,20 +382,15 @@ function setPointerEvent(e) {
 ///create rectangle svg
 var btnRect = document.getElementById('btn-rectangle');
 btnRect.onclick = function(){
-    var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    //svgElement.width = 400;
-    //svgElement.height = 400;
     
-    var rectElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rectElement.setAttribute("fill", "#ff0000");
-    rectElement.setAttribute("width", "200px");
-    rectElement.setAttribute("height", "200px");
-
-    svgElement.appendChild(rectElement);
-     
+    var rectElement = document.createElement(svgNS, 'rect');
+    rectElement.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());
+    rectElement.setAttributeNS(null, 'width', 150);
+    rectElement.setAttributeNS(null, 'height', 150);
+        
     var img = new Image(); 
     img.className = 'resize-image';
-    img.src = svgToDataURL("image/svg+xml", undefined, svgElement);
+    img.src = svgToDataURL("image/svg+xml", undefined, rectElement);
     //img.src = svgToDataURL("image/png", undefined, svgElement);      
    
     croquisDOMElement.appendChild(img);  
@@ -414,7 +415,7 @@ var resizeableImage = function(image_target) {
 
   init = function(){
 
-    // When resizing, we will always use this copy of the original as the base
+    // When resizing, we will always use this copy of the original as the base   
     orig_src.src=image_target.src;
 
     // Wrap the image with the container and add resize handles
@@ -424,7 +425,34 @@ var resizeableImage = function(image_target) {
     .after('<span class="resize-handle resize-handle-se"></span>')
     .after('<span class="resize-handle resize-handle-sw"></span>');
 
-    // Assign the container to a variable
+    // var divResizeContainer = document.createElement('div');
+    // divResizeContainer.class = 'resize-container';
+    // divResizeContainer.style.top = '10px';
+    // divResizeContainer.style.left = '10px';
+
+    // var handle1 = document.createElement('span');
+    // var handle2 = document.createElement('span');
+    // var handle3 = document.createElement('span');
+    // var handle4 = document.createElement('span');
+
+    // handle1.class = 'resize-handle resize-handle-nw';
+    // divResizeContainer.appendChild(handle1);
+
+    // handle2.class = 'resize-handle resize-handle-ne';
+    // divResizeContainer.appendChild(handle2);
+
+    // divResizeContainer.appendChild(image_target);
+
+    // handle3.class = 'resize-handle resize-handle-se';
+    // divResizeContainer.appendChild(handle3);
+
+    // handle4.class = 'resize-handle resize-handle-sw';
+    // divResizeContainer.appendChild(handle4);
+
+
+
+
+      // Assign the container to a variable
     $container = $(image_target).parent('.resize-container');
 
     // Add events
