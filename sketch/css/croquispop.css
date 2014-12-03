@@ -34,7 +34,6 @@
   border-left: 1px solid #fff;
   background: #eee;
   opacity: 0.5;
-  
 }
 
 .geo-button:hover{
@@ -62,6 +61,11 @@
 }
 .icon-star:before{
   content: "\e624";
+  width: 30px;
+  height: 30px;
+}
+.icon-heart:before{
+  content: "\e64c";
   width: 30px;
   height: 30px;
 }
@@ -198,5 +202,6 @@ span {
   width: 300px;
   float: right; 
   display: inline-block;
+  padding-right: 500px;
 }
 
