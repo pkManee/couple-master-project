@@ -34,6 +34,7 @@
   border-left: 1px solid #fff;
   background: #eee;
   opacity: 0.5;
+  
 }
 
 .geo-button:hover{
@@ -48,9 +49,22 @@
   content: "\e637";
   width: 30px;
   height: 30px;
-  opacity: 0.5;
 }
-
+.icon-tri:before{
+  content: "\e60c";
+  width: 30px;
+  height: 30px;
+}
+.icon-round:before{
+  content: "\e604";
+  width: 30px;
+  height: 30px;
+}
+.icon-star:before{
+  content: "\e624";
+  width: 30px;
+  height: 30px;
+}
 
 body {
   background-color: #888;
