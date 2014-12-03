@@ -103,14 +103,29 @@ mergeButton.onclick = function (){
         context.drawImage(pic[i], picRelativePosition.x, picRelativePosition.y); 
     }
     
-    //delete image 
-    var resizeContainer = document.getElementsByClassName('resize-container');
-    while (resizeContainer.length > 0){
-        var index = resizeContainer.length - 1;
-        resizeContainer[index].remove();
-    }
+    deleteResizeableImage(false);
 
     imageLoader.value = '';
+}
+
+function deleteResizeableImage(active){
+   
+     if (!active){
+        //delete all
+        var resizeContainer = document.getElementsByClassName('resize-container');
+        while (resizeContainer.length > 0){
+            var index = resizeContainer.length - 1;
+            resizeContainer[index].remove();
+        }
+    }else{
+        var resizeContainer = document.querySelectorAll('resize-container:hover');
+        if (resizeContainer === null) return;
+
+        while (resizeContainer.length > 0){
+            var index = resizeContainer.length - 1;
+            resizeContainer[index].remove();
+        }
+    }
 }
 
 //brush images
@@ -353,7 +368,7 @@ var mac = navigator.platform.indexOf('Mac') >= 0;
 
 //keyboard
 document.addEventListener('keydown', documentKeyDown);
-function documentKeyDown(e) {
+function documentKeyDown(e) {    
     if (mac ? e.metaKey : e.ctrlKey) {
         switch (e.keyCode) {
         case 89: //ctrl + y
@@ -362,6 +377,12 @@ function documentKeyDown(e) {
         case 90: //ctrl + z
             croquis[e.shiftKey ? 'redo' : 'undo']();
             break;
+        }
+    }
+
+    if (!e.ctrlKey){
+        if (e.keyCode === 46){
+            deleteResizeableImage(true);
         }
     }
 }
@@ -383,20 +404,70 @@ function setPointerEvent(e) {
 var btnRect = document.getElementById('btn-rectangle');
 btnRect.onclick = function(){
     
-    var rectElement = document.createElement(svgNS, 'rect');
-    rectElement.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());
-    rectElement.setAttributeNS(null, 'width', 150);
-    rectElement.setAttributeNS(null, 'height', 150);
-        
-    var img = new Image(); 
-    img.className = 'resize-image';
-    img.src = svgToDataURL("image/svg+xml", undefined, rectElement);
-    //img.src = svgToDataURL("image/png", undefined, svgElement);      
-   
-    croquisDOMElement.appendChild(img);  
-    resizeableImage(img);   
+    var svg = createSVG();
+    var elm = document.createElementNS(svgNS, 'rect');
+    elm.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());
+    elm.setAttributeNS(null, 'width', '100px');
+    elm.setAttributeNS(null, 'height', '100px');
+    svg.appendChild(elm);
+
+    insertGeoSVG(svg);
+}
+//create triangle svg
+var btnTri = document.getElementById('btn-triangle');
+btnTri.onclick = function(){
+
+    var svg = createSVG();
+    var elm = document.createElementNS(svgNS, 'polygon');
+    elm.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());
+    elm.setAttributeNS(null, 'points', "0,100 50,0 100,100");
+    svg.appendChild(elm);
+
+    insertGeoSVG(svg);
+    
+}
+//create circle or eclipse svg
+var btnRound = document.getElementById('btn-round');
+btnRound.onclick = function(){
+    var svg = createSVG();
+    var elm = document.createElementNS(svgNS, 'circle');
+    elm.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());  
+    elm.setAttributeNS(null, 'cx', '50px');
+    elm.setAttributeNS(null, 'cy', '50px');
+    elm.setAttributeNS(null, 'r', '45px');
+    svg.appendChild(elm);
+    insertGeoSVG(svg);
+}
+//create star svg
+var btnStar = document.getElementById('btn-star');
+btnStar.onclick = function(){
+    var svg = createSVG();
+    var elm = document.createElementNS(svgNS, 'polygon');
+    elm.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());  
+    elm.setAttributeNS(null, 'points', "50,5 20,99 95,39 5,39 80,99");
+    svg.appendChild(elm);
+    insertGeoSVG(svg);
 }
 
+function insertGeoSVG(svg){
+    var encoded = window.btoa(svg.outerHTML);
+    var img = new Image();
+    img.className = 'resize-image';    
+    img.src = 'data:image/svg+xml;base64,' + encoded;
+
+    croquisDOMElement.appendChild(img);  
+    resizeableImage(img);  
+}
+
+function createSVG(){
+    var svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('xmlns', svgNS)
+    svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+    svg.setAttribute('version', '1.1');
+    svg.setAttribute('width', '100px');
+    svg.setAttribute('height', '100px');
+    return svg;
+}
 
 
 //resizeableImage
@@ -425,34 +496,7 @@ var resizeableImage = function(image_target) {
     .after('<span class="resize-handle resize-handle-se"></span>')
     .after('<span class="resize-handle resize-handle-sw"></span>');
 
-    // var divResizeContainer = document.createElement('div');
-    // divResizeContainer.class = 'resize-container';
-    // divResizeContainer.style.top = '10px';
-    // divResizeContainer.style.left = '10px';
-
-    // var handle1 = document.createElement('span');
-    // var handle2 = document.createElement('span');
-    // var handle3 = document.createElement('span');
-    // var handle4 = document.createElement('span');
-
-    // handle1.class = 'resize-handle resize-handle-nw';
-    // divResizeContainer.appendChild(handle1);
-
-    // handle2.class = 'resize-handle resize-handle-ne';
-    // divResizeContainer.appendChild(handle2);
-
-    // divResizeContainer.appendChild(image_target);
-
-    // handle3.class = 'resize-handle resize-handle-se';
-    // divResizeContainer.appendChild(handle3);
-
-    // handle4.class = 'resize-handle resize-handle-sw';
-    // divResizeContainer.appendChild(handle4);
-
-
-
-
-      // Assign the container to a variable
+       // Assign the container to a variable
     $container = $(image_target).parent('.resize-container');
 
     // Add events
