@@ -97,6 +97,7 @@ mergeButton.onclick = function (){
     
     var currentLayerIndex = croquis.getCurrentLayerIndex();
     var context = document.getElementsByClassName('croquis-layer-canvas')[currentLayerIndex].getContext('2d');
+    context.globalAlpha = croquis.getPaintingOpacity();
 
     for(var i = 0; i < pic.length; i++){
         var picRelativePosition = getRelativePosition(pic[i].x, pic[i].y);
@@ -406,7 +407,14 @@ btnRect.onclick = function(){
     
     var svg = createSVG();
     var elm = document.createElementNS(svgNS, 'rect');
-    elm.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());
+
+    var color = tinycolor(brush.getColor());
+    var rgbaColor = color.toRgb();
+    // colorPickerChecker.style.backgroundColor = 
+    // 'rgba(' + rgbaColor.r + ', ' + rgbaColor.g + ', ' + rgbaColor.b + ', ' + rgbaColor.a + ')'; 
+
+    //elm.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());
+    elm.setAttributeNS(null, 'fill', 'rgba(' + rgbaColor.r + ', ' + rgbaColor.g + ', ' + rgbaColor.b + ', ' + rgbaColor.a + ')' );
     elm.setAttributeNS(null, 'width', '100px');
     elm.setAttributeNS(null, 'height', '100px');
     svg.appendChild(elm);
@@ -423,8 +431,7 @@ btnTri.onclick = function(){
     elm.setAttributeNS(null, 'points', "0,100 50,0 100,100");
     svg.appendChild(elm);
 
-    insertGeoSVG(svg);
-    
+    insertGeoSVG(svg);    
 }
 //create circle or eclipse svg
 var btnRound = document.getElementById('btn-round');
@@ -448,12 +455,23 @@ btnStar.onclick = function(){
     svg.appendChild(elm);
     insertGeoSVG(svg);
 }
+//create heart svg
+var btnHeart = document.getElementById('btn-heart');
+btnHeart.onclick = function(){
+    var svg = createSVG();
+    var elm = document.createElementNS(svgNS, 'path');
+    elm.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());  
+    elm.setAttributeNS(null, 'd', "M67.607,13.462c-7.009,0-13.433,3.238-17.607,8.674c-4.174-5.437-10.598-8.674-17.61-8.674  c-12.266,0-22.283,10.013-22.33,22.32c-0.046,13.245,6.359,21.054,11.507,27.331l1.104,1.349  c6.095,7.515,24.992,21.013,25.792,21.584c0.458,0.328,1,0.492,1.538,0.492c0.539,0,1.08-0.165,1.539-0.492  c0.8-0.571,19.697-14.069,25.792-21.584l1.103-1.349c5.147-6.277,11.553-14.086,11.507-27.331  C89.894,23.475,79.876,13.462,67.607,13.462z");
+    svg.appendChild(elm);
+    insertGeoSVG(svg);
+}
 
 function insertGeoSVG(svg){
     var encoded = window.btoa(svg.outerHTML);
     var img = new Image();
     img.className = 'resize-image';    
     img.src = 'data:image/svg+xml;base64,' + encoded;
+    img.style.opacity = croquis.getPaintingOpacity(); 
 
     croquisDOMElement.appendChild(img);  
     resizeableImage(img);  
@@ -468,7 +486,6 @@ function createSVG(){
     svg.setAttribute('height', '100px');
     return svg;
 }
-
 
 //resizeableImage
 var resizeableImage = function(image_target) {
