@@ -84,7 +84,7 @@ flipHorizon.onclick = function(){
     
     context.save(); // Save the current state
     context.scale(-1, 1); // Set scale to flip the image
-    context.drawImage(img, croquis.getCanvasWidth() * -1, 0, croquis.getCanvasWidth(), croquis.getCanvasHeight()); // draw the image
+    context.drawImage(img, croquis.getCanvasWidth() * -1, 0, croquis.getCanvasWidth(), croquis.getCanvasHeight());
     context.restore(); // Restore the last saved state
 }
 var flipVertical = document.getElementById('btn-flip-vertical');
@@ -99,7 +99,7 @@ flipVertical.onclick = function(){
     
     context.save(); // Save the current state
     context.scale(1, -1); // Set scale to flip the image
-    context.drawImage(img, 0, croquis.getCanvasHeight() * -1, croquis.getCanvasWidth(), croquis.getCanvasHeight()); // draw the image
+    context.drawImage(img, 0, croquis.getCanvasHeight() * -1, croquis.getCanvasWidth(), croquis.getCanvasHeight());
     context.restore(); // Restore the last saved state
 }
 
