@@ -24,7 +24,6 @@ canvasArea.appendChild(croquisDOMElement);
 
 //resize and drag canvas
 var the_canvas = document.createElement('canvas');
-var draw_canvas = document.getElementsByClassName('croquis-dirty-rect-display')[0];
 var w = croquis.getCanvasWidth();
 var h = croquis.getCanvasHeight();
 the_canvas.width =  w;
@@ -144,26 +143,46 @@ function handleImage(e){
 //button onclick event
 var mergeButton = document.getElementById('merge-button');
 mergeButton.onclick = function (){
-    var pic = new Image();
-    pic = document.getElementsByClassName('resize-image');
-    if (pic === undefined) return;
+    // var pic = new Image();
+    // pic = document.getElementsByClassName('resize-image');
+    // if (pic === undefined) return;
     
-    var currentLayerIndex = croquis.getCurrentLayerIndex();
-    var context = croquis.getLayerCanvas(currentLayerIndex).getContext('2d');
+    // var currentLayerIndex = croquis.getCurrentLayerIndex();
+    // var context = croquis.getLayerCanvas(currentLayerIndex).getContext('2d');
 
-    //apply alpha value to merged canvas
-    var temp = context.globalAlpha;
-    context.globalAlpha = croquis.getPaintingOpacity();
+    // //apply alpha value to merged canvas
+    // var temp = context.globalAlpha;
+    // context.globalAlpha = croquis.getPaintingOpacity();
 
-    for(var i = 0; i < pic.length; i++){
-        var picRelativePosition = getRelativePosition(pic[i].x, pic[i].y);
-        context.drawImage(pic[i], picRelativePosition.x, picRelativePosition.y); 
-    }
+    // for(var i = 0; i < pic.length; i++){
+    //     var picRelativePosition = getRelativePosition(pic[i].x, pic[i].y);
+    //     context.drawImage(pic[i], picRelativePosition.x, picRelativePosition.y); 
+    // }
     
-    deleteResizeableImage(false);
+    // deleteResizeableImage(false);
 
-    imageLoader.value = '';
-    context.globalAlpha = temp;
+    // imageLoader.value = '';
+    // context.globalAlpha = temp;
+    
+    switchToPaint(); 
+
+    setTimeout(function(){ 
+    
+        var currentLayer = croquis.getLayerCanvas(croquis.getCurrentLayerIndex());    
+        var context = currentLayer.getContext('2d');
+
+        var img = new Image();
+        img.src = canvasState.canvas.toDataURL();
+        canvasState.clear();
+        canvasState.shapes = [];
+        context.drawImage(img, 0, 0);
+
+        img = new Image();
+        img.src = currentLayer.toDataURL();
+        croquis.clearLayer();
+        context.drawImage(img, 0, 0);
+    }, 
+    100);
 }
 
 function deleteResizeableImage(active){
@@ -472,7 +491,7 @@ function switchToPaint(){
     var activeLayer = document.getElementById('active');
     if (activeLayer === null) return;
     activeLayer.style.setProperty('z-index', 1);
-
+    
     //deselect object
     var event = new MouseEvent('mousedown', {
                                 'view': window,
@@ -481,13 +500,9 @@ function switchToPaint(){
                               });
     activeLayer.dispatchEvent(event);
 
-    // var canvasDiaplay = document.getElementsByClassName('croquis-dirty-rect-display');
-    // canvasDiaplay[0].style.setProperty('z-index', 2)    
-    // for (i=0; i < croquis.getLayerCount(); i++){
-    //     croquis.getLayerCanvas(i).style.setProperty('z-index', 2);
-    // }
     var paintCanvas = document.getElementsByClassName('croquis-painting-canvas');
     paintCanvas[0].style.setProperty('z-index', 2);
+    
 }
 
 var btnSelector = document.getElementById('btn-selector');
