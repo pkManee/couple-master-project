@@ -69,6 +69,11 @@
   width: 30px;
   height: 30px;
 }
+.icon-selector:before{
+  content: "\e61a";
+  width: 30px;
+  height: 30px;
+}
 
 body {
   background-color: #888;
@@ -83,10 +88,21 @@ body {
   top: -1000px;
 }
 
-#canvas-area {
+#canvas-area{
+  position: absolute;
+  left: 10px;
+  top: 50px;
   display: inline-block;
   cursor: crosshair;
   overflow: hidden;
+}
+#active{
+  position: absolute;
+  left: 0px;
+  top: 0px;  
+  display: inline-block;
+  cursor: default !important;
+  overflow: hidden;    
 }
 
 .croquis-dirty-rect-display {
@@ -96,6 +112,9 @@ body {
 #right-side {
   display: inline-block;
   vertical-align: top;
+  position: absolute;
+  top: 50px;
+  left: 1050px;
 }
 
 #color-picker:active {
@@ -203,5 +222,6 @@ span {
   float: right; 
   display: inline-block;
   padding-right: 500px;
+  top:0px;
 }
 

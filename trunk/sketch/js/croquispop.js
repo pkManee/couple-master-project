@@ -22,6 +22,19 @@ var croquisDOMElement = croquis.getDOMElement();
 var canvasArea = document.getElementById('canvas-area');
 canvasArea.appendChild(croquisDOMElement);
 
+//resize and drag canvas
+var the_canvas = document.createElement('canvas');
+var draw_canvas = document.getElementsByClassName('croquis-dirty-rect-display')[0];
+var w = croquis.getCanvasWidth();
+var h = croquis.getCanvasHeight();
+the_canvas.width =  w;
+the_canvas.height = h;
+the_canvas.style.setProperty('width', w + 'px');
+the_canvas.style.setProperty('height', h + 'px');  
+the_canvas.id = "active"; 
+canvasArea.appendChild(the_canvas);
+var canvasState = new CanvasState(the_canvas);
+
 function canvasPointerDown(e) {
     setPointerEvent(e);
     var pointerPosition = getRelativePosition(e.clientX, e.clientY);
@@ -56,9 +69,10 @@ function getRelativePosition(absoluteX, absoluteY) {
 }
 croquisDOMElement.addEventListener('pointerdown', canvasPointerDown);
 
-//clear & fill button ui
+//clear & fill button event onclick
 var clearButton = document.getElementById('clear-button');
 clearButton.onclick = function () {
+    //resizeRrotateImage();
     croquis.clearLayer();
 }
 
@@ -75,8 +89,8 @@ fillButton.onclick = function () {
 var flipHorizon = document.getElementById('btn-flip-horizon');
 flipHorizon.onclick = function(){
     var currentLayerIndex = croquis.getCurrentLayerIndex();
-    var currentLayer = croquis.getLayerCanvas(currentLayerIndex);
-    var context = document.getElementsByClassName('croquis-layer-canvas')[currentLayerIndex].getContext('2d');
+    var currentLayer = croquis.getLayerCanvas(currentLayerIndex);    
+    var context = currentLayer.getContext('2d');
     
     var img = new Image();
     img.src = currentLayer.toDataURL();
@@ -91,7 +105,7 @@ var flipVertical = document.getElementById('btn-flip-vertical');
 flipVertical.onclick = function(){
     var currentLayerIndex = croquis.getCurrentLayerIndex();
     var currentLayer = croquis.getLayerCanvas(currentLayerIndex);
-    var context = document.getElementsByClassName('croquis-layer-canvas')[currentLayerIndex].getContext('2d');
+    var context = currentLayer.getContext('2d');
     
     var img = new Image();
     img.src = currentLayer.toDataURL();
@@ -112,9 +126,16 @@ function handleImage(e){
     reader.onload = function(event){
         var img = new Image();       
         img.src = event.target.result;
-        img.className = 'resize-image';
-        croquisDOMElement.appendChild(img);    
-        resizeableImage(img);
+        // img.className = 'resize-image';        
+        // croquisDOMElement.appendChild(img);    
+        // resizeableImage(img);
+        if (img.complete){
+            canvasState.addShape(new Shape(canvasState, 10, 10, img.width, img.height, 1, img));   
+            switchToActive();
+        }else{
+            alert('invalid image !!!');
+            return;
+        }
     }
     reader.readAsDataURL(e.target.files[0]);     
 }
@@ -128,9 +149,10 @@ mergeButton.onclick = function (){
     if (pic === undefined) return;
     
     var currentLayerIndex = croquis.getCurrentLayerIndex();
-    var context = document.getElementsByClassName('croquis-layer-canvas')[currentLayerIndex].getContext('2d');
+    var context = croquis.getLayerCanvas(currentLayerIndex).getContext('2d');
 
     //apply alpha value to merged canvas
+    var temp = context.globalAlpha;
     context.globalAlpha = croquis.getPaintingOpacity();
 
     for(var i = 0; i < pic.length; i++){
@@ -141,6 +163,7 @@ mergeButton.onclick = function (){
     deleteResizeableImage(false);
 
     imageLoader.value = '';
+    context.globalAlpha = temp;
 }
 
 function deleteResizeableImage(active){
@@ -173,6 +196,7 @@ Array.prototype.map.call(brushImages, function (brush) {
 });
 
 function brushImagePointerDown(e) {
+    switchToPaint();
     var image = e.currentTarget;
     currentBrush.className = 'brush-image';
     image.className = 'brush-image on';
@@ -253,8 +277,6 @@ var inputHexColor = document.getElementById('input-hex-color');
 ///input hex color on lost focus
 inputHexColor.onblur = function(){
     var color = tinycolor(inputHexColor.value);
-    //brush.setColor(color.toRgbString());
-
     var hsvColor = color.toHsv();
 
     //set Hue slider
@@ -435,20 +457,50 @@ function setPointerEvent(e) {
     }
 }
 
-///create rectangle svg
+//=================================================================================================================
+///create svg image
+//=================================================================================================================
+function switchToActive(){
+    var activeLayer = document.getElementById('active');
+    if (activeLayer === null) return;
+    activeLayer.style.setProperty('z-index', 2);
+
+    var paintCanvas = document.getElementsByClassName('croquis-painting-canvas');
+    paintCanvas[0].style.setProperty('z-index', 1);
+}
+function switchToPaint(){
+    var activeLayer = document.getElementById('active');
+    if (activeLayer === null) return;
+    activeLayer.style.setProperty('z-index', 1);
+
+    //deselect object
+    var event = new MouseEvent('mousedown', {
+                                'view': window,
+                                'bubbles': true,
+                                'cancelable': true
+                              });
+    activeLayer.dispatchEvent(event);
+
+    // var canvasDiaplay = document.getElementsByClassName('croquis-dirty-rect-display');
+    // canvasDiaplay[0].style.setProperty('z-index', 2)    
+    // for (i=0; i < croquis.getLayerCount(); i++){
+    //     croquis.getLayerCanvas(i).style.setProperty('z-index', 2);
+    // }
+    var paintCanvas = document.getElementsByClassName('croquis-painting-canvas');
+    paintCanvas[0].style.setProperty('z-index', 2);
+}
+
+var btnSelector = document.getElementById('btn-selector');
+btnSelector.onclick = function(){
+    switchToActive();
+}
+
 var btnRect = document.getElementById('btn-rectangle');
 btnRect.onclick = function(){
     
     var svg = createSVG();
     var elm = document.createElementNS(svgNS, 'rect');
-
-    var color = tinycolor(brush.getColor());
-    var rgbaColor = color.toRgb();
-    // colorPickerChecker.style.backgroundColor = 
-    // 'rgba(' + rgbaColor.r + ', ' + rgbaColor.g + ', ' + rgbaColor.b + ', ' + rgbaColor.a + ')'; 
-
-    //elm.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());
-    elm.setAttributeNS(null, 'fill', 'rgba(' + rgbaColor.r + ', ' + rgbaColor.g + ', ' + rgbaColor.b + ', ' + rgbaColor.a + ')' );
+    elm.setAttributeNS(null, 'fill', tinycolor(brush.getColor()).toHexString());   
     elm.setAttributeNS(null, 'width', '100px');
     elm.setAttributeNS(null, 'height', '100px');
     svg.appendChild(elm);
@@ -501,14 +553,20 @@ btnHeart.onclick = function(){
 }
 
 function insertGeoSVG(svg){
+    
+    deleteResizeableImage(false);
+
     var encoded = window.btoa(svg.outerHTML);
     var img = new Image();
-    img.className = 'resize-image';    
-    img.src = 'data:image/svg+xml;base64,' + encoded;
-    img.style.opacity = croquis.getPaintingOpacity(); 
-
-    croquisDOMElement.appendChild(img);  
-    resizeableImage(img);  
+    img.onload = function(){
+        img.className = 'resize-image';
+    }
+    img.style.opacity = croquis.getPaintingOpacity();  
+    img.src = 'data:image/svg+xml;base64,' + encoded;   
+    
+    canvasState.addShape(new Shape(canvasState, 10, 10, img.width, img.height, img.style.opacity, img));  
+   
+    switchToActive();
 }
 
 function createSVG(){
@@ -521,109 +579,127 @@ function createSVG(){
     return svg;
 }
 
+//=================================================================================================================
 //resizeableImage
+//=================================================================================================================
 var resizeableImage = function(image_target) {
   // Some variable and settings
-  var $container,
-      orig_src = new Image(),
-      image_target = image_target, //$(image_target).get(0),
-      event_state = {},
-      constrain = false,
-      min_width = 60, // Change as required
-      min_height = 60,
-      max_width = 800, // Change as required
-      max_height = 900,
-      resize_canvas = document.createElement('canvas');
+    var $container,
+          orig_src = new Image(),
+          image_target = image_target, //$(image_target).get(0),
+          event_state = {},
+          constrain = false,
+          min_width = 60, // Change as required
+          min_height = 60,
+          max_width = 800, // Change as required
+          max_height = 900,
+          resize_canvas = document.createElement('canvas');
 
-  init = function(){
+    init = function(){
 
-    // When resizing, we will always use this copy of the original as the base   
-    orig_src.src=image_target.src;
+        // When resizing, we will always use this copy of the original as the base   
+        orig_src.src=image_target.src;
 
-    // Wrap the image with the container and add resize handles
-    $(image_target).wrap('<div class="resize-container" style="top:10px; left:10px;"></div>')
-    .before('<span class="resize-handle resize-handle-nw"></span>')
-    .before('<span class="resize-handle resize-handle-ne"></span>')
-    .after('<span class="resize-handle resize-handle-se"></span>')
-    .after('<span class="resize-handle resize-handle-sw"></span>');
+        // Wrap the image with the container and add resize handles
+        $(image_target).wrap('<div class="resize-container" style="top:10px; left:10px;"></div>')
+        .before('<span class="resize-handle resize-handle-nw"></span>')
+        .before('<span class="resize-handle resize-handle-ne"></span>')
+        .after('<span class="resize-handle resize-handle-se"></span>')
+        .after('<span class="resize-handle resize-handle-sw"></span>');
 
-       // Assign the container to a variable
-    $container = $(image_target).parent('.resize-container');
+        // Assign the container to a variable
+        $container = $(image_target).parent('.resize-container');
 
-    // Add events
-    $container.on('mousedown touchstart', '.resize-handle', startResize);
-    $container.on('mousedown touchstart', 'img', startMoving);
-    $('.js-crop').on('click', crop);
-  };
+        // Add events
+        $container.on('mousedown touchstart', '.resize-handle', startResize);
+        $container.on('mousedown touchstart', 'img', startMoving);
+        $('.js-crop').on('click', crop);
+    };    
 
-  startResize = function(e){
-    e.preventDefault();
-    e.stopPropagation();
-    saveEventState(e);
-    $(document).on('mousemove touchmove', resizing);
-    $(document).on('mouseup touchend', endResize);
-  };
+    startResize = function(e){       
+        e.preventDefault();
+        e.stopPropagation();
+        saveEventState(e);
+        $(document).on('mousemove touchmove', resizing);
+        $(document).on('mouseup touchend', endResize);
+    };
 
-  endResize = function(e){
-    e.preventDefault();
-    $(document).off('mouseup touchend', endResize);
-    $(document).off('mousemove touchmove', resizing);
-  };
+    endResize = function(e){
+        e.preventDefault();
+        $(document).off('mouseup touchend', endResize);
+        $(document).off('mousemove touchmove', resizing);
+    };
 
-  saveEventState = function(e){
-    // Save the initial event details and container state
-    event_state.container_width = $container.width();
-    event_state.container_height = $container.height();
-    event_state.container_left = $container.offset().left; 
-    event_state.container_top = $container.offset().top;
-    event_state.mouse_x = (e.clientX || e.pageX || e.originalEvent.touches[0].clientX) + $(window).scrollLeft(); 
-    event_state.mouse_y = (e.clientY || e.pageY || e.originalEvent.touches[0].clientY) + $(window).scrollTop();
-    
-    // This is a fix for mobile safari
-    // For some reason it does not allow a direct copy of the touches property
-    if(typeof e.originalEvent.touches !== 'undefined'){
-        event_state.touches = [];
-        $.each(e.originalEvent.touches, function(i, ob){
-          event_state.touches[i] = {};
-          event_state.touches[i].clientX = 0+ob.clientX;
-          event_state.touches[i].clientY = 0+ob.clientY;
-        });
-    }
-    event_state.evnt = e;
-  };
+    saveEventState = function(e){
+        // Save the initial event details and container state
+        event_state.container_width = $container.width();
+        event_state.container_height = $container.height();
+        event_state.container_left = $container.offset().left; 
+        event_state.container_top = $container.offset().top;
+        event_state.mouse_x = (e.clientX || e.pageX || e.originalEvent.touches[0].clientX) + $(window).scrollLeft(); 
+        event_state.mouse_y = (e.clientY || e.pageY || e.originalEvent.touches[0].clientY) + $(window).scrollTop();
+
+        // This is a fix for mobile safari
+        // For some reason it does not allow a direct copy of the touches property
+        if(typeof e.originalEvent.touches !== 'undefined'){
+            event_state.touches = [];
+            $.each(e.originalEvent.touches, function(i, ob){
+              event_state.touches[i] = {};
+              event_state.touches[i].clientX = 0+ob.clientX;
+              event_state.touches[i].clientY = 0+ob.clientY;
+            });
+        }
+        event_state.evnt = e;
+    };
+
+    var mainCanvas = croquis.getLayerCanvas(croquis.getCurrentLayerIndex());
+    var cx = mainCanvas.width / 2;
+    var cy = mainCanvas.height / 2;
+    var offsetX = mainCanvas.offsetLeft;
+    var offsetY = mainCanvas.offsetTop;
+    var r = 0;
 
   resizing = function(e){
     var mouse={},width,height,left,top,offset=$container.offset();
     mouse.x = (e.clientX || e.pageX || e.originalEvent.touches[0].clientX) + $(window).scrollLeft(); 
     mouse.y = (e.clientY || e.pageY || e.originalEvent.touches[0].clientY) + $(window).scrollTop();
-    
+
     // Position image differently depending on the corner dragged and constraints
     if( $(event_state.evnt.target).hasClass('resize-handle-se') ){
-      width = mouse.x - event_state.container_left;
-      height = mouse.y  - event_state.container_top;
-      left = event_state.container_left;
-      top = event_state.container_top;
+          width = mouse.x - event_state.container_left;
+          height = mouse.y  - event_state.container_top;
+          left = event_state.container_left;
+          top = event_state.container_top;
     } else if($(event_state.evnt.target).hasClass('resize-handle-sw') ){
-      width = event_state.container_width - (mouse.x - event_state.container_left);
-      height = mouse.y  - event_state.container_top;
-      left = mouse.x;
-      top = event_state.container_top;
+          width = event_state.container_width - (mouse.x - event_state.container_left);
+          height = mouse.y  - event_state.container_top;
+          left = mouse.x;
+          top = event_state.container_top;
     } else if($(event_state.evnt.target).hasClass('resize-handle-nw') ){
-      width = event_state.container_width - (mouse.x - event_state.container_left);
-      height = event_state.container_height - (mouse.y - event_state.container_top);
-      left = mouse.x;
-      top = mouse.y;
-      if(constrain || e.shiftKey){
-        top = mouse.y - ((width / orig_src.width * orig_src.height) - height);
-      }
+          width = event_state.container_width - (mouse.x - event_state.container_left);
+          height = event_state.container_height - (mouse.y - event_state.container_top);
+          left = mouse.x;
+          top = mouse.y;
+          if(constrain || e.shiftKey){
+            top = mouse.y - ((width / orig_src.width * orig_src.height) - height);
+          }
     } else if($(event_state.evnt.target).hasClass('resize-handle-ne') ){
-      width = mouse.x - event_state.container_left;
-      height = event_state.container_height - (mouse.y - event_state.container_top);
-      left = event_state.container_left;
-      top = mouse.y;
-      if(constrain || e.shiftKey){
-        top = mouse.y - ((width / orig_src.width * orig_src.height) - height);
-      }
+          // width = mouse.x - event_state.container_left;
+          // height = event_state.container_height - (mouse.y - event_state.container_top);
+          // left = event_state.container_left;
+          // top = mouse.y;
+          // if(constrain || e.shiftKey){
+          //   top = mouse.y - ((width / orig_src.width * orig_src.height) - height);
+            //}
+
+        //try some rotate shit
+        mouseX = parseInt(e.clientX - offsetX);
+        mouseY = parseInt(e.clientY - offsetY);
+        var dx = mouseX - cx;
+        var dy = mouseY - cy;
+        var angle = Math.atan2(dy, dx);
+        r = angle;       
+        drawRotate();
     }
     
     // Optionally maintain aspect ratio
@@ -639,11 +715,30 @@ var resizeableImage = function(image_target) {
     }
   }
 
+  drawRotate = function(){
+    var diagonal = Math.sqrt(Math.pow(orig_src.width, 2) + Math.pow(orig_src.height, 2));
+    resize_canvas.width = parseInt(diagonal);
+    resize_canvas.height = parseInt(diagonal);
+    var ctx = resize_canvas.getContext('2d');
+    ctx.clearRect(0, 0, resize_canvas.width, resize_canvas.height);
+    ctx.save();
+    ctx.translate(orig_src.width, orig_src.height);
+
+    console.log(cx + '  ' + cy + ' ' + r);
+
+    ctx.rotate(r);   
+    var w = orig_src.width / 2;
+    var h = orig_src.height / 2;
+    //ctx.drawImage(orig_src, 0, 0, orig_src.width, orig_src.height, -w / 2, -h / 2, w, h);  
+    ctx.drawImage(orig_src, -orig_src.width, -orig_src.height);
+    ctx.restore();
+  };
+
   resizeImage = function(width, height){
     resize_canvas.width = width;
     resize_canvas.height = height;
     resize_canvas.getContext('2d').drawImage(orig_src, 0, 0, width, height);   
-    $(image_target).attr('src', resize_canvas.toDataURL("image/png"));  
+    $(image_target).attr('src', resize_canvas.toDataURL("image/png"));     
   };
 
   startMoving = function(e){
@@ -711,7 +806,7 @@ var resizeableImage = function(image_target) {
     
     crop_canvas.getContext('2d').drawImage(image_target, left, top, width, height, 0, 0, width, height);
     window.open(crop_canvas.toDataURL("image/png"));
-  }
+  } 
 
-  init();
+  init();  
 };
