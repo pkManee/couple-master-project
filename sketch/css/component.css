@@ -14,7 +14,14 @@
     outline: 2px dashed rgba(222,60,80,.9);
 }
 
-.resize-handle-ne,
+.resize-handle-ne {
+	position: absolute;
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: rgba(4,255,0,.9);
+    z-index: 999;
+}
 .resize-handle-se,
 .resize-handle-nw,
 .resize-handle-sw {
