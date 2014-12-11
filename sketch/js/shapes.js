@@ -75,11 +75,15 @@ Shape.prototype.draw = function(ctx, optionalColor) {
     
     this.state.selectionHandles[7].x = this.x+this.w-half;
     this.state.selectionHandles[7].y = this.y+this.h-half;
-
     
-    ctx.fillStyle = this.state.selectionBoxColor;
+    //ctx.fillStyle = this.state.selectionBoxColor;
     for (i = 0; i < 8; i += 1) {
       cur = this.state.selectionHandles[i];
+      if (i==5) {
+        ctx.fillStyle = '#00effc'; 
+      }else {
+        ctx.fillStyle = this.state.selectionBoxColor;
+      }
       ctx.fillRect(cur.x, cur.y, this.state.selectionBoxSize, this.state.selectionBoxSize);
     }
   }
@@ -151,6 +155,7 @@ function CanvasState(canvas) {
   
   //fixes a problem where double clicking causes text to get selected on the canvas
   canvas.addEventListener('selectstart', function(e) { e.preventDefault(); return false; }, false);
+
   // Up, down, and move are for dragging
   canvas.addEventListener('mousedown', function(e) {
     var mouse, mx, my, shapes, l, i, mySel;
@@ -183,6 +188,7 @@ function CanvasState(canvas) {
       myState.valid = false; // Need to clear the old selection border
     }
   }, true);
+
   canvas.addEventListener('mousemove', function(e) {
     var mouse = myState.getMouse(e),
         mx = mouse.x,
@@ -196,7 +202,7 @@ function CanvasState(canvas) {
       myState.selection.y = mouse.y - myState.dragoffy;   
       myState.valid = false; // Something's dragging so we must redraw
     } else if (myState.resizeDragging) {
-      // time ro resize!
+      // time to resize!
       oldx = myState.selection.x;
       oldy = myState.selection.y;
       
@@ -268,7 +274,7 @@ function CanvasState(canvas) {
               this.style.cursor='n-resize';
               break;
             case 2:
-              this.style.cursor='ne-resize';
+              this.style.cursor='ne-resize';              
               break;
             case 3:
               this.style.cursor='w-resize';
@@ -277,7 +283,8 @@ function CanvasState(canvas) {
               this.style.cursor='e-resize';
               break;
             case 5:
-              this.style.cursor='sw-resize';
+              //this.style.cursor='sw-resize';
+              this.style.cursor = "url('img/rotate-cursor.png'), default";
               break;
             case 6:
               this.style.cursor='s-resize';
@@ -296,6 +303,7 @@ function CanvasState(canvas) {
       this.style.cursor = 'auto';
     }
   }, true);
+
   canvas.addEventListener('mouseup', function(e) {
     myState.dragging = false;
     myState.resizeDragging = false;
@@ -312,6 +320,27 @@ function CanvasState(canvas) {
     }
   }, true);
 
+  //double click to remove shapes 
+  canvas.addEventListener('dblclick', function(e) {
+    var shapes, l, i;
+    var mouse = myState.getMouse(e);
+     //if (!e.ctrlKey){
+        //if (e.keyCode === 46){    
+
+            shapes = myState.shapes;
+            l = shapes.length;
+            for (i = l-1; i >= 0; i -= 1) {
+              if (shapes[i].contains(mouse.x, mouse.y)) {               
+                myState.shapes.splice(i, 1);
+
+                myState.selection = null;
+                myState.valid = false;
+                return;
+              }
+        }
+      //}
+    //}
+  }, true);
   // double click for making new shapes
   // canvas.addEventListener('dblclick', function(e) {
   //   var mouse = myState.getMouse(e);
@@ -320,10 +349,10 @@ function CanvasState(canvas) {
   
   // **** Options! ****
   
-  this.selectionColor = '#CC0000';
+  this.selectionColor = '#0086c0';
   this.selectionWidth = 2;  
-  this.selectionBoxSize = 6;
-  this.selectionBoxColor = 'darkred';
+  this.selectionBoxSize = 8;
+  this.selectionBoxColor = '#4f8563';
   this.interval = 30;
   setInterval(function() { myState.draw(); }, myState.interval);
 }

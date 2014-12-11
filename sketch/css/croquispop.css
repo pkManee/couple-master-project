@@ -74,6 +74,16 @@
   width: 30px;
   height: 30px;
 }
+.icon-crop:before{
+  content: "\e666";
+  width: 30px;
+  height: 30px;
+}
+.icon-ok:before{
+  content: "\e605";
+  width: 30px;
+  height: 30px;
+}
 
 body {
   background-color: #888;
@@ -101,7 +111,7 @@ body {
   left: 0px;
   top: 0px;  
   display: inline-block;
-  cursor: default !important;
+  cursor: default;
   overflow: hidden;    
 }
 
@@ -114,7 +124,7 @@ body {
   vertical-align: top;
   position: absolute;
   top: 50px;
-  left: 1050px;
+  left: 880px;
 }
 
 #color-picker:active {

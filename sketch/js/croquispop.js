@@ -1,8 +1,10 @@
 // Initialize croquis
 var svgNS = "http://www.w3.org/2000/svg";
 var croquis = new Croquis();
+var paintWidth = 849;
+var paintHeight = 600;
 croquis.lockHistory();
-croquis.setCanvasSize(1024, 600);
+croquis.setCanvasSize(paintWidth, paintHeight); //ratio 1:1.4142
 croquis.addLayer();
 croquis.fillLayer('#fff');
 croquis.addLayer();
@@ -70,8 +72,7 @@ croquisDOMElement.addEventListener('pointerdown', canvasPointerDown);
 
 //clear & fill button event onclick
 var clearButton = document.getElementById('clear-button');
-clearButton.onclick = function () {
-    //resizeRrotateImage();
+clearButton.onclick = function () {   
     croquis.clearLayer();
 }
 
@@ -90,14 +91,16 @@ flipHorizon.onclick = function(){
     var currentLayerIndex = croquis.getCurrentLayerIndex();
     var currentLayer = croquis.getLayerCanvas(currentLayerIndex);    
     var context = currentLayer.getContext('2d');
-    
-    var img = new Image();
-    img.src = currentLayer.toDataURL();
-    croquis.clearLayer();
-    
+
+    var tmpCanvas = document.createElement('canvas');
+    tmpCanvas.width = paintWidth;
+    tmpCanvas.height = paintHeight;
+    tmpCanvas.getContext('2d').drawImage(currentLayer, 0, 0);
+
+    croquis.clearLayer(currentLayerIndex);
     context.save(); // Save the current state
     context.scale(-1, 1); // Set scale to flip the image
-    context.drawImage(img, croquis.getCanvasWidth() * -1, 0, croquis.getCanvasWidth(), croquis.getCanvasHeight());
+    context.drawImage(tmpCanvas, paintWidth * -1, 0, paintWidth, paintHeight);
     context.restore(); // Restore the last saved state
 }
 var flipVertical = document.getElementById('btn-flip-vertical');
@@ -105,14 +108,16 @@ flipVertical.onclick = function(){
     var currentLayerIndex = croquis.getCurrentLayerIndex();
     var currentLayer = croquis.getLayerCanvas(currentLayerIndex);
     var context = currentLayer.getContext('2d');
-    
-    var img = new Image();
-    img.src = currentLayer.toDataURL();
-    croquis.clearLayer();
-    
+
+    var tmpCanvas = document.createElement('canvas');
+    tmpCanvas.width = paintWidth;
+    tmpCanvas.height = paintHeight;
+    tmpCanvas.getContext('2d').drawImage(currentLayer, 0, 0);
+
+    croquis.clearLayer(currentLayerIndex);    
     context.save(); // Save the current state
     context.scale(1, -1); // Set scale to flip the image
-    context.drawImage(img, 0, croquis.getCanvasHeight() * -1, croquis.getCanvasWidth(), croquis.getCanvasHeight());
+    context.drawImage(tmpCanvas, 0, paintHeight * -1, paintWidth, paintHeight);
     context.restore(); // Restore the last saved state
 }
 
@@ -141,28 +146,8 @@ function handleImage(e){
 
 //merge layer and image
 //button onclick event
-var mergeButton = document.getElementById('merge-button');
-mergeButton.onclick = function (){
-    // var pic = new Image();
-    // pic = document.getElementsByClassName('resize-image');
-    // if (pic === undefined) return;
-    
-    // var currentLayerIndex = croquis.getCurrentLayerIndex();
-    // var context = croquis.getLayerCanvas(currentLayerIndex).getContext('2d');
-
-    // //apply alpha value to merged canvas
-    // var temp = context.globalAlpha;
-    // context.globalAlpha = croquis.getPaintingOpacity();
-
-    // for(var i = 0; i < pic.length; i++){
-    //     var picRelativePosition = getRelativePosition(pic[i].x, pic[i].y);
-    //     context.drawImage(pic[i], picRelativePosition.x, picRelativePosition.y); 
-    // }
-    
-    // deleteResizeableImage(false);
-
-    // imageLoader.value = '';
-    // context.globalAlpha = temp;
+var btnMerge = document.getElementById('merge-button');
+btnMerge.onclick = function (){  
     
     switchToPaint(); 
 
@@ -170,39 +155,28 @@ mergeButton.onclick = function (){
     
         var currentLayer = croquis.getLayerCanvas(croquis.getCurrentLayerIndex());    
         var context = currentLayer.getContext('2d');
+        var tempCanvas = document.createElement('canvas');
+        tempCanvas.width = paintWidth;
+        tempCanvas.height = paintHeight;        
 
-        var img = new Image();
-        img.src = canvasState.canvas.toDataURL();
+        tempCanvas.getContext('2d').drawImage(canvasState.canvas, 0, 0);
         canvasState.clear();
         canvasState.shapes = [];
-        context.drawImage(img, 0, 0);
 
-        img = new Image();
-        img.src = currentLayer.toDataURL();
+        tempCanvas.getContext('2d').drawImage(currentLayer, 0, 0);
         croquis.clearLayer();
-        context.drawImage(img, 0, 0);
+        context.drawImage(tempCanvas, 0, 0);        
     }, 
-    100);
+    50);
 }
 
-function deleteResizeableImage(active){
-   
-     if (!active){
-        //delete all
-        var resizeContainer = document.getElementsByClassName('resize-container');
-        while (resizeContainer.length > 0){
-            var index = resizeContainer.length - 1;
-            resizeContainer[index].remove();
-        }
-    }else{
-        var resizeContainer = document.querySelectorAll('resize-container:hover');
-        if (resizeContainer === null) return;
-
-        while (resizeContainer.length > 0){
-            var index = resizeContainer.length - 1;
-            resizeContainer[index].remove();
-        }
-    }
+function deleteResizeableImage(){  
+    //delete all
+    var resizeContainer = document.getElementsByClassName('resize-container');
+    while (resizeContainer.length > 0){
+        var index = resizeContainer.length - 1;
+        resizeContainer[index].remove();
+    }    
 }
 
 //brush images
@@ -454,11 +428,9 @@ function documentKeyDown(e) {
             croquis[e.shiftKey ? 'redo' : 'undo']();
             break;
         }
-    }
-
-    if (!e.ctrlKey){
+    }else{
         if (e.keyCode === 46){
-            deleteResizeableImage(true);
+            deleteResizeableImage();
         }
     }
 }
@@ -568,15 +540,13 @@ btnHeart.onclick = function(){
 }
 
 function insertGeoSVG(svg){
-    
-    deleteResizeableImage(false);
 
     var encoded = window.btoa(svg.outerHTML);
     var img = new Image();
     img.onload = function(){
-        img.className = 'resize-image';
+        //img.className = 'resize-image';    
+        img.style.opacity = croquis.getPaintingOpacity();  
     }
-    img.style.opacity = croquis.getPaintingOpacity();  
     img.src = 'data:image/svg+xml;base64,' + encoded;   
     
     canvasState.addShape(new Shape(canvasState, 10, 10, img.width, img.height, img.style.opacity, img));  
@@ -594,6 +564,69 @@ function createSVG(){
     return svg;
 }
 
+//Crop function
+var btnCrop = document.getElementById('btn-crop');
+btnCrop.onclick = function(){
+
+    //create layer crop
+    if (btnCrop.className === "geo-button icon-crop"){
+
+        var cropLayer = document.getElementsByClassName('resize-image');
+        if (cropLayer.length > 0) return;
+
+        var svg = createSVG();
+        svg.setAttribute('width', '100px');
+        svg.setAttribute('height', '142px');
+
+        var elm = document.createElementNS(svgNS, 'rect');
+        elm.setAttributeNS(null, 'fill', 'rgba(187, 201, 159, 41)');   
+        elm.setAttributeNS(null, 'width', '100px');
+        elm.setAttributeNS(null, 'height', '142px');
+
+        svg.appendChild(elm);
+
+        var encoded = window.btoa(svg.outerHTML);
+        var img = new Image();
+        img.onload = function(){
+            img.className = 'resize-image';
+            img.style.opacity = 0.40;
+        }        
+        img.src = 'data:image/svg+xml;base64,' + encoded;   
+        
+        croquisDOMElement.appendChild(img);
+        resizeableImage(img);
+
+        btnCrop.className = "geo-button icon-ok";
+    } else {
+   
+    //Find the part of the image that is inside the crop box   
+    var currentLayer = croquis.getLayerCanvas(croquis.getCurrentLayerIndex());    
+    var context = currentLayer.getContext('2d'); 
+    var overlay = document.getElementsByClassName('resize-image')[0];
+    var relativePosition = getRelativePosition(overlay.x, overlay.y);
+    var crop_canvas,
+        left = relativePosition.x,
+        top =  relativePosition.y, 
+        width = overlay.width,
+        height = overlay.height;
+    
+    //dispatch merge layers event
+    btnMerge.onclick();
+    setTimeout(function(){
+            crop_canvas = document.createElement('canvas');
+            crop_canvas.width = paintHeight; 
+            crop_canvas.height = paintWidth;
+            
+            crop_canvas.getContext('2d').drawImage(currentLayer, left, top, width, height, 0, 0, paintHeight, paintWidth);
+            window.open(crop_canvas.toDataURL()); 
+
+            btnCrop.className = "geo-button icon-crop";
+            deleteResizeableImage();
+        }, 50);    
+    }
+}
+
+
 //=================================================================================================================
 //resizeableImage
 //=================================================================================================================
@@ -603,11 +636,11 @@ var resizeableImage = function(image_target) {
           orig_src = new Image(),
           image_target = image_target, //$(image_target).get(0),
           event_state = {},
-          constrain = false,
-          min_width = 60, // Change as required
-          min_height = 60,
-          max_width = 800, // Change as required
-          max_height = 900,
+          constrain = true,
+          min_width = 100, // Change as required
+          min_height = 141,
+          max_width = 849, // Change as required
+          max_height = 600,
           resize_canvas = document.createElement('canvas');
 
     init = function(){
@@ -616,7 +649,7 @@ var resizeableImage = function(image_target) {
         orig_src.src=image_target.src;
 
         // Wrap the image with the container and add resize handles
-        $(image_target).wrap('<div class="resize-container" style="top:10px; left:10px;"></div>')
+        $(image_target).wrap('<div class="resize-container" style="top:5px; left:5px;"></div>')
         .before('<span class="resize-handle resize-handle-nw"></span>')
         .before('<span class="resize-handle resize-handle-ne"></span>')
         .after('<span class="resize-handle resize-handle-se"></span>')
@@ -627,8 +660,7 @@ var resizeableImage = function(image_target) {
 
         // Add events
         $container.on('mousedown touchstart', '.resize-handle', startResize);
-        $container.on('mousedown touchstart', 'img', startMoving);
-        $('.js-crop').on('click', crop);
+        $container.on('mousedown touchstart', 'img', startMoving);       
     };    
 
     startResize = function(e){       
@@ -699,22 +731,13 @@ var resizeableImage = function(image_target) {
             top = mouse.y - ((width / orig_src.width * orig_src.height) - height);
           }
     } else if($(event_state.evnt.target).hasClass('resize-handle-ne') ){
-          // width = mouse.x - event_state.container_left;
-          // height = event_state.container_height - (mouse.y - event_state.container_top);
-          // left = event_state.container_left;
-          // top = mouse.y;
-          // if(constrain || e.shiftKey){
-          //   top = mouse.y - ((width / orig_src.width * orig_src.height) - height);
-            //}
-
-        //try some rotate shit
-        mouseX = parseInt(e.clientX - offsetX);
-        mouseY = parseInt(e.clientY - offsetY);
-        var dx = mouseX - cx;
-        var dy = mouseY - cy;
-        var angle = Math.atan2(dy, dx);
-        r = angle;       
-        drawRotate();
+          width = mouse.x - event_state.container_left;
+          height = event_state.container_height - (mouse.y - event_state.container_top);
+          left = event_state.container_left;
+          top = mouse.y;
+        if(constrain || e.shiftKey){
+            top = mouse.y - ((width / orig_src.width * orig_src.height) - height);
+        }      
     }
     
     // Optionally maintain aspect ratio
@@ -729,25 +752,6 @@ var resizeableImage = function(image_target) {
       $container.offset({'left': left, 'top': top});
     }
   }
-
-  drawRotate = function(){
-    var diagonal = Math.sqrt(Math.pow(orig_src.width, 2) + Math.pow(orig_src.height, 2));
-    resize_canvas.width = parseInt(diagonal);
-    resize_canvas.height = parseInt(diagonal);
-    var ctx = resize_canvas.getContext('2d');
-    ctx.clearRect(0, 0, resize_canvas.width, resize_canvas.height);
-    ctx.save();
-    ctx.translate(orig_src.width, orig_src.height);
-
-    console.log(cx + '  ' + cy + ' ' + r);
-
-    ctx.rotate(r);   
-    var w = orig_src.width / 2;
-    var h = orig_src.height / 2;
-    //ctx.drawImage(orig_src, 0, 0, orig_src.width, orig_src.height, -w / 2, -h / 2, w, h);  
-    ctx.drawImage(orig_src, -orig_src.width, -orig_src.height);
-    ctx.restore();
-  };
 
   resizeImage = function(width, height){
     resize_canvas.width = width;
@@ -806,22 +810,5 @@ var resizeableImage = function(image_target) {
       resizeImage(width, height);
     }
   };
-
-  crop = function(){
-    //Find the part of the image that is inside the crop box
-    var crop_canvas,
-        left = $('.overlay').offset().left - $container.offset().left,
-        top =  $('.overlay').offset().top - $container.offset().top,
-        width = $('.overlay').width(),
-        height = $('.overlay').height();
-        
-    crop_canvas = document.createElement('canvas');
-    crop_canvas.width = width;
-    crop_canvas.height = height;
-    
-    crop_canvas.getContext('2d').drawImage(image_target, left, top, width, height, 0, 0, width, height);
-    window.open(crop_canvas.toDataURL("image/png"));
-  } 
-
   init();  
 };
