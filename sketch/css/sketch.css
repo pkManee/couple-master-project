@@ -107,18 +107,6 @@ body {
   overflow: hidden;
   background: #FFF;
 }
-#active{
-  position: absolute;
-  left: 0px;
-  top: 0px;  
-  display: inline-block;
-  cursor: default;
-  overflow: hidden;    
-}
-
-.croquis-dirty-rect-display {
-  touch-action: none;
-}
 
 #right-side {
   display: inline-block;
