@@ -232,7 +232,7 @@ function init() {
     
 }
 
-canvas.on('mouse:dblclick', function (options) {
+canvas.on('mouse:dblclick', function (options){
     console.log('double click removed');
 });
 
