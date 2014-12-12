@@ -295,16 +295,13 @@ function setColor() {
     b = 1 - ((b + halfThumbRadius + sbSize) / sbSize);
     brush.setColor(tinycolor({h: h, s:s, v: b}).toRgbString());
     var a = croquis.getPaintingOpacity();
-    var color = tinycolor({h: h, s:s, v: b, a: a});
-    //colorPickerColor.style.backgroundColor = color.toRgbString();
-    //colorPickerColor.textContent = color.toHexString();
+    var color = tinycolor({h: h, s:s, v: b, a: a});    
     inputHexColor.value = color.toHexString();
 
     var colorPickerChecker = document.getElementById('color-picker-checker');
     var rgbaColor = color.toRgb();
     colorPickerChecker.style.backgroundColor = 
-    'rgba(' + rgbaColor.r + ', ' + rgbaColor.g + ', ' + rgbaColor.b + ', ' + rgbaColor.a + ')'; 
-    //inputHexColor.value; //color.toHexString();
+    'rgba(' + rgbaColor.r + ', ' + rgbaColor.g + ', ' + rgbaColor.b + ', ' + rgbaColor.a + ')';    
 }
 
 colorPickerHueSlider.onchange = function () {
@@ -339,21 +336,6 @@ function pickColor(x, y) {
 }
 colorPickerSb.addEventListener('pointerdown', colorPickerPointerDown);
 document.addEventListener('pointerup', colorPickerPointerUp);
-
-var backgroundCheckerImage;
-(function () {
-    backgroundCheckerImage = document.createElement('canvas');
-    backgroundCheckerImage.width = backgroundCheckerImage.height = 20;
-    var backgroundImageContext = backgroundCheckerImage.getContext('2d');
-    backgroundImageContext.fillStyle = '#fff';
-    backgroundImageContext.fillRect(0, 0, 20, 20);
-    backgroundImageContext.fillStyle = '#ccc';
-    backgroundImageContext.fillRect(0, 0, 10, 10);
-    backgroundImageContext.fillRect(10, 10, 20, 20);
-})();
-
-// var colorPickerChecker = document.getElementById('color-picker-checker');
-// colorPickerChecker.style.backgroundImage = 'url(' + backgroundCheckerImage.toDataURL() + ')';
 
 //stabilizer shelf
 var toolStabilizeLevelSlider =
