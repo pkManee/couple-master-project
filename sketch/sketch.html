@@ -5,12 +5,14 @@
 
   	<link rel="stylesheet" type="text/css" href="./css/sketch.css">
   	<link rel="stylesheet" type="text/css" href="./css/component.css">
+    <link rel="stylesheet" type="text/css" href="./css/Color.Picker.Classic.css">
 
   	<script src="./js/jquery-2.1.1.min.js"></script>
   	<script src="./TinyColor/tinycolor.js"></script>
     <script src="./HSBRect/HSBRect.js"></script>
   	<script src="./js/fabric.js"></script>
-  	<script src="./js/fabric.canvasex.js"></script>		
+  	<script src="./js/fabric.canvasex.js"></script>
+
 	</head>
 	<body>
     <div id="brush-image-shelf">
@@ -25,33 +27,18 @@
     </div>
     <div id="geometry-shelf">
       <button id="btn-selector" title="Selector" class="geo-button icon-selector"></button>
-      <button id="btn-rectangle" title="Rectangle [dbl click in object to delete]" class="geo-button icon-rect"></button>
-      <button id="btn-triangle" title="Triangle [dbl click in object to delete]" class="geo-button icon-tri"></button>
-      <button id="btn-round" title="Round [dbl click in object to delete]" class="geo-button icon-round"></button>
-      <button id="btn-star" title="Star [dbl click in object to delete]" class="geo-button icon-star"></button>
-      <button id="btn-heart" title="Heart [dbl click in object to delete]" class="geo-button icon-heart"></button>
+      <button id="btn-text" title="Text tool" class="geo-button icon-text"></button>
+      <button id="btn-rectangle" title="Rectangle [hit del button to delete]" class="geo-button icon-rect"></button>
+      <button id="btn-triangle" title="Triangle [hit del button to delete]" class="geo-button icon-tri"></button>
+      <button id="btn-round" title="Round [hit del button to delete]" class="geo-button icon-round"></button>
+      <button id="btn-star" title="Star [hit del button to delete]" class="geo-button icon-star"></button>
+      <button id="btn-heart" title="Heart [hit del button to delete]" class="geo-button icon-heart"></button>
       <button id="btn-crop" title="Create copy [hit del button to delete]" class="geo-button icon-crop"></button>
     </div>
     <br/>
   <div id="canvas-area">	 
   </div>
 	<div id="right-side">
-      <div id="color-picker">
-        <div id="color-picker-sb">
-        </div>        
-        <span>hue: </span>
-        <input id="color-picker-hue-slider" type="range" min="0" max="360">
-        <br>
-        <span>opacity: </span>
-        <input id="brush-opacity-slider" type="range" min="0" max="100">
-        <br>
-        <span>color: </span>
-        <div id="color-picker-checker-frame">
-          <div id="color-picker-checker"></div>
-          <input type="text" id="input-hex-color">
-         </div> 
-      </div>
-      <hr>
       <div id="brush-shelf">
         <span>eraser: </span>
         <input id="select-eraser-checkbox" type="checkbox">
@@ -71,6 +58,9 @@
       <button id="btn-flip-vertical">flip vertically</button>
       
     </div>
+    <script src="./js/Event.js" type="text/javascript"></script> 
+    <script src="./js/Color.Picker.Classic.js" type="text/javascript"></script>
+    <script src="./js/Color.Space.js" type="text/javascript"></script>
     <script src="./js/app.js"></script>
     
 	</body>
