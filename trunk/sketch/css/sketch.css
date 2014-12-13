@@ -84,6 +84,11 @@
   width: 30px;
   height: 30px;
 }
+.icon-text:before{
+  content: "\e610";
+  width: 30px;
+  height: 30px;
+}
 
 body {
   background-color: #888;
@@ -216,8 +221,7 @@ span {
   display: inline-block;
 }
 
-#geometry-shelf{
-  width: 300px;
+#geometry-shelf{  
   float: right; 
   display: inline-block;
   padding-right: 500px;
