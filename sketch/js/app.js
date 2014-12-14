@@ -16,13 +16,22 @@ c.style.width = areaWidth;
 c.style.height = areaHeight;
 div.appendChild(c);
 
-var canvas = new fabric.CanvasEx('c');  // extend event
-//var canvas = new fabric.Canvas('c');  //normal event
-this.__canvas = canvas;
+//var canvas = new fabric.CanvasEx('c');  // extend event
+var canvas = this.__canvas = new fabric.Canvas('c');  //normal event
+fabric.Object.prototype.selectable = false;
+canvas.selection = false;
 var PICKER = undefined;
 var COLOR = '#FF0000';
 var OPACITY = '1';
 
+//init fabric painter
+var painter = fabricPainter;
+var isPainterOn = false;
+var isMouseDownForPaint = false;
+
+//============================================================================================================
+//insert svg geometry
+//============================================================================================================
 var btnRect = $('btn-rectangle');
 btnRect.onclick = function(){         
 
@@ -31,11 +40,13 @@ btnRect.onclick = function(){
         height: 100,
         top: 10,
         left: 10,
-        fill: COLOR
+        fill: COLOR,
+        selectable: true
     });
    
     canvas.add(rect);
     canvas.renderAll();
+    btnSelect.onclick();
 }
 var btnTri = $('btn-triangle');
 btnTri.onclick = function(){
@@ -44,11 +55,13 @@ btnTri.onclick = function(){
       height: 100, 
       fill: COLOR, 
       left: 10, 
-      top: 10
+      top: 10,
+      selectable: true
     });
 
     canvas.add(triangle);
     canvas.renderAll();
+    btnSelect.onclick();
 }
 var btnRound = $('btn-round');
 btnRound.onclick = function(){
@@ -56,11 +69,13 @@ btnRound.onclick = function(){
       radius: 50, 
       fill: COLOR, 
       left: 10, 
-      top: 10
+      top: 10,
+      selectable: true
     });
 
     canvas.add(circle);
     canvas.renderAll();
+    btnSelect.onclick();
 }
 var btnStar = document.getElementById('btn-star');
 btnStar.onclick = function(){
@@ -101,7 +116,8 @@ function insertGeoSVG(svg){
                 top: 10,
                 width: 100,
                 height: 100,
-                fill: COLOR
+                fill: COLOR,
+                selectable: true
         });
 
         canvas.add(loadedObjects);
@@ -111,6 +127,8 @@ function insertGeoSVG(svg){
                 object.set('id',item.getAttribute('id'));
                 group.push(object);
     });
+
+    btnSelect.onclick();
 }
 //upload file
 var imageLoader = $('upload-button');
@@ -122,9 +140,12 @@ function handleImage(e){
         fabric.Image.fromURL(event.target.result, function(oImg) {
             canvas.add(oImg);
             canvas.renderAll();
+            oImg.selectable = true;
         });
     }
-    reader.readAsDataURL(e.target.files[0]);     
+    reader.readAsDataURL(e.target.files[0]);
+
+    btnSelect.onclick();
 }
 //insert text
 var btnText = $('btn-text');
@@ -133,19 +154,76 @@ btnText.onclick = function(){
                               fontFamily: 'arial',
                               left: 100, 
                               top: 100 ,
-                              fill: COLOR
+                              fill: COLOR,
+                              selectable: true
                             })
     canvas.add(text);
     canvas.renderAll();
+
+    btnSelect.onclick();
 }
+
+//switch between draw <--> select Mode
 var btnSelect = $('btn-selector');
 btnSelect.onclick = function(){
+    isPainterOn = false;
     canvas.isDrawingMode = false;
 }
-var btnBrush = $('brush-image-shelf');
+
+//brush side slider
+var lineWidth = $('brush-size-slider');
+lineWidth.onchange = function(){
+    setColor();
+}
+var btnPencil = $('btn-pencil');
+btnPencil.onclick = function(){
+    canvas.isDrawingMode = true;
+    canvas.freeDrawingBrush = new fabric[btnPencil.getAttribute('title') + 'Brush'](canvas);
+    setColor();;
+}
+var btnBrush = $('btn-brush');
 btnBrush.onclick = function(){
     canvas.isDrawingMode = true;
+    canvas.freeDrawingBrush = new fabric[btnBrush.getAttribute('title') + 'Brush'](canvas);
+    setColor();
 }
+
+//use fabricjs-painter
+var btnSpray = $('btn-spray');
+btnSpray.onclick = function(data){
+    canvas.isDrawingMode = false;   
+    isPainterOn = true;
+    setColor();
+}
+
+
+function setColor(){    
+    var activeObject = canvas.getActiveObject();
+
+     if (canvas.freeDrawingBrush) {
+        canvas.freeDrawingBrush.color = COLOR;
+        canvas.freeDrawingBrush.width = parseInt(lineWidth.value, 10) || 1;  
+        painter.brush_globals.prop('size', parseInt(lineWidth.value, 10));       
+        fabricPainter.brush_globals.prop('color', COLOR);
+    }
+    if (activeObject !== null && activeObject !== undefined) {        
+        activeObject.set('fill', COLOR);
+        canvas.renderAll();       
+    return;
+    }
+}
+
+//============================================================================================================
+//right side panel
+//============================================================================================================
+var btnClear = $('clear-button');
+btnClear.onclick = function(){ canvas.clear(); }
+
+
+
+//============================================================================================================
+//painter
+//============================================================================================================
 
 //init method
 function init() { 
@@ -161,14 +239,36 @@ function init() {
             var w3 = Color.Space(rgba, "RGBA>W3");
             // sketch.style.strokeStyle = w3;            
             COLOR = w3;
+            setColor();
         }
     });
+
+    canvas.on('mouse:down', function(data){
+        if (isPainterOn && !canvas.isDrawingMode){
+            isMouseDownForPaint = true;
+        }
+    });
+
+    canvas.on('mouse:move', function(data){
+        if (isMouseDownForPaint){
+            painter.drawGlassStorm(data); 
+            return;
+        }
+    });
+
+    canvas.on('mouse:up', function(data){
+        if (isMouseDownForPaint){
+            isMouseDownForPaint = false; 
+            return;
+        }
+    });
+
+    btnSelect.onclick();
 }
 
-canvas.on('mouse:dblclick', function (options){
-    console.log('double click removed');
-});
-
+// canvas.on('mouse:dblclick', function (options){
+//     console.log('double click removed');
+// });
 document.onkeydown = onKeyDownHandler;
 function onKeyDownHandler(e) {
    switch (e.keyCode) {
