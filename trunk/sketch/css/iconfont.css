@@ -48,11 +48,11 @@
   height: 30px;
 }
 .icon-selector:before{
-  content: "\e61a";
+  content: "\e65d";
   width: 30px;
   height: 30px;
 }
-.icon-crop:before{
+.icon-clone:before{
   content: "\e666";
   width: 30px;
   height: 30px;
@@ -79,6 +79,16 @@
 }
 .icon-spray:before{
   content: "\e603";
+  width: 30px;
+  height: 30px;
+}
+.icon-flip:before{
+  content: "\e665";
+  width: 30px;
+  height: 30px;
+}
+.icon-folder:before{
+  content: "\e646";
   width: 30px;
   height: 30px;
 }
