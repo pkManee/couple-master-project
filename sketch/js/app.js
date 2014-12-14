@@ -162,6 +162,36 @@ btnText.onclick = function(){
 
     btnSelect.onclick();
 }
+//button clone
+var btnClone = $('btn-clone');
+btnClone.onclick = function(){    
+
+    var obj = canvas.getActiveObject();
+    if (obj === null || obj === undefined) return;
+
+    if (fabric.util.getKlass(obj.type).async) {
+        obj.clone(function (clone) {
+            clone.set({
+                left: clone.get('left') + 20,
+                top: clone.get('top') - 20,
+                selectable: true
+            });
+            canvas.add(clone);
+        });
+    } else {
+        canvas.add(obj.clone().set({left: clone.get('left') + 20, top: clone.get('top') - 20, selectable: true}));
+    }
+    canvas.renderAll();
+}
+//button flip
+var btnFlip = $('btn-flip');
+btnFlip.onclick = function(){
+    var obj = canvas.getActiveObject();
+    if (obj === null || obj === undefined) return;
+    obj.set('flipX', !obj.get('flipX'));
+    canvas.renderAll()
+}
+
 
 //switch between draw <--> select Mode
 var btnSelect = $('btn-selector');
@@ -171,9 +201,15 @@ btnSelect.onclick = function(){
 }
 
 //brush side slider
-var lineWidth = $('brush-size-slider');
-lineWidth.onchange = function(){
+var lineWidthSlider = $('brush-size-slider');
+lineWidthSlider.onchange = function(){   
     setColor();
+}
+lineWidthSlider.onmouseover = function(){
+    this.title = this.value;
+}
+lineWidthSlider.onmouseup = function(){
+    this.title = this.value;
 }
 var btnPencil = $('btn-pencil');
 btnPencil.onclick = function(){
@@ -199,11 +235,13 @@ btnSpray.onclick = function(data){
 
 function setColor(){    
     var activeObject = canvas.getActiveObject();
+    var theWidth = parseInt(lineWidthSlider.value, 10);
+    lineWidthSlider.previousSibling.innerHTML = theWidth;
 
      if (canvas.freeDrawingBrush) {
-        canvas.freeDrawingBrush.color = COLOR;
-        canvas.freeDrawingBrush.width = parseInt(lineWidth.value, 10) || 1;  
-        painter.brush_globals.prop('size', parseInt(lineWidth.value, 10));       
+        canvas.freeDrawingBrush.color = COLOR;        
+        canvas.freeDrawingBrush.width = theWidth;  
+        painter.brush_globals.prop('size', theWidth);       
         fabricPainter.brush_globals.prop('color', COLOR);
     }
     if (activeObject !== null && activeObject !== undefined) {        
