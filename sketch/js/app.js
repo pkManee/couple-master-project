@@ -250,8 +250,8 @@ btnCrop.onclick = function(){
             return;
         }
 
-        var left = el.left - object.left;
-        var top = el.top - object.top;
+        var left = el.left - activeObject.left;
+        var top = el.top - activeObject.top;
         
         left *= 1 / 0.25;
         top *= 1 / 0.25;
