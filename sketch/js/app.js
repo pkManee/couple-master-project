@@ -28,6 +28,7 @@ var OPACITY = '1';
 var painter = fabricPainter;
 var isPainterOn = false;
 var isMouseDownForPaint = false;
+var isMouseDown = false;
 
 //============================================================================================================
 //insert svg geometry
@@ -165,7 +166,7 @@ btnText.onclick = function(){
 //button clone
 var btnClone = $('btn-clone');
 btnClone.onclick = function(){    
-
+    removeCrop();
     var obj = canvas.getActiveObject();
     if (obj === null || obj === undefined) return;
 
@@ -186,21 +187,94 @@ btnClone.onclick = function(){
 //button flip
 var btnFlip = $('btn-flip');
 btnFlip.onclick = function(){
+    removeCrop();
     var obj = canvas.getActiveObject();
     if (obj === null || obj === undefined) return;
     obj.set('flipX', !obj.get('flipX'));
     canvas.renderAll()
 }
-
-
 //switch between draw <--> select Mode
 var btnSelect = $('btn-selector');
 btnSelect.onclick = function(){
+    removeCrop();
     isPainterOn = false;
-    canvas.isDrawingMode = false;
+    canvas.isDrawingMode = false;   
 }
 
-//brush side slider
+//add crop rectangle
+var pos = [0, 0];
+
+var r = c.getBoundingClientRect();
+pos[0] = r.left;
+pos[1] = r.top;
+
+var mousex = 0;
+var mousey = 0;
+var crop = false;
+var disabled = false;
+
+var el = new fabric.Rect({   
+    fill: 'transparent',
+    originX: 'left',
+    originY: 'top',
+    stroke: '#ccc',
+    strokeDashArray: [2, 2],
+    opacity: 1,
+    width: 1,
+    height: 1
+});
+el.visible = false;
+canvas.add(el);
+
+//button crop event
+var btnCrop = $('btn-crop');
+btnCrop.onclick = function(){  
+    if (!crop){  
+        crop = true;
+        isPainterOn = false;
+        canvas.isDrawingMode = false;
+        btnCrop.setAttribute('title', 'OK');
+        btnCrop.className = 'geo-button icon-ok';
+        return;
+    }else if (crop){       
+        if (!canvas.getActiveObject()){            
+            removeCrop();
+            canvas.renderAll();
+            return;
+        }
+
+        var activeObject = canvas.getActiveObject();
+        if (activeObject.type !== 'image'){          
+            removeCrop();
+            canvas.renderAll();
+            return;
+        }
+
+        var left = el.left - object.left;
+        var top = el.top - object.top;
+        
+        left *= 1 / 0.25;
+        top *= 1 / 0.25;
+        
+        var width = el.width * 1 / 0.25;
+        var height = el.height * 1 / 0.25;
+        
+        activeObject.clipTo = function (ctx) {
+            ctx.rect(left, top, width, height);
+        };
+        activeObject.selectable = true;        
+        removeCrop();
+        canvas.renderAll();
+    }
+}
+function removeCrop(){
+    el.visible = false;
+    crop = false;
+    btnCrop.setAttribute('title', 'Crop');
+    btnCrop.className = 'geo-button icon-crop';
+}
+
+//brush size slider
 var lineWidthSlider = $('brush-size-slider');
 lineWidthSlider.onchange = function(){   
     setColor();
@@ -214,12 +288,14 @@ lineWidthSlider.onmouseup = function(){
 var btnPencil = $('btn-pencil');
 btnPencil.onclick = function(){
     canvas.isDrawingMode = true;
+    removeCrop();
     canvas.freeDrawingBrush = new fabric[btnPencil.getAttribute('title') + 'Brush'](canvas);
-    setColor();;
+    setColor();
 }
 var btnBrush = $('btn-brush');
 btnBrush.onclick = function(){
     canvas.isDrawingMode = true;
+    removeCrop();
     canvas.freeDrawingBrush = new fabric[btnBrush.getAttribute('title') + 'Brush'](canvas);
     setColor();
 }
@@ -229,6 +305,7 @@ var btnSpray = $('btn-spray');
 btnSpray.onclick = function(data){
     canvas.isDrawingMode = false;   
     isPainterOn = true;
+    removeCrop();
     setColor();
 }
 
@@ -237,8 +314,9 @@ function setColor(){
     var activeObject = canvas.getActiveObject();
     var theWidth = parseInt(lineWidthSlider.value, 10);
     lineWidthSlider.previousSibling.innerHTML = theWidth;
+    removeCrop();
 
-     if (canvas.freeDrawingBrush) {
+    if (canvas.freeDrawingBrush) {
         canvas.freeDrawingBrush.color = COLOR;        
         canvas.freeDrawingBrush.width = theWidth;  
         painter.brush_globals.prop('size', theWidth);       
@@ -256,12 +334,6 @@ function setColor(){
 //============================================================================================================
 var btnClear = $('clear-button');
 btnClear.onclick = function(){ canvas.clear(); }
-
-
-
-//============================================================================================================
-//painter
-//============================================================================================================
 
 //init method
 function init() { 
@@ -282,8 +354,20 @@ function init() {
     });
 
     canvas.on('mouse:down', function(data){
+        isMouseDown = true;
         if (isPainterOn && !canvas.isDrawingMode){
             isMouseDownForPaint = true;
+        }
+        if (crop){           
+
+            el.left = data.e.pageX - pos[0];
+            el.top = data.e.pageY - pos[1];           
+            el.visible = true;
+
+            mousex = data.e.pageX;
+            mousey = data.e.pageY;
+          
+            canvas.bringToFront(el);
         }
     });
 
@@ -292,13 +376,20 @@ function init() {
             painter.drawGlassStorm(data); 
             return;
         }
+        if (crop && isMouseDown) {
+            if (data.e.pageX - mousex > 0) {
+                el.width = data.e.pageX - mousex;
+            }
+
+            if (data.e.pageY - mousey > 0) {
+                el.height = data.e.pageY - mousey;
+            }
+        }
     });
 
     canvas.on('mouse:up', function(data){
-        if (isMouseDownForPaint){
-            isMouseDownForPaint = false; 
-            return;
-        }
+        isMouseDown = false;
+        if (isMouseDownForPaint) isMouseDownForPaint = false;        
     });
 
     btnSelect.onclick();
