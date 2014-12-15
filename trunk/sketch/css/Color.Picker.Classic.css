@@ -15,8 +15,8 @@
 	font-family:'arial',helvetica,sans-serif;
 	padding:7px 8px 20px;
 	position:absolute;
-	top: 250px;
-	right: 240px;
+	top: 200px;
+	left: 880px;
 	width:229px;
 	z-index: 100;
 }

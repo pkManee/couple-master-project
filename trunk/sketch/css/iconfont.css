@@ -92,3 +92,13 @@
   width: 30px;
   height: 30px;
 }
+.icon-crop:before{
+  content: "\e629";
+  width: 30px;
+  height: 30px;
+}
+.icon-ok:before{
+  content: "\e605";
+  width: 30px;
+  height: 30px;
+}
