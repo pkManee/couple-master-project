@@ -1,4 +1,4 @@
-var areaWidth = 849;
+var areaWidth = 850;
 var areaHeight = 600;
 var svgNS = "http://www.w3.org/2000/svg";
 
@@ -29,6 +29,27 @@ var painter = fabricPainter;
 var isPainterOn = false;
 var isMouseDownForPaint = false;
 var isMouseDown = false;
+
+function setArea(){
+    div.style.width = areaWidth;   
+
+    c.width = areaWidth;
+    c.style.width = areaWidth;
+}
+
+var btnExpandCanvas = $('btn-expand-canvas');
+btnExpandCanvas.onclick = function(){
+    if (this.value === "850"){
+        this.value = "425";
+        this.className = "geo-button icon-one"
+        areaWidth = 425;
+    }else{
+        this.value = "850";
+        this.className = "geo-button icon-two"
+        areaWidth = 850;
+    }
+    setArea();
+}
 
 //============================================================================================================
 //insert svg geometry
@@ -165,8 +186,7 @@ btnText.onclick = function(){
 }
 //button clone
 var btnClone = $('btn-clone');
-btnClone.onclick = function(){    
-    removeCrop();
+btnClone.onclick = function(){
     var obj = canvas.getActiveObject();
     if (obj === null || obj === undefined) return;
 
@@ -187,7 +207,6 @@ btnClone.onclick = function(){
 //button flip
 var btnFlip = $('btn-flip');
 btnFlip.onclick = function(){
-    removeCrop();
     var obj = canvas.getActiveObject();
     if (obj === null || obj === undefined) return;
     obj.set('flipX', !obj.get('flipX'));
@@ -196,74 +215,98 @@ btnFlip.onclick = function(){
 //switch between draw <--> select Mode
 var btnSelect = $('btn-selector');
 btnSelect.onclick = function(){
-    removeCrop();
     isPainterOn = false;
     canvas.isDrawingMode = false;   
 }
 
-//add crop rectangle
-var pos = [0, 0];
-
-var r = c.getBoundingClientRect();
-pos[0] = r.left;
-pos[1] = r.top;
-
-var mousex = 0;
-var mousey = 0;
+var el;
+var object, lastActive, object1, object2;
+var cntObj = 0;
+var selection_object_left = 0;
+var selection_object_top = 0;
 var crop = false;
-var disabled = false;
-
-var el = new fabric.Rect({   
-    fill: 'transparent',
-    originX: 'left',
-    originY: 'top',
-    stroke: '#ccc',
-    strokeDashArray: [2, 2],
-    opacity: 1,
-    width: 1,
-    height: 1
-});
-el.visible = false;
-canvas.add(el);
-
 //button crop event
 var btnCrop = $('btn-crop');
 btnCrop.onclick = function(){  
-    if (!crop){  
-        crop = true;
-        isPainterOn = false;
-        canvas.isDrawingMode = false;
-        btnCrop.setAttribute('title', 'OK');
-        btnCrop.className = 'geo-button icon-ok';
-        return;
-    }else if (crop){       
-        if (!canvas.getActiveObject()){            
-            removeCrop();
-            canvas.renderAll();
-            return;
-        }
 
-        var activeObject = canvas.getActiveObject();
-        if (activeObject.type !== 'image'){          
-            removeCrop();
-            canvas.renderAll();
-            return;
-        }
+    //start crop
+    if (!crop){
+        canvas.remove(el);
+        if (canvas.getActiveObject()) {
 
-        var left = el.left - activeObject.left;
-        var top = el.top - activeObject.top;
+            object = canvas.getActiveObject();
+
+            if (lastActive !== object) {
+                console.log('different object');
+            } else {
+                console.log('same object');
+            }
+            if (lastActive && lastActive !== object) {
+                //lastActive.clipTo = null; results in clip loss
+            }
+
+            el = new fabric.Rect({
+                fill: 'rgba(0,0,0,0.3)',
+                originX: 'left',
+                originY: 'top',
+                stroke: '#ccc',
+                strokeDashArray: [2, 2],
+                opacity: 0,
+                width: 1,
+                height: 1,
+                borderColor: '#36fd00',
+                cornerColor: 'green',
+                hasRotatingPoint: false,
+                selectable: true
+            });
+
+            el.left = canvas.getActiveObject().left;
+            selection_object_left = canvas.getActiveObject().left;
+            selection_object_top = canvas.getActiveObject().top;
+            el.top = canvas.getActiveObject().top;
+            el.width = canvas.getActiveObject().width * canvas.getActiveObject().scaleX;
+            el.height = canvas.getActiveObject().height * canvas.getActiveObject().scaleY;
+
+            canvas.add(el);
+            canvas.setActiveObject(el);
+            crop = true;
+
+            btnCrop.setAttribute('title', 'OK');
+            btnCrop.className = 'geo-button icon-ok';
+        } else {
+            alert("Please select an object or layer");
+            crop = false;
+            btnCrop.setAttribute('title', 'Crop');
+            btnCrop.className = 'geo-button icon-crop';
+        }
         
-        left *= 1 / 0.25;
-        top *= 1 / 0.25;
-        
-        var width = el.width * 1 / 0.25;
-        var height = el.height * 1 / 0.25;
-        
-        activeObject.clipTo = function (ctx) {
-            ctx.rect(left, top, width, height);
-        };
-        activeObject.selectable = true;        
-        removeCrop();
+    }else if (crop){ //do crop        
+        btnCrop.setAttribute('title', 'Crop');
+        btnCrop.className = 'geo-button icon-crop';
+
+        var box = el, //this is rect object
+        format = 'png',
+        quality = '10',
+        boxTop = box.top,
+        boxLeft = box.left,
+        cropping = {
+            y: box.top,
+            x: box.left,
+            width: box.currentWidth,
+            height: box.currentHeight            
+        };       
+        canvas.deactivateAll();        
+
+        var dataURL = canvas.toDataURLWithCropping(format, cropping, quality);      
+        fabric.Image.fromURL(dataURL, function(oImg) {
+            canvas.clear();
+            oImg.set({top: boxTop ,left: boxLeft});
+            canvas.add(oImg);
+            canvas.renderAll();
+            oImg.selectable = true;
+        });        
+
+        crop = false;      
         canvas.renderAll();
     }
 }
@@ -272,6 +315,34 @@ function removeCrop(){
     crop = false;
     btnCrop.setAttribute('title', 'Crop');
     btnCrop.className = 'geo-button icon-crop';
+}
+fabric.Canvas.prototype.toDataURLWithCropping = function (format, cropping, quality) {
+  var canvasEl = this.upperCanvasEl || this.lowerCanvasEl,
+    ctx = this.contextTop || this.contextContainer,
+    tempCanvasEl = fabric.document.createElement('canvas'),
+    tempCtx, imageData;
+
+  if (!tempCanvasEl.getContext && typeof G_vmlCanvasManager !== 'undefined') {
+    G_vmlCanvasManager.initElement(tempCanvasEl);
+  }
+
+  this.renderAll(true);
+
+  tempCanvasEl.width = cropping.width;
+  tempCanvasEl.height = cropping.height;
+
+  imageData = ctx.getImageData(cropping.x, cropping.y, cropping.width, cropping.height);
+
+  tempCtx = tempCanvasEl.getContext('2d');
+  tempCtx.putImageData(imageData, 0, 0);
+
+  var data = (fabric.StaticCanvas.supports('toDataURLWithQuality'))
+               ? tempCanvasEl.toDataURL('image/' + format, quality)
+               : tempCanvasEl.toDataURL('image/' + format);
+
+  this.contextTop && this.clearContext(this.contextTop);
+  this.renderAll();
+  return data;
 }
 
 //brush size slider
@@ -287,15 +358,13 @@ lineWidthSlider.onmouseup = function(){
 }
 var btnPencil = $('btn-pencil');
 btnPencil.onclick = function(){
-    canvas.isDrawingMode = true;
-    removeCrop();
+    canvas.isDrawingMode = true;    
     canvas.freeDrawingBrush = new fabric[btnPencil.getAttribute('title') + 'Brush'](canvas);
     setColor();
 }
 var btnBrush = $('btn-brush');
 btnBrush.onclick = function(){
     canvas.isDrawingMode = true;
-    removeCrop();
     canvas.freeDrawingBrush = new fabric[btnBrush.getAttribute('title') + 'Brush'](canvas);
     setColor();
 }
@@ -305,7 +374,6 @@ var btnSpray = $('btn-spray');
 btnSpray.onclick = function(data){
     canvas.isDrawingMode = false;   
     isPainterOn = true;
-    removeCrop();
     setColor();
 }
 
@@ -313,8 +381,7 @@ btnSpray.onclick = function(data){
 function setColor(){    
     var activeObject = canvas.getActiveObject();
     var theWidth = parseInt(lineWidthSlider.value, 10);
-    lineWidthSlider.previousSibling.innerHTML = theWidth;
-    removeCrop();
+    lineWidthSlider.previousSibling.innerHTML = theWidth;    
 
     if (canvas.freeDrawingBrush) {
         canvas.freeDrawingBrush.color = COLOR;        
@@ -357,34 +424,14 @@ function init() {
         isMouseDown = true;
         if (isPainterOn && !canvas.isDrawingMode){
             isMouseDownForPaint = true;
-        }
-        if (crop){           
-
-            el.left = data.e.pageX - pos[0];
-            el.top = data.e.pageY - pos[1];           
-            el.visible = true;
-
-            mousex = data.e.pageX;
-            mousey = data.e.pageY;
-          
-            canvas.bringToFront(el);
-        }
+        }       
     });
 
     canvas.on('mouse:move', function(data){
         if (isMouseDownForPaint){
             painter.drawGlassStorm(data); 
             return;
-        }
-        if (crop && isMouseDown) {
-            if (data.e.pageX - mousex > 0) {
-                el.width = data.e.pageX - mousex;
-            }
-
-            if (data.e.pageY - mousey > 0) {
-                el.height = data.e.pageY - mousey;
-            }
-        }
+        }      
     });
 
     canvas.on('mouse:up', function(data){
