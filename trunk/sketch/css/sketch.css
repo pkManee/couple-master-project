@@ -21,6 +21,17 @@ body {
   overflow: hidden;
   background: #FFF;
 }
+#the-devide{
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  display: inline-block;
+  width: 425px;
+  height: 600px;
+  border-style: solid;
+  border-color: #e2e2e2;
+  border-width: 1px;
+}
 
 #right-side {
   display: inline-block;
