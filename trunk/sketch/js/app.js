@@ -108,29 +108,31 @@ function createSVG(){
 }
 function insertGeoSVG(svg){
     var group = [];
-    var uri = 'data:image/svg+xml;base64,' + window.btoa(svg.outerHTML);
+    var uri = undefined;  
+    if (svg.outerHTML){
+        uri = 'data:image/svg+xml;base64,' + window.btoa(svg.outerHTML);        
+    }else{
+        uri = svg;       
+    }
 
     fabric.loadSVGFromURL(uri,function(objects,options) {
         var loadedObjects = new fabric.Group(group);
-
         loadedObjects.set({
                 left: 10,
                 top: 10,
-                width: 100,
-                height: 100,
-                fill: COLOR,
+                width: loadedObjects.width,
+                height: loadedObjects.height,
                 selectable: true
-        });
-
+        });      
+        
         canvas.add(loadedObjects);
         canvas.renderAll();
+        btnSelect.onclick();
 
-        },function(item, object) {
-                object.set('id',item.getAttribute('id'));
+        },function(item, object) {              
+                object.set('id',item.getAttribute('id'));             
                 group.push(object);
-    });
-
-    btnSelect.onclick();
+    });    
 }
 //upload file
 var imageLoader = $('upload-button');
@@ -142,52 +144,27 @@ function handleImage(e){
         if (files[i].type.match(/image.svg*/)) {
             var reader = new FileReader();
             reader.onload = function (event) {
-                fabric.loadSVGFromURL(event.target.result, function(objects, options) {
-                    var shape = fabric.util.groupSVGElements(objects, options);
-                                shape.set({
-                                  left: 20,
-                                  top: 20,
-                                  width: objects.width,
-                                  height: objects.height
-                                });
-
-                     if (shape.isSameColor && shape.isSameColor() || !shape.paths) {
-                        shape.setFill(COLOR);
-                    } else if (shape.paths) {
-                        for (var i = 0; i < shape.paths.length; i++) {
-                            shape.paths[i].setFill(COLOR);
-                        }
-                    }
-                    var group = new fabric.Group();
-                    group.append(shape);                   
-                    canvas.add(group);
-                    canvas.renderAll();
-                    group.set('selectable', true);                          
-                   
-                });
+               insertGeoSVG(event.target.result);
             }
             reader.readAsDataURL(files[i]);
-            btnSelect.onclick();
+           
         }else if (files[i].type.match(/image.*/)){
+            var reader = new FileReader();
+            reader.onload = function(event){
+               
+                fabric.Image.fromURL(event.target.result, function(oImg) {
+                    canvas.add(oImg);
+                    canvas.renderAll();
+                    oImg.selectable = true;
+                });
+            }
+            reader.readAsDataURL(e.target.files[0]);
 
+            btnSelect.onclick();
         }
-    }
-
-    //
-    // var reader = new FileReader();
-    // reader.onload = function(event){
-       
-    //     fabric.Image.fromURL(event.target.result, function(oImg) {
-    //         canvas.add(oImg);
-    //         oImg.set('fill', COLOR);
-    //         canvas.renderAll();
-    //         oImg.selectable = true;
-    //     });
-    // }
-    // reader.readAsDataURL(e.target.files[0]);
-
-    // btnSelect.onclick();
+    } 
 }
+
 //insert text
 var btnText = $('btn-text');
 btnText.onclick = function(){
