@@ -30,26 +30,6 @@ var isPainterOn = false;
 var isMouseDownForPaint = false;
 var isMouseDown = false;
 
-function setArea(){
-    div.style.width = areaWidth;   
-
-    c.width = areaWidth;
-    c.style.width = areaWidth;
-}
-
-var btnExpandCanvas = $('btn-expand-canvas');
-btnExpandCanvas.onclick = function(){
-    if (this.value === "850"){
-        this.value = "425";
-        this.className = "geo-button icon-one"
-        areaWidth = 425;
-    }else{
-        this.value = "850";
-        this.className = "geo-button icon-two"
-        areaWidth = 850;
-    }
-    setArea();
-}
 
 //============================================================================================================
 //insert svg geometry
@@ -156,18 +136,57 @@ function insertGeoSVG(svg){
 var imageLoader = $('upload-button');
 imageLoader.addEventListener('change', handleImage, false);
 function handleImage(e){
-    var reader = new FileReader();
-    reader.onload = function(event){
-       
-        fabric.Image.fromURL(event.target.result, function(oImg) {
-            canvas.add(oImg);
-            canvas.renderAll();
-            oImg.selectable = true;
-        });
-    }
-    reader.readAsDataURL(e.target.files[0]);
 
-    btnSelect.onclick();
+    var files = e.target.files;
+    for (var i = 0; i < files.length; i++) {
+        if (files[i].type.match(/image.svg*/)) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                fabric.loadSVGFromURL(event.target.result, function(objects, options) {
+                    var shape = fabric.util.groupSVGElements(objects, options);
+                                shape.set({
+                                  left: 20,
+                                  top: 20,
+                                  width: objects.width,
+                                  height: objects.height
+                                });
+
+                     if (shape.isSameColor && shape.isSameColor() || !shape.paths) {
+                        shape.setFill(COLOR);
+                    } else if (shape.paths) {
+                        for (var i = 0; i < shape.paths.length; i++) {
+                            shape.paths[i].setFill(COLOR);
+                        }
+                    }
+                    var group = new fabric.Group();
+                    group.append(shape);                   
+                    canvas.add(group);
+                    canvas.renderAll();
+                    group.set('selectable', true);                          
+                   
+                });
+            }
+            reader.readAsDataURL(files[i]);
+            btnSelect.onclick();
+        }else if (files[i].type.match(/image.*/)){
+
+        }
+    }
+
+    //
+    // var reader = new FileReader();
+    // reader.onload = function(event){
+       
+    //     fabric.Image.fromURL(event.target.result, function(oImg) {
+    //         canvas.add(oImg);
+    //         oImg.set('fill', COLOR);
+    //         canvas.renderAll();
+    //         oImg.selectable = true;
+    //     });
+    // }
+    // reader.readAsDataURL(e.target.files[0]);
+
+    // btnSelect.onclick();
 }
 //insert text
 var btnText = $('btn-text');
