@@ -112,3 +112,8 @@
   width: 30px;
   height: 30px;
 }
+.icon-shirt:before{
+  content: "\e82a";
+  width: 30px;
+  height: 30px;
+}
