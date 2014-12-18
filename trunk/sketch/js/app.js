@@ -1,6 +1,9 @@
 var areaWidth = 850;
 var areaHeight = 600;
 var svgNS = "http://www.w3.org/2000/svg";
+var isShirtMode = false;
+// var obj1 = pixelToCm(425, 600, 300);
+// var obj2 = cmToPixel(21, 29.7, 300);
 
 var $ = function(id){return document.getElementById(id)};
 
@@ -19,6 +22,7 @@ div.appendChild(c);
 //var canvas = new fabric.CanvasEx('c');  // extend event
 var canvas = this.__canvas = new fabric.Canvas('c');  //normal event
 fabric.Object.prototype.selectable = false;
+
 canvas.selection = false;
 var PICKER = undefined;
 var COLOR = '#FF0000';
@@ -306,12 +310,7 @@ btnCrop.onclick = function(){
         canvas.renderAll();
     }
 }
-function removeCrop(){
-    el.visible = false;
-    crop = false;
-    btnCrop.setAttribute('title', 'Crop');
-    btnCrop.className = 'geo-button icon-crop';
-}
+
 fabric.Canvas.prototype.toDataURLWithCropping = function (format, cropping, quality) {
   var canvasEl = this.upperCanvasEl || this.lowerCanvasEl,
     ctx = this.contextTop || this.contextContainer,
@@ -339,6 +338,13 @@ fabric.Canvas.prototype.toDataURLWithCropping = function (format, cropping, qual
   this.contextTop && this.clearContext(this.contextTop);
   this.renderAll();
   return data;
+}
+
+//shirt mode
+var btnShirt = document.getElementById('btn-shirt');
+btnShirt.onclick = function(){
+    isShirtMode = !isShirtMode;
+    loadShirt();
 }
 
 //brush size slider
@@ -435,6 +441,24 @@ function init() {
         if (isMouseDownForPaint) isMouseDownForPaint = false;        
     });
 
+    if (isShirtMode){
+
+        var goodtop, goodleft, boundingObject;
+        canvas.on("object:moving", function(){
+            var obj = shirt_1;
+            var bounds = boundingObject;
+            obj.setCoords();
+            if(!obj.isContainedWithinObject(bounds)){
+                obj.setTop(goodtop);
+                obj.setLeft(goodleft);
+                canvas.refresh();    
+            } else {
+                goodtop = obj.top;
+                goodleft = obj.left;
+            }  
+        });
+    }
+
     btnSelect.onclick();
 }
 
@@ -455,3 +479,35 @@ function onKeyDownHandler(e) {
 };
 
 init();
+
+var shirt_1 = undefined, shirt_2 = undefined;
+function loadShirt(){
+    if (!isShirtMode) return;
+     var rect = new fabric.Rect({
+        width: 100,
+        height: 200,
+        top: 30,
+        left: 500,
+        strokeWidth: 1,
+        fill: 'rgba(0, 0, 0, 0)',
+        stroke: 'rgba(0, 0, 0, 0.5)',
+        selectable: true
+    });
+   
+    canvas.add(rect);
+
+    fabric.Image.fromURL('./img/shirts/white-front-m.png', function(oImg) {
+        //oImg.selectable = true;
+        oImg.set({width: 417, height: 456, top: 5, left: 5}); 
+        canvas.add(oImg);
+
+        var filter = new fabric.Image.filters.Multiply({
+            color: COLOR
+        });
+        oImg.filters.push(filter);
+        oImg.applyFilters(canvas.renderAll.bind(canvas));
+        shirt_1 = oImg;
+    });
+
+   
+}

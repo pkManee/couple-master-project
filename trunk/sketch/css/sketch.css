@@ -45,19 +45,12 @@ body {
   display: inline-block;
   top:0px;
 }
-#geometry-shelf{  
+.upper-shelf{  
   float: left; 
   display: inline-block;
   padding-left: 10px;
   top:0px;
 }
-#transform-shelf{  
-  float: left; 
-  display: inline-block;
-  padding-left: 10px;
-  top:0px;
-}
-
 .info {
   display: inline-block;
   width: 25px;
