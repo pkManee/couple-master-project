@@ -34,7 +34,9 @@ var isPainterOn = false;
 var isMouseDownForPaint = false;
 var isMouseDown = false;
 
-
+//set movement limit
+var screenShirt1 = undefined, screenShirt2 = undefined, 
+    borderShirt1 = undefined, borderShirt2 = undefined;
 //============================================================================================================
 //insert svg geometry
 //============================================================================================================
@@ -441,23 +443,45 @@ function init() {
         if (isMouseDownForPaint) isMouseDownForPaint = false;        
     });
 
-    if (isShirtMode){
+    //set movement limit    
+    var goodtop, goodleft;
+    canvas.on("object:moving", function(){
+        if (isShirtMode){
+            var obj = canvas.getActiveObject();
+            var bounds = borderShirt1;            
 
-        var goodtop, goodleft, boundingObject;
-        canvas.on("object:moving", function(){
-            var obj = shirt_1;
-            var bounds = boundingObject;
             obj.setCoords();
             if(!obj.isContainedWithinObject(bounds)){
                 obj.setTop(goodtop);
                 obj.setLeft(goodleft);
-                canvas.refresh();    
             } else {
                 goodtop = obj.top;
                 goodleft = obj.left;
             }  
-        });
-    }
+        }
+    });
+
+    var goodScaleX, goodScaleY
+    canvas.on("object:scaling", function(){
+        if (isShirtMode){
+            var obj = canvas.getActiveObject();;
+            var bounds = borderShirt1;            
+
+            obj.setCoords();
+            if(!obj.isContainedWithinObject(bounds)){ 
+                obj.set('scaleX', goodScaleX);
+                obj.set('left', goodleft);
+
+                obj.set('scaleY', goodScaleY);
+                obj.set('top', goodtop);                          
+            } else{
+                goodtop = obj.top;
+                goodleft = obj.left;
+                goodScaleX = obj.scaleX;
+                goodScaleY = obj.scaleY;
+            }
+        }
+    });
 
     btnSelect.onclick();
 }
@@ -480,21 +504,21 @@ function onKeyDownHandler(e) {
 
 init();
 
-var shirt_1 = undefined, shirt_2 = undefined;
 function loadShirt(){
     if (!isShirtMode) return;
      var rect = new fabric.Rect({
-        width: 100,
-        height: 200,
-        top: 30,
-        left: 500,
+        width: 190,
+        height: 340,
+        top: 68,
+        left: 112,
         strokeWidth: 1,
         fill: 'rgba(0, 0, 0, 0)',
         stroke: 'rgba(0, 0, 0, 0.5)',
-        selectable: true
+        selectable: false
     });
    
     canvas.add(rect);
+    borderShirt1 = rect;
 
     fabric.Image.fromURL('./img/shirts/white-front-m.png', function(oImg) {
         //oImg.selectable = true;
@@ -506,8 +530,19 @@ function loadShirt(){
         });
         oImg.filters.push(filter);
         oImg.applyFilters(canvas.renderAll.bind(canvas));
-        shirt_1 = oImg;
+        //canvas.bringForward(rect);
+        canvas.sendToBack(oImg);   
+    }); 
+
+    var objPaint = new fabric.Rect({
+        width: 100,
+        height: 100,
+        top: 80,
+        left: 120,
+        selectable: true
     });
 
-   
+    canvas.add(objPaint);
+    canvas.bringToFront(objPaint);
+    objPaint.set('hasRotatingPoint', false);
 }
