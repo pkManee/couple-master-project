@@ -10,3 +10,6 @@ this.cmToPixel = function(width, height, dpi){
 	return obj;
 }
 })(this);
+
+//A4 = 21 x 29.7
+//A3 = 29.7 x 42
