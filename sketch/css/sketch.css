@@ -20,6 +20,8 @@ body {
   cursor: default;  
   overflow: hidden;
   background: #FFF;
+  width: 850px;
+  height: 600px;
 }
 #the-devide{
   position: absolute;

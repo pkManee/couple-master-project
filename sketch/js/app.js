@@ -1,9 +1,10 @@
 var areaWidth = 850;
 var areaHeight = 600;
+var DPI = 300;
+var A3 = {cmWidth: 29.7, cmHeight: 42, pxWidth: cmToPixel(29.7, 42, DPI).width, pxHeight: cmToPixel(29.7, 42, DPI).height};
+var A4 = {cmWidth: 21, cmHeight: 29.7, pxWidth: cmToPixel(21, 29.7, DPI).width, pxHeight: cmToPixel(21, 29.7, DPI).height};
 var svgNS = "http://www.w3.org/2000/svg";
 var isShirtMode = false;
-// var obj1 = pixelToCm(425, 600, 300);
-// var obj2 = cmToPixel(21, 29.7, 300);
 
 var $ = function(id){return document.getElementById(id)};
 
@@ -11,6 +12,7 @@ var div = $('canvas-area');
 div.style.width = areaWidth;
 div.style.height = areaHeight;
 
+//draw canvas
 var c = document.createElement('canvas');
 c.id = 'c';
 c.width = areaWidth;
@@ -22,8 +24,23 @@ div.appendChild(c);
 //var canvas = new fabric.CanvasEx('c');  // extend event
 var canvas = this.__canvas = new fabric.Canvas('c');  //normal event
 fabric.Object.prototype.selectable = false;
-
+canvas.wrapperEl.style.position = 'absolute';
 canvas.selection = false;
+
+//shirt canvas
+var s = document.createElement('canvas');
+s.id = 's';
+s.width = A4.pxWidth;
+s.height = A4.pxHeight;
+s.style.width = areaWidth;
+s.style.height = areaHeight;
+s.style.position = 'absolute';
+div.appendChild(s);
+
+var shirtCanvas = new fabric.Canvas('s');
+shirtCanvas.wrapperEl.style = 'absolute';
+shirtCanvas.selection = false;
+
 var PICKER = undefined;
 var COLOR = '#FF0000';
 var OPACITY = '1';
@@ -37,6 +54,22 @@ var isMouseDown = false;
 //set movement limit
 var screenShirt1 = undefined, screenShirt2 = undefined, 
     borderShirt1 = undefined, borderShirt2 = undefined;
+
+
+//shirt mode
+var btnShirt = document.getElementById('btn-shirt');
+btnShirt.onclick = function(){
+    isShirtMode = !isShirtMode;
+
+    if (isShirtMode){
+        canvas.wrapperEl.style.zIndex = -1;
+        shirtCanvas.wrapperEl.style.zIndex = 1;
+        loadShirt();
+    }else{
+        canvas.wrapperEl.style.zIndex = 1;
+        shirtCanvas.wrapperEl.style.zIndex = -1;
+    }
+}
 //============================================================================================================
 //insert svg geometry
 //============================================================================================================
@@ -202,7 +235,7 @@ btnClone.onclick = function(){
             canvas.add(clone);
         });
     } else {
-        canvas.add(obj.clone().set({left: clone.get('left') + 20, top: clone.get('top') - 20, selectable: true}));
+        canvas.add(obj.clone().set({left: obj.get('left') + 20, top: obj.get('top') - 20, selectable: true}));
     }
     canvas.renderAll();
 }
@@ -342,13 +375,6 @@ fabric.Canvas.prototype.toDataURLWithCropping = function (format, cropping, qual
   return data;
 }
 
-//shirt mode
-var btnShirt = document.getElementById('btn-shirt');
-btnShirt.onclick = function(){
-    isShirtMode = !isShirtMode;
-    loadShirt();
-}
-
 //brush size slider
 var lineWidthSlider = $('brush-size-slider');
 lineWidthSlider.onchange = function(){   
@@ -424,6 +450,9 @@ function init() {
         }
     });
 
+    canvas.wrapperEl.style.zIndex = 1;
+    shirtCanvas.wrapperEl.style.zIndex = -1;
+
     canvas.on('mouse:down', function(data){
         isMouseDown = true;
         if (isPainterOn && !canvas.isDrawingMode){
@@ -445,9 +474,9 @@ function init() {
 
     //set movement limit    
     var goodtop, goodleft;
-    canvas.on("object:moving", function(){
+    shirtCanvas.on("object:moving", function(){
         if (isShirtMode){
-            var obj = canvas.getActiveObject();
+            var obj = shirtCanvas.getActiveObject();
             var bounds = borderShirt1;            
 
             obj.setCoords();
@@ -462,9 +491,9 @@ function init() {
     });
 
     var goodScaleX, goodScaleY
-    canvas.on("object:scaling", function(){
+    shirtCanvas.on("object:scaling", function(){
         if (isShirtMode){
-            var obj = canvas.getActiveObject();;
+            var obj = shirtCanvas.getActiveObject();;
             var bounds = borderShirt1;            
 
             obj.setCoords();
@@ -506,6 +535,7 @@ init();
 
 function loadShirt(){
     if (!isShirtMode) return;
+
      var rect = new fabric.Rect({
         width: 190,
         height: 340,
@@ -517,21 +547,20 @@ function loadShirt(){
         selectable: false
     });
    
-    canvas.add(rect);
+    shirtCanvas.add(rect);
     borderShirt1 = rect;
 
     fabric.Image.fromURL('./img/shirts/white-front-m.png', function(oImg) {
         //oImg.selectable = true;
         oImg.set({width: 417, height: 456, top: 5, left: 5}); 
-        canvas.add(oImg);
+        shirtCanvas.add(oImg);
 
         var filter = new fabric.Image.filters.Multiply({
             color: COLOR
         });
         oImg.filters.push(filter);
-        oImg.applyFilters(canvas.renderAll.bind(canvas));
-        //canvas.bringForward(rect);
-        canvas.sendToBack(oImg);   
+        oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
+        shirtCanvas.sendToBack(oImg);   
     }); 
 
     var objPaint = new fabric.Rect({
@@ -542,7 +571,7 @@ function loadShirt(){
         selectable: true
     });
 
-    canvas.add(objPaint);
-    canvas.bringToFront(objPaint);
+    shirtCanvas.add(objPaint);
+    shirtCanvas.bringToFront(objPaint);
     objPaint.set('hasRotatingPoint', false);
 }
