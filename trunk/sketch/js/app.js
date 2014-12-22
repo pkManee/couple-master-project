@@ -1,8 +1,18 @@
 var areaWidth = 850;
 var areaHeight = 600;
 var DPI = 300;
-var A3 = {cmWidth: 29.7, cmHeight: 42, pxWidth: cmToPixel(29.7, 42, DPI).width, pxHeight: cmToPixel(29.7, 42, DPI).height};
-var A4 = {cmWidth: 21, cmHeight: 29.7, pxWidth: cmToPixel(21, 29.7, DPI).width, pxHeight: cmToPixel(21, 29.7, DPI).height};
+var A3 = {
+            cmWidth: 29.7, 
+            cmHeight: 42, 
+            pxWidth: cmToPixel(29.7, 42, DPI).width, 
+            pxHeight: cmToPixel(29.7, 42, DPI).height
+        };
+var A4 = {
+            cmWidth: 21, 
+            cmHeight: 29.7, 
+            pxWidth: cmToPixel(21, 29.7, DPI).width, 
+            pxHeight: cmToPixel(21, 29.7, DPI).height
+        };
 var svgNS = "http://www.w3.org/2000/svg";
 var isShirtMode = false;
 
@@ -320,11 +330,11 @@ btnCrop.onclick = function(){
         btnCrop.className = 'geo-button icon-crop';
 
         var box = el, //this is rect object
-        format = 'png',
-        quality = '10',
-        boxTop = box.top,
-        boxLeft = box.left,
-        cropping = {
+            format = 'png',
+            quality = '10',
+            boxTop = box.top,
+            boxLeft = box.left,
+            cropping = {
             y: box.top,
             x: box.left,
             width: box.currentWidth,
@@ -352,27 +362,27 @@ fabric.Canvas.prototype.toDataURLWithCropping = function (format, cropping, qual
     tempCanvasEl = fabric.document.createElement('canvas'),
     tempCtx, imageData;
 
-  if (!tempCanvasEl.getContext && typeof G_vmlCanvasManager !== 'undefined') {
-    G_vmlCanvasManager.initElement(tempCanvasEl);
-  }
+    if (!tempCanvasEl.getContext && typeof G_vmlCanvasManager !== 'undefined') {
+        G_vmlCanvasManager.initElement(tempCanvasEl);
+    }
 
-  this.renderAll(true);
+    this.renderAll(true);
 
-  tempCanvasEl.width = cropping.width;
-  tempCanvasEl.height = cropping.height;
+    tempCanvasEl.width = cropping.width;
+    tempCanvasEl.height = cropping.height;
 
-  imageData = ctx.getImageData(cropping.x, cropping.y, cropping.width, cropping.height);
+    imageData = ctx.getImageData(cropping.x, cropping.y, cropping.width, cropping.height);
 
-  tempCtx = tempCanvasEl.getContext('2d');
-  tempCtx.putImageData(imageData, 0, 0);
+    tempCtx = tempCanvasEl.getContext('2d');
+    tempCtx.putImageData(imageData, 0, 0);
 
-  var data = (fabric.StaticCanvas.supports('toDataURLWithQuality'))
+    var data = (fabric.StaticCanvas.supports('toDataURLWithQuality'))
                ? tempCanvasEl.toDataURL('image/' + format, quality)
                : tempCanvasEl.toDataURL('image/' + format);
 
-  this.contextTop && this.clearContext(this.contextTop);
-  this.renderAll();
-  return data;
+    this.contextTop && this.clearContext(this.contextTop);
+    this.renderAll();
+    return data;
 }
 
 //brush size slider
@@ -473,44 +483,44 @@ function init() {
     });
 
     //set movement limit    
-    var goodtop, goodleft;
-    shirtCanvas.on("object:moving", function(){
-        if (isShirtMode){
-            var obj = shirtCanvas.getActiveObject();
-            var bounds = borderShirt1;            
+    // var goodtop, goodleft;
+    // shirtCanvas.on("object:moving", function(){
+    //     if (isShirtMode){
+    //         var obj = shirtCanvas.getActiveObject();
+    //         var bounds = borderShirt1;            
 
-            obj.setCoords();
-            if(!obj.isContainedWithinObject(bounds)){
-                obj.setTop(goodtop);
-                obj.setLeft(goodleft);
-            } else {
-                goodtop = obj.top;
-                goodleft = obj.left;
-            }  
-        }
-    });
+    //         obj.setCoords();
+    //         if(!obj.isContainedWithinObject(bounds)){
+    //             obj.setTop(goodtop);
+    //             obj.setLeft(goodleft);
+    //         } else {
+    //             goodtop = obj.top;
+    //             goodleft = obj.left;
+    //         }  
+    //     }
+    // });
 
-    var goodScaleX, goodScaleY
-    shirtCanvas.on("object:scaling", function(){
-        if (isShirtMode){
-            var obj = shirtCanvas.getActiveObject();;
-            var bounds = borderShirt1;            
+    // var goodScaleX, goodScaleY
+    // shirtCanvas.on("object:scaling", function(){
+    //     if (isShirtMode){
+    //         var obj = shirtCanvas.getActiveObject();;
+    //         var bounds = borderShirt1;            
 
-            obj.setCoords();
-            if(!obj.isContainedWithinObject(bounds)){ 
-                obj.set('scaleX', goodScaleX);
-                obj.set('left', goodleft);
+    //         obj.setCoords();
+    //         if(!obj.isContainedWithinObject(bounds)){ 
+    //             obj.set('scaleX', goodScaleX);
+    //             obj.set('left', goodleft);
 
-                obj.set('scaleY', goodScaleY);
-                obj.set('top', goodtop);                          
-            } else{
-                goodtop = obj.top;
-                goodleft = obj.left;
-                goodScaleX = obj.scaleX;
-                goodScaleY = obj.scaleY;
-            }
-        }
-    });
+    //             obj.set('scaleY', goodScaleY);
+    //             obj.set('top', goodtop);                          
+    //         } else{
+    //             goodtop = obj.top;
+    //             goodleft = obj.left;
+    //             goodScaleX = obj.scaleX;
+    //             goodScaleY = obj.scaleY;
+    //         }
+    //     }
+    // });
 
     btnSelect.onclick();
 }
@@ -533,10 +543,14 @@ function onKeyDownHandler(e) {
 
 init();
 
+var shirtPaint = [];
 function loadShirt(){
     if (!isShirtMode) return;
 
-     var rect = new fabric.Rect({
+    shirtCanvas.clear();
+    splitCanvas()
+
+    var rectBorder = new fabric.Rect({
         width: 190,
         height: 340,
         top: 68,
@@ -547,8 +561,8 @@ function loadShirt(){
         selectable: false
     });
    
-    shirtCanvas.add(rect);
-    borderShirt1 = rect;
+    shirtCanvas.add(rectBorder);
+    borderShirt1 = rectBorder;
 
     fabric.Image.fromURL('./img/shirts/white-front-m.png', function(oImg) {
         //oImg.selectable = true;
@@ -561,17 +575,36 @@ function loadShirt(){
         oImg.filters.push(filter);
         oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
         shirtCanvas.sendToBack(oImg);   
-    }); 
+    });    
 
-    var objPaint = new fabric.Rect({
-        width: 100,
-        height: 100,
-        top: 80,
-        left: 120,
-        selectable: true
+    fabric.Image.fromURL(shirtPaint[0], function(oImg) {        
+        oImg.set({top: 70 ,left: 120, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
+        shirtCanvas.add(oImg);        
+        oImg.selectable = true;
+        oImg.set('hasRotatingPoint', false);
+        shirtCanvas.bringToFront(oImg);
+        shirtCanvas.renderAll();
     });
+}
 
-    shirtCanvas.add(objPaint);
-    shirtCanvas.bringToFront(objPaint);
-    objPaint.set('hasRotatingPoint', false);
+function splitCanvas(){
+    shirtPaint = [];
+    var format = 'png',
+        quality = '10',       
+        cropping1 = {
+        y: 0,
+        x: 0,
+        width: 425,
+        height: 600
+    };
+    var cropping2 = {
+        y: 0,
+        x: 425,
+        width: 425,
+        height: 600
+    };
+  
+    canvas.deactivateAll();
+    shirtPaint.push(canvas.toDataURLWithCropping(format, cropping1, quality));
+    shirtPaint.push(canvas.toDataURLWithCropping(format, cropping2, quality));
 }
