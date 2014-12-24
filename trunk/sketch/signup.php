@@ -64,6 +64,7 @@
     <script src="./js/jquery-2.1.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.js"></script>
+    <script src="js/bootbox.js"></script>
     <script src="js/validator.js"></script>
   </body>
 </html>
@@ -83,9 +84,14 @@ $stmt->bindParam(":email", $_POST["txtEmail"]);
 $stmt->bindParam(":member_name", $_POST["txtName"]);
 $stmt->bindParam(":address", $_POST["txtAddress"]);
 if ($stmt->execute()){
-    echo '<script type="text/javascript">';
-    echo '<div class="alert alert-success" role="alert">Success !!!</div>'
-    echo '</script>';
+    $script = '<script type="text/javascript">' +
+            'bootbox.dialog({' +
+            'title: "That html", ' +
+            'message: "<div class="alert alert-success" role="alert">Success !!!</div>' +
+            '});' +
+            '</script>';
+
+    echo $script;
 }else{
 
 }
