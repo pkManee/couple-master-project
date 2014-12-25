@@ -13,12 +13,13 @@
     <form id="sign-up-form" action="signup.php" method="post" data-toggle="validator">
       <div class="col-xs-4">
       </div>
-    <div class="col-xs-4">
-      <div class="form-group">
+    <div class="col-xs-4">    
+      <div class="form-group">        
         <label class="control-label" for="txt-email">Email address</label>
         <input type="email" class="form-control" id="txt-email" placeholder="Enter email" name="txtEmail" required data-error="Please provide your email">
         <div class="help-block with-errors"></div>
       </div>
+
       <div class="form-group">
         <label class="control-label" for="txt-member-name">Your name</label>
         <input type="text" class="form-control" id="txt-member-name" placeholder="Your name" name="txtName">
@@ -46,13 +47,13 @@
       <div class="form-group">
         <label for="txt-password">Password</label>
         <input type="password" class="form-control" id="txt-password" placeholder="Password" required 
-        data-minlength="6" >       
+        data-minlength="6" value="111111" name="txtPassword" >       
         <span class="help-block">Minimum of 6 characters</span>
       </div>     
       <div class="form-group">
         <label for="txt-password">Confirm password</label>       
         <input type="password" class="form-control" id="txt-confirm-password" placeholder="Confirm" 
-        data-match="#txt-password" data-match-error="Password not match" required>
+        data-match="#txt-password" data-match-error="Password not match" required value="111111">
         <div class="help-block with-errors"></div>
       </div>
     <button type="submit" class="btn btn-default">Submit</button>
@@ -61,15 +62,20 @@
     </form>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="./js/jquery-2.1.1.min.js"></script>
+    <script src="js/jquery-2.1.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.js"></script>
     <script src="js/bootbox.js"></script>
-    <script src="js/validator.js"></script>
+    <script src="js/validator.js"></script>   
   </body>
 </html>
 
 <?php
+session_start();
+echo $_SESSION["email"];
+
+if (empty($_POST)) return;
+
 $user = "root";
 $pass = "";
 try {
@@ -79,21 +85,39 @@ try {
     die();
 }
 
-$stmt = $dbh->prepare("insert into member(email, member_name, address) values (:email, :member_name, :address)");
+$stmt = $dbh->prepare("insert into member(email, member_name, address, password) values (:email, :member_name, :address, :password)");
 $stmt->bindParam(":email", $_POST["txtEmail"]);
 $stmt->bindParam(":member_name", $_POST["txtName"]);
 $stmt->bindParam(":address", $_POST["txtAddress"]);
+$stmt->bindParam(":password", $_POST["txtPassword"]);
+
 if ($stmt->execute()){
-    $script = '<script type="text/javascript">' +
-            'bootbox.dialog({' +
-            'title: "That html", ' +
-            'message: "<div class="alert alert-success" role="alert">Success !!!</div>' +
-            '});' +
-            '</script>';
+   
+    $script = "<script type='text/JavaScript'>";
+    $script .= "$( document ).ready(function() { ";
+    $script .= "bootbox.dialog({";
+    $script .= "title: '',";
+    $script .= "message : '<div class=\"alert alert-success\" role=\"alert\">Save Successfully !!!</div>' ";
+    $script .= "});";  
+    $script .= "setTimeout(function(){bootbox.hideAll()}, 1000);";
+    $script .= "}); ";
+    $script .= "</script>";
+ 
+    
+  echo $script;
 
-    echo $script;
 }else{
-
+    $script = "<script type='text/JavaScript'>";
+    $script .= "$( document ).ready(function() { ";
+    $script .= "bootbox.dialog({";
+    $script .= "title: '',";
+    $script .= "message : '<div class=\"alert alert-warning\" role=\"alert\">Error on Saving !!!</div>' ";
+    $script .= "});";  
+    // $script .= "setTimeout(function(){bootbox.hideAll()}, 1000);";
+    $script .= "}); ";
+    $script .= "</script>";
+    
+  echo $script;
 }
 
 ?>
