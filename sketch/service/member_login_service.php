@@ -1,11 +1,10 @@
 <?php
+	require("db_connect.php");
 
-	$user = 'root';
-	$pass = '';
 	try {
-	    $dbh = new PDO('mysql:host=localhost;dbname=c_shirt', $user, $pass);   
+	    $dbh = dbConnect::getInstance()->dbh;
 	} catch (PDOException $e) {
-	    echo 'Error!: ' . $e->getMessage() . '<br/>';
+	    print "Error!: " . $e->getMessage() . "<br/>";
 	    die();
 	}
 
