@@ -72,7 +72,6 @@
 
 <?php
 session_start();
-echo $_SESSION["email"];
 
 if (empty($_POST)) return;
 

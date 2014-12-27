@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <?php
-session_start();
+if (!isset($_SESSION)){
+  session_start();
+  $_SESSION['email'] = '';
+}
 ?>
 
 <html lang="en">
@@ -30,7 +33,7 @@ session_start();
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">    
-      <p id="lbl1" class="navbar-text"><?php if (!isset($_SESSION) || $_SESSION['email'] == '') echo "Member sign in"; else echo htmlentities($_SESSION['member_name']); ?></p>   
+      <p id="lbl1" class="navbar-text"><?php if ($_SESSION["email"] == "") echo "Member sign in"; else echo htmlentities($_SESSION["member_name"]); ?></p>   
         <form class="navbar-form navbar-left">
           <div class="form-group">         
             <label class="sr-only" for="txt-email">Email address</label>
