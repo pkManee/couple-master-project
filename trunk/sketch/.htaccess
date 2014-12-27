@@ -1,0 +1,14 @@
+﻿<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-s
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule service/(.*)$ service/service.php?method=$1 [QSA,NC,L]
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule service/(.*)$ service/service.php [QSA,NC,L]
+
+RewriteCond %{REQUEST_FILENAME} -s
+RewriteRule service/(.*)$ service/service.php [QSA,NC,L]
+</IfModule>
+
+
