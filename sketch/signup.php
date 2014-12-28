@@ -66,13 +66,13 @@
           </div>
         </div>
         <div class="col-md-4">
-          <label id="cbo-amphur">Amphur</label>
+          <label for="cbo-amphur">Amphur</label>
           <select id="cbo-amphur" class="form-control" disabled>
             <option>อำเภอ</option>
           </select>
         </div>
         <div class="col-md-4">
-          <label id="cbo-tambol">Tambol</label>
+          <label for="cbo-tambol">Tambol</label>
           <select id="cbo-tambol" class="form-control" disabled>
             <option>ตำบล</option>
           </select>
@@ -94,6 +94,7 @@
       <button type="submit" class="btn btn-default">Submit</button>
     </div>
     </form>     
+    <script src="js/province.combo.js"></script>
   </body>
 </html>
 
