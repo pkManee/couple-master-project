@@ -108,7 +108,11 @@ try {
     die();
 }
 
-$stmt = $dbh->prepare("insert into member(email, member_name, address, password) values (:email, :member_name, :address, :password)");
+$sql = "insert into member ";
+$sql .= "(email, member_name, address, password, province_id, province_name, amphur_id, amphur_name, district_id, district_name) "
+$sql .= " values "
+$sql .= "(:email, :member_name, :address, :password, :province_id, :province_name)";
+$stmt = $dbh->prepare($sql);
 $stmt->bindParam(":email", $_POST["txtEmail"]);
 $stmt->bindParam(":member_name", $_POST["txtName"]);
 $stmt->bindParam(":address", $_POST["txtAddress"]);
@@ -124,4 +128,4 @@ if ($stmt->execute()){
   echo $script;
 }
 
-?>
+?> 

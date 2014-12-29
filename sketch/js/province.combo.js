@@ -29,7 +29,7 @@ function getAmphur(province){
         });
       }
     });
-}
+} 
 
 cboAmphur.onchange = function(){	
 	cboTambol.removeAttribute("disabled");
