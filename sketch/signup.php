@@ -4,7 +4,8 @@
 ?>
 <html lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Sign up</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.css" rel="stylesheet">    
@@ -22,8 +23,8 @@
       require("service/message_service.php");
       require("service/db_connect.php");
     ?>
-    <form id="sign-up-form" action="signup.php" method="post" data-toggle="validator">
-    
+    <form id="sign-up-form" action="" method="post" data-toggle="validator">
+    <div class="container">
     <div class="col-xs-6 col-md-4">    
       <div class="form-group">        
         <label class="control-label" for="txt-email">Email address</label>
@@ -111,7 +112,7 @@
       </div>
       <button type="submit" class="btn btn-default">Submit</button>
     </div>
-
+    </div>
     </form>     
     <script src="js/province.combo.js"></script>
   </body>
@@ -147,12 +148,12 @@ $stmt->bindValue(":postcode", $_POST["txtPostCode"]);
 if ($stmt->execute()){
    
   //$script = messageSuccess("<strong>Save Complete!!!</strong><br/>Please <strong>sign in</strong> with your email", 0, 'index.php');     
-  $script = toastSuccess("<strong>Save Complete!!!</strong><br/>Please <strong>sign in</strong> with your email");
+  $script = toastSuccess("<strong>Save completed!!!</strong><br/>Please <strong>sign in</strong> with your email");
   echo $script;
 
 }else{
   //$script = messageFail("<strong>Error on saving !!!<strong>", 0);    
-  $script = toastFail("<strong>Error on saving !!!<strong>");
+  $script = toastFail("<strong>Error on saving!!!<strong>");
   echo $script;
 }
 
