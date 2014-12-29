@@ -36,7 +36,7 @@
           </ul>
         </li>
       </ul>
-  </div>
+  </div>  
 </nav>
 
 <script src="./js/jquery-2.1.1.min.js"></script>
@@ -62,7 +62,7 @@ btnSignin.onclick = function(){
       dataType: "json",
       url: "service/servie",
       data: {method: "memberLogin", email: txtEmail.value, password: txtPassword.value},
-      success: function(data){     
+      success: function(data){
         doLogin(data);
       }
     });
@@ -103,11 +103,15 @@ function doLogin(data){
     return;
   }
   
-  bootbox.dialog({
-                title: '',
-                message : '<div class="alert alert-success" role="alert"><strong>Singing in...</strong></div>'
-  });  
-  setTimeout(function(){bootbox.hideAll()}, 1000);    
+  // bootbox.dialog({
+  //               title: '',
+  //               message : '<div class="alert alert-success" role="alert"><strong>Singing in...</strong></div>'
+  // });  
+  // setTimeout(function(){bootbox.hideAll()}, 1000);    
+  Toast.init({
+      "selector": ".alert-success"
+  });
+  Toast.show("<strong>Success</strong> you are signed in...");
 
   var obj = data[0];      
   lbl.innerHTML = obj.member_name;
@@ -122,6 +126,26 @@ function doLogin(data){
   $.post("member_session.php", {email: obj.email, member_name: obj.member_name});
 }
 
+var Toast = (function() {
+    "use strict";
+
+    var elem,
+        hideHandler,
+        that = {};
+
+    that.init = function(options) {
+        elem = $(options.selector);
+    };
+
+    that.show = function(text) {
+        clearTimeout(hideHandler);
+
+        elem.find("span").html(text);
+        elem.delay(200).fadeIn().delay(3000).fadeOut();
+    };
+
+    return that;
+}());
 
 function init(){
   if (lbl.innerHTML !== lblText){
@@ -134,7 +158,8 @@ function init(){
   }
   else{
      dropdown.style.display = 'none';
-  }
+  }  
 }
 init();
+
 </script>

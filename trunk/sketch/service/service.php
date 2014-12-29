@@ -86,7 +86,7 @@ class MyService extends  REST {
 		}
 	}//function getAmphur
 
-	function getTambol(){
+	function getDistrict(){
 		if($this->get_request_method() != "POST")
 		{
 			$this->response('',406);
@@ -104,9 +104,12 @@ class MyService extends  REST {
 		$results = array();
 
 		if (!empty($provinceId) && !empty($amphurId)){
-			$sql = "select district_id, district_name from districts where 1 = 1 ";
-			$sql .= "and province_id = :province_id ";			
-			$sql .= "and amphur_id = :amphur_id ";
+			$sql = "select d.district_id, d.district_name, z.zipcode from ";
+			$sql .= "districts d inner join zipcodes z on d.district_code = z.district_code ";
+			$sql .= "where 1 = 1 ";
+			$sql .= "and d.province_id = :province_id ";			
+			$sql .= "and d.amphur_id = :amphur_id ";
+			$sql .= "order by d.district_name asc ";
 
 			$stmt = $dbh->prepare($sql);
 			$stmt->bindParam(':province_id', $provinceId);
