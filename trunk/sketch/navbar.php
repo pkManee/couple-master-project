@@ -25,14 +25,24 @@
         <li><a href="signup.php">Sign up</a></li>
       </ul>
 
-      <ul class="nav navbar-nav navbar-right">
-       
+      <ul id="member-menu" class="nav navbar-nav navbar-right">       
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Member Action<span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ข้อมูลสมาชิก<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="editprofile.php">ปรับแต่งแอคเคาน์</a></li>            
+            <li class="divider"></li>
+            <li><a href="#">เกี่ยวกับ</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul id="admin-menu" class="nav navbar-nav navbar-right" >
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">จัดการระบบ<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="editprofile.php">Account Settings</a></li>
+            <li><a href="listshirttype.php">แบบเสื้อ</a></li>
             <li class="divider"></li>
-            <li><a href="#">About</a></li>
+            <li><a href="#">เกี่ยวกับ</a></li>
           </ul>
         </li>
       </ul>
@@ -49,7 +59,8 @@ var btnSignin = document.getElementById('btn-sign-in');
 var txtEmail = document.getElementById('txt-email');
 var txtPassword = document.getElementById('txt-password');
 var lbl = document.getElementById('lbl1');
-var dropdown = $('li.dropdown')[0];
+var dropdown = document.getElementById('member-menu');
+var adminMenu = document.getElementById('admin-menu');
 var lblText = 'Member sign in';
 var btnSigninText = 'Sign in';
 var btnSignoutText= 'Sign out';
