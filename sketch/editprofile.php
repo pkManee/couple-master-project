@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <?php
-  session_start();  
+session_start();  
+
+if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
+  header("location: index.php");
+}
 ?>
 <html lang="en">
   <head>
@@ -12,19 +16,17 @@
     <link href="css/bootstrap.css" rel="stylesheet">    
   </head>
   <body>
+  <?php include("navbar.php"); ?>
     <div class="alert alert-success" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
       <span></span>
     </div>
     <div class="alert alert-danger" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
       <span></span>
-    </div>
-
-    <?php
-      include("navbar.php");
-      include("./service/message_service.php");
-      include("./service/db_connect.php");
-
-      $email = $_SESSION["email"];
+    </div>    
+    <form id="editprofile-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" data-toggle="validator">
+    <?php      
+      include("service/message_service.php");
+      include("service/db_connect.php");
 
       class Member
       {
@@ -39,7 +41,7 @@
       }
 
       //select user profile
-      if (!empty($email)){          
+      if (isset($_SESSION["email"]) && !empty($_SESSION["email"])){           
           try {
               $dbh = dbConnect::getInstance()->dbh;
           } catch (PDOException $e) {
@@ -47,25 +49,26 @@
               die();
           }
 
-          $sql = "select email, member_name, address, province_id, amphur_id, district_id, password, zipcode from member where email = :email ";
+          $sql = "select email, member_name, address, province_id, amphur_id, district_id, password, postcode from member where email = :email ";
           $stmt = $dbh->prepare($sql);
-          $stmt->bindParam(":email", $email);
-          $stmt->execute();
-          $stmt->setFetchMode(PDO::FETCH_CLASS, "Member");
-          $member = $stmt->fetch();
+          $stmt->bindValue(":email", $_SESSION["email"]);
+          if ($stmt->execute()){
+            $stmt->setFetchMode(PDO::FETCH_CLASS, "Member");
+            $member = $stmt->fetch();
 
-          echo "<input type=\"hidden\" id=\"hidden-amphur\" value=\"" .$member->amphur_id. "\" >";
-          echo "<input type=\"hidden\" id=\"hidden-district\" value=\"" .$member->district_id. "\" >";
+            echo "<input type=\"hidden\" id=\"hidden-amphur\" value=\"" .$member->amphur_id. "\" >";
+            echo "<input type=\"hidden\" id=\"hidden-district\" value=\"" .$member->district_id. "\" >";
+          }else{
+            echo "error -> " .$stmt->errorInfo()[2];
+          }
       }
-
     ?>
-    <form id="sign-up-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" data-toggle="validator">
     <div class="container">
     <div class="col-xs-6 col-md-4">    
       <div class="form-group">        
         <label class="control-label" for="txt-form-email">Email address</label>
         <input type="email" class="form-control" id="txt-form-email" placeholder="Enter email"
-          required data-error="Please provide your email" value="<?php echo $member->email; ?>" name="txtEmail" disabled>
+          required data-error="Please provide your email" value="<?php echo $member->email; ?>" name="txtEmail" disabled >
         <div class="help-block with-errors"></div>
       </div>
 
@@ -158,57 +161,40 @@
     </div>
     </form>  
     <script src="js/province.combo.js"></script>
+    <script type="text/javascript">
+      var theForm = $('#editprofile-form')[0];     
+      theForm.onsubmit = function(){
+        event.preventDefault();
+        var email = document.getElementById('txt-form-email');
+
+        $.ajax({
+            type: 'POST',
+            url: 'data/editprofile.data.php', 
+            data: $(this).serialize() + "&email=" + email.value
+        })
+        .done(function(data){
+          if (data.result === "success"){
+            Toast.init({
+                "selector": ".alert-success"
+            });
+            Toast.show("<strong>Profile update completed!!!</strong><br/>");             
+          }else{
+            Toast.init({
+              "selector": ".alert-danger"
+            });
+            Toast.show("<strong>Error on saving!!!<strong>" + data);
+          }
+        })
+        .fail(function() {
+          bootbox.dialog({
+                      title: 'Fetal Error',
+                      message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
+          });
+        });
+ 
+        // to prevent refreshing the whole page page
+        return false;
+      }
+    </script>
   </body>
 </html>
-
-<?php
-if (empty($_POST)) return;
-
-// if (!isset($_POST["submit"])) {
-//   echo "Not set !!!";
-//   return;
-// }
-
-try {
-    $dbh = dbConnect::getInstance()->dbh;
-} catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
-    die();
-}
-
-$sql = "update member set member_name = :member_name, address = :address, password = :password, ";
-$sql .= "province_id = :province_id, province_name = :province_name, ";
-$sql .= "amphur_id = :amphur_id, amphur_name = :amphur_name, ";
-$sql .= "district_id = :district_id, district_name = :district_name, ";
-$sql .= "zipcode = :zipcode ";
-$sql .= "where email = :email";
-
-$stmt = $dbh->prepare($sql);
-
-$stmt->bindValue(":member_name", $_POST["txtName"]);
-$stmt->bindValue(":address", $_POST["txtAddress"]);
-$stmt->bindValue(":password", $_POST["txtPassword"]);
-$stmt->bindValue(":province_id", doExplode($_POST["cboProvince"])[0]);
-$stmt->bindValue(":province_name", doExplode($_POST["cboProvince"])[1]);
-$stmt->bindValue(":amphur_id", doExplode($_POST["cboAmphur"])[0]);
-$stmt->bindValue(":amphur_name", doExplode($_POST["cboAmphur"])[1]);
-$stmt->bindValue(":district_id", doExplode($_POST["cboDistrict"])[0]);
-$stmt->bindValue(":district_name", doExplode($_POST["cboDistrict"])[1]);
-$stmt->bindValue(":zipcode", $_POST["txtPostCode"]);
-$stmt->bindValue(":email", $member->email);
-
-
-if ($stmt->execute()){
-  
-  // echo "<script>setTimeout(function(){ window.location = 'editprofile.php' }, 3000);</script>";
-  // $script = toastSuccess("<strong>Update completed!!!</strong>");
-  // echo $script;    
-  unset($_POST);
-}else{
-  $script = toastFail("<strong>Error on saving!!!<strong>");
-  echo $script;
-  echo "<script>window.location = 'editprofile.php';</script>";
-  unset($_POST);
-}
-
-?>

@@ -23,7 +23,7 @@
       require("service/message_service.php");
       require("service/db_connect.php");
     ?>
-    <form id="sign-up-form" action="" method="post" data-toggle="validator">
+    <form id="sign-up-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" data-toggle="validator">
     <div class="container">
     <div class="col-xs-6 col-md-4">    
       <div class="form-group">        
@@ -110,52 +110,48 @@
         
         </div>
       </div>
-      <button type="submit" class="btn btn-default">Submit</button>
+      <input type="submit" class="btn btn-default" value="Submit">
     </div>
     </div>
     </form>     
     <script src="js/province.combo.js"></script>
+    <script type="text/javascript">
+      var signupForm = $('#sign-up-form')[0];     
+      signupForm.onsubmit = function(){
+        event.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: 'data/signup.data.php', 
+            data: $(this).serialize()
+        })
+        .done(function(data){
+          if (data.result === "success"){
+            Toast.init({
+                "selector": ".alert-success"
+            });
+            Toast.show("<strong>Save completed!!!</strong> redirecting ...<br/>Please <strong>sign in</strong> with your email");
+            setTimeout(function(){ window.location = "index.php" }, 3000);
+          }else{
+            Toast.init({
+              "selector": ".alert-danger"
+            });
+            Toast.show("<strong>Error on saving!!!<strong> " + data);
+          }
+        })
+        .fail(function() {
+          bootbox.dialog({
+                      title: 'Fetal Error',
+                      message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
+          });
+        });
+ 
+        // to prevent refreshing the whole page page
+        return false;
+      }
+    </script>
   </body>
 </html>
 
-<?php
-if (empty($_POST)) return;
 
-try {
-    $dbh = dbConnect::getInstance()->dbh;
-} catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
-    die();
-}
-
-$sql = "insert into member ";
-$sql .= "(email, member_name, address, password, province_id, province_name, amphur_id, amphur_name, district_id, district_name, postcode) ";
-$sql .= "values";
-$sql .= "(:email, :member_name, :address, :password, :province_id, :province_name, :amphur_id, :amphur_name, :district_id, :district_name, :postcode)";
-$stmt = $dbh->prepare($sql);
-$stmt->bindValue(":email", $_POST["txtEmail"]);
-$stmt->bindValue(":member_name", $_POST["txtName"]);
-$stmt->bindValue(":address", $_POST["txtAddress"]);
-$stmt->bindValue(":password", $_POST["txtPassword"]);
-$stmt->bindValue(":province_id", doExplode($_POST["cboProvince"])[0]);
-$stmt->bindValue(":province_name", doExplode($_POST["cboProvince"])[1]);
-$stmt->bindValue(":amphur_id", doExplode($_POST["cboAmphur"])[0]);
-$stmt->bindValue(":amphur_name", doExplode($_POST["cboAmphur"])[1]);
-$stmt->bindValue(":district_id", doExplode($_POST["cboDistric"])[0]);
-$stmt->bindValue(":district_name", doExplode($_POST["cboDistric"])[1]);
-$stmt->bindValue(":postcode", $_POST["txtPostCode"]);
-
-if ($stmt->execute()){
-   
-  //$script = messageSuccess("<strong>Save Complete!!!</strong><br/>Please <strong>sign in</strong> with your email", 0, 'index.php');     
-  $script = toastSuccess("<strong>Save completed!!!</strong><br/>Please <strong>sign in</strong> with your email");
-  echo $script;
-
-}else{
-  //$script = messageFail("<strong>Error on saving !!!<strong>", 0);    
-  $script = toastFail("<strong>Error on saving!!!<strong>");
-  echo $script;
-}
-
-?> 
 
