@@ -49,11 +49,6 @@
   </div>  
 </nav>
 
-<script src="./js/jquery-2.1.1.min.js"></script>
-<script src="js/bootstrap.js"></script>
-<script src="js/bootbox.js"></script>
-<script src="js/validator.js"></script>
-
 <script type="text/javascript">
 var btnSignin = document.getElementById('btn-sign-in');
 var txtEmail = document.getElementById('txt-email');

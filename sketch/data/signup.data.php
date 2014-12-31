@@ -17,8 +17,8 @@ if(isset($_POST) && !empty($_POST)) {
   $sql .= "(:email, :member_name, :address, :password, :province_id, :province_name, :amphur_id, :amphur_name, :district_id, :district_name, :postcode)";
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":email", $_POST["txtEmail"]);
-  $stmt->bindValue(":member_name", $_POST["txtName"]);
-  $stmt->bindValue(":address", $_POST["txtAddress"]);
+  $stmt->bindValue(":member_name", empty($$_POST["txtName"]) ? null : $_POST["txtName"]);
+  $stmt->bindValue(":address", empty($$_POST["txtAddress"]) ? null : $_POST["txtAddress"]);
   $stmt->bindValue(":password", $_POST["txtPassword"]);
   $stmt->bindValue(":province_id", doExplode($_POST["cboProvince"])[0]);
   $stmt->bindValue(":province_name", doExplode($_POST["cboProvince"])[1]);
