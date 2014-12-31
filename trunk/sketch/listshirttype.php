@@ -26,15 +26,20 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
     require("navbar.php");
     require("service/message_service.php");
     require("service/db_connect.php");
+
   ?>  
   <form class="form-inline" id="shirttype-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get" data-toggle="validator">
   <div class="container">
     <div class="col-xs-6 col-md-4">    
-      <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="submit">Go!</button>
+        </span>
         <input type="text" class="form-control" id="txt-shirttype" placeholder="ประเภทเสื้อ" 
         name="txtShirtType">
-        <button type="submit" class="btn btn-default">Search</button>
+        
       </div>
+      <input class="btn btn-default" type="button" value="New"/>
     </div>    
   </div>
   </form>
@@ -52,10 +57,11 @@ try {
 $sql = "select shirt_type, shirt_type_description from shirt_type where 1 = 1 ";
 
 if (!empty($_GET["txtShirtType"])){
-  $sql .= "and shirt_type like :shirt_type ";
+  $sql .= "and shirt_type like :shirt_type order by shirt_type asc ";
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":shirt_type", "%" .$_GET["txtShirtType"]. "%");
 }else{
+  $sql .= "order by shirt_type asc ";
   $stmt = $dbh->prepare($sql);
 }
 
@@ -80,7 +86,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo "<tr>";
 
         echo "<th scope=\"row\">" .$i. "</th>";
-        echo "<td><a href=\"managetypeshirt.php?shirttype=" .urlencode($shirt_type). "\">" .$shirt_type. "</a></td>";
+        echo "<td><a href=\"manageshirttype.php?shirttype=" .urlencode($shirt_type). "\">" .$shirt_type. "</a></td>";
         echo "<td>" .$shirt_type_description. "</td>";
 
         echo "</tr>";
