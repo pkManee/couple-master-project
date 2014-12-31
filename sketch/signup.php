@@ -110,13 +110,27 @@
         
         </div>
       </div>
-      <input type="submit" class="btn btn-default" value="Submit">
+      <input type="button" class="btn btn-primary" id="btn-signup-submit" value="Submit">
     </div>
     </div>
     </form>     
     <script src="js/province.combo.js"></script>
     <script type="text/javascript">
-      var signupForm = $('#sign-up-form')[0];     
+      var signupForm = $('#sign-up-form')[0];
+      var isValid = false;
+      $('#sign-up-form').on('invalid.bs.validator', function(){ 
+        isValid = false;
+      });
+
+      var btnSubmit = document.getElementById('btn-signup-submit');
+      btnSubmit.onclick = function(){
+        isValid = true;
+        $('#sign-up-form').validator('validate');
+        if (isValid){
+          signupForm.onsubmit();
+        }
+      }
+
       signupForm.onsubmit = function(){
         event.preventDefault();
 

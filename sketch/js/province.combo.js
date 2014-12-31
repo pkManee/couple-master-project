@@ -9,7 +9,7 @@ cboProvince.onchange = function(){
 	cboAmphur.removeAttribute('disabled');
 	getAmphur(this.value.split("|")[0]);
 	
-	setTimeout(function() { cboAmphur.onchange(); }, 200);
+	setTimeout(function() { cboAmphur.onchange(); }, 500);
 }
 	
 function getAmphur(province){
@@ -34,7 +34,7 @@ function getAmphur(province){
 cboAmphur.onchange = function(){	
 	cboDistrict.removeAttribute("disabled");
 	getDistrict(cboProvince.value.split("|")[0], this.value.split("|")[0]);
-  setTimeout(function() { cboDistrict.onchange(); }, 200);
+  setTimeout(function() { cboDistrict.onchange(); }, 500);
 }
 
 function getDistrict(province, amphur){

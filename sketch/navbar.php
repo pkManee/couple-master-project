@@ -18,7 +18,7 @@
           <label class="sr-only" for="txt-password">Email address</label>
           <input id="txt-password" type="password" class="form-control" placeholder="Password" value="111111">
         </div>
-        <input type="button" id="btn-sign-in" class="btn btn-default" value="Sign in">
+        <input type="button" id="btn-sign-in" class="btn btn-primary" value="Sign in">
       </form>
 
       <ul class="nav navbar-nav">

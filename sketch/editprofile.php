@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <?php
-session_start();  
-
-if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
-  header("location: index.php");
-}
+  require("header.php");
 ?>
 <html lang="en">
   <head>
@@ -155,7 +151,7 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
         
         </div>
       </div>
-    <button type="submit" class="btn btn-default" name="submit">Submit</button>
+    <button type="submit" class="btn btn-primary" name="submit">Submit</button>
     <a role="button" class="btn btn-default" href="index.php">Cancel</a>
     </div>
     </div>
