@@ -14,9 +14,11 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>List Shirt Tye</title>   
     <!--CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">   
-    <link href="css/jasny-bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">       
     <link href="css/bootstrapValidator.css" rel="stylesheet">
+    <link href="css/iconfont.css" rel="stylesheet">
+    <!--List -->
+    <link href="css/jasny-bootstrap.css" rel="stylesheet">
 
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
@@ -38,13 +40,13 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
     <div class="col-xs-6 col-md-4">    
       <div class="input-group">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="submit">Go!</button>
+          <button class="btn btn-default icon-search" type="submit"></button>
         </span>
         <input type="text" class="form-control" id="txt-shirttype" placeholder="ประเภทเสื้อ" 
         name="txtShirtType">
         
       </div>
-      <input class="btn btn-default" type="button" value="New"/>
+      <a role="button" class="btn btn-default" href="manageshirttype.php?shirttype=">New</a>
     </div>    
   </div>
   </form>

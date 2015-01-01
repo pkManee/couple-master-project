@@ -107,7 +107,7 @@
           <input type="password" class="form-control" id="txt-confirm-password" placeholder="ยืนยันรหัสผ่าน" name="txtConfirm">
         </div>
       </div>
-      <button type="submit" class="btn btn-primary" id="btn-signup-submit" >Sigh up</button>
+      <button type="submit" class="btn btn-primary" id="btn-signup-submit" >Sign up</button>
     </div>
     </div>
     </form>     
@@ -163,12 +163,14 @@
                         identical: {
                             field: 'txtPassword',
                             message: 'กรุณายืนยันรหัสผ่านให้ถูกต้อง'
-                      }
+                      },
+                        notEmpty: {
+                            message: 'กรุณายืนยันรหัสผ่าน'
+                        }
                     }
                   }
               }
-            });//bootstrapValidator
-          })
+            })//bootstrapValidator
           .on('success.form.bv', function(e) {
               // Prevent form submission
               e.preventDefault();
@@ -181,7 +183,7 @@
               // Use Ajax to submit form data
               goSave($form);
           });//on success.form.bv
-      
+      });//document.ready
       function goSave($form){
         $.ajax({
             type: 'POST',
@@ -201,15 +203,16 @@
             });
             Toast.show("<strong>Error on saving!!!<strong> " + data);
           }
-        })
+        })//done
         .fail(function() {
           bootbox.dialog({
                       title: 'Fetal Error',
                       message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
           });
-        });
-      }    
+        });//fail
+      }//goSave
       
+
     </script>
   </body>
 </html>

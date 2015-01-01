@@ -117,3 +117,7 @@
   width: 30px;
   height: 30px;
 }
+.icon-search:before{
+  content: "\e6e6";
+  font-size: 20px;
+}
