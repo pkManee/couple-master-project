@@ -238,7 +238,7 @@
       })//done
       .fail(function() {
         bootbox.dialog({
-                    title: 'Fetal Error',
+                    title: 'Fatal Error',
                     message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
         });
       });//fail

@@ -12,7 +12,7 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>List Shirt Tye</title>   
+    <title>List Material Type</title>   
     <!--CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">       
     <link href="css/bootstrapValidator.css" rel="stylesheet">
@@ -35,18 +35,18 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
     require("service/db_connect.php");
 
   ?>  
-  <form class="form-inline" id="shirttype-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
+  <form class="form-inline" id="listmaterialtype-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
   <div class="container">
     <div class="col-xs-6 col-md-4">    
       <div class="input-group">
         <span class="input-group-btn">
           <button class="btn btn-default icon-search" type="submit"></button>
         </span>
-        <input type="text" class="form-control" id="txt-shirttype" placeholder="ประเภทเสื้อ" 
-        name="txtShirtType">
+        <input type="text" class="form-control" id="txt-materialtype" placeholder="ประเภทผ้า" 
+        name="txtMaterialType">
         
       </div>
-      <a role="button" class="btn btn-default" href="manageshirttype.php?shirttype=">New</a>
+      <a role="button" class="btn btn-default" href="managematerialtype.php?materialtype=">New</a>
     </div>    
   </div>
   </form>
@@ -61,14 +61,14 @@ try {
     die();
 }
 
-$sql = "select shirt_type, shirt_type_description from shirt_type where 1 = 1 ";
+$sql = "select material_type, description from material where 1 = 1 ";
 
-if (!empty($_GET["txtShirtType"])){
-  $sql .= "and shirt_type like :shirt_type order by shirt_type asc ";
+if (!empty($_GET["txtMaterialType"])){
+  $sql .= "and material_type like :material_type order by material_type asc ";
   $stmt = $dbh->prepare($sql);
-  $stmt->bindValue(":shirt_type", "%" .$_GET["txtShirtType"]. "%");
+  $stmt->bindValue(":material_type", "%" .$_GET["txtMaterialType"]. "%");
 }else{
-  $sql .= "order by shirt_type asc ";
+  $sql .= "order by material_type asc ";
   $stmt = $dbh->prepare($sql);
 }
 
@@ -80,7 +80,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <thead>
       <tr>
         <th>#</th>
-        <th>แบบเสื้อ</th>
+        <th>ประเภทผ้า</th>
         <th>คำอธิบาย</th>       
       </tr>
     </thead>
@@ -88,13 +88,13 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <?php
       $i = 1;
       foreach($result as $row) {
-        $shirt_type = $row["shirt_type"];
-        $shirt_type_description = $row["shirt_type_description"];
+        $material_type = $row["material_type"];
+        $description = $row["description"];
         echo "<tr>";
 
         echo "<th scope=\"row\">" .$i. "</th>";
-        echo "<td><a href=\"manageshirttype.php?shirttype=" .urlencode($shirt_type). "\">" .$shirt_type. "</a></td>";
-        echo "<td>" .$shirt_type_description. "</td>";
+        echo "<td><a href=\"managematerialtype.php?materialtype=" .urlencode($material_type). "\">" .$material_type. "</a></td>";
+        echo "<td>" .$description. "</td>";
 
         echo "</tr>";
         $i ++;

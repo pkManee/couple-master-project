@@ -40,17 +40,17 @@
 
       <div class="form-group">
         <label class="control-label" for="txt-member-name">ชื่อ นามสกุล</label>
-        <input type="text" class="form-control" id="txt-member-name" placeholder="Your name" name="txtName" >
+        <input type="text" class="form-control" id="txt-member-name" placeholder="ชื่อ นามสกุล" name="txtName" >
       </div>      
       <div class="form-group">
         <label class="control-label" for="txt-address">ที่อยู่</label>
-        <textarea class="form-control" id="txt-address" placeholder="Address" rows="4" name="txtAddress"></textarea> 
+        <textarea class="form-control" id="txt-address" placeholder="ที่อยู่" rows="4" name="txtAddress"></textarea> 
       </div>
 
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="cbo-province">จุงหวัด</label>
+            <label class="control-label" for="cbo-province">จังหวัด</label>
             <select id="cbo-province" class="form-control" name="cboProvince">
 
               <?php 
@@ -206,7 +206,7 @@
         })//done
         .fail(function() {
           bootbox.dialog({
-                      title: 'Fetal Error',
+                      title: 'Fatal Error',
                       message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
           });
         });//fail
