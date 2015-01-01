@@ -11,7 +11,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Sign up</title>
     <!-- Bootstrap -->
-    <link href="css/bootstrap.css" rel="stylesheet">    
+    <link href="css/bootstrap.css" rel="stylesheet">       
+    <link href="css/bootstrapValidator.css" rel="stylesheet">
+
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/bootbox.js"></script>
+    <script src="js/bootstrapValidator.js"></script>     
   </head>
   <body>  
     <div class="alert alert-success" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
@@ -30,8 +36,8 @@
       //get data
       class ShirtType
       {
-        public $shirt_type;
-        public $shirt_type_description;
+        public $shirt_type = "";
+        public $shirt_type_description = "";
       }
 
       //select user profile
@@ -54,70 +60,92 @@
             echo "error -> " .$stmt->errorInfo()[2];
           }
       }else{
-      	die();
+      	$shirttype = new ShirtType();
       }
     ?>
-    <form id="manage-shirt-type-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" data-toggle="validator">
+    <form id="manage-shirt-type-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <div class="container">
     <div class="col-xs-6 col-md-4">   
     
       <div class="form-group">        
         <label class="control-label" for="txt-shirt-type">แบบเสื้อ</label>
-        <input type="text" class="form-control" id="txt-shirt-type" name="txtShirtType" required 
-        	data-error="กรุณาระบุแบบเสื้อ" value="<?php echo $shirttype->shirt_type; ?>" >
-        <div class="help-block with-errors"></div>
+        <input type="text" class="form-control" id="txt-shirt-type" name="txtShirtType" 
+        	     value="<?php echo $shirttype->shirt_type; ?>" >        
       </div>
 
       <div class="form-group">        
         <label class="control-label" for="txt-shirt-type-description">คำอธิบาย</label>
         <input type="text" class="form-control" id="txt-shirt-type-description" name="txtShirtTypeDescription" 
-        value="<?php echo $shirttype->shirt_type_description; ?>" >      
+              value="<?php echo $shirttype->shirt_type_description; ?>" >      
       </div>     
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <input class="btn btn-default" type="button" id="btn-cancel" value="Cancel">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a role="button" class="btn btn-default" href="listshirttype.php">Cancel</a>
         <button id="btn-delete" class="btn btn-warning">Delete</button>
     </div>
     </div>
     </form>    
     <script type="text/javascript">
-    var btnCancel = document.getElementById('btn-cancel');
-    btnCancel.onclick = function(){
-      window.location = "listshirttype.php";
-    }
+     $(document).ready(function() {
+      $('#manage-shirt-type-form')
+          .bootstrapValidator({
+              //... options ...
+              feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+              },
+              fields: {
+                  txtShirtType: {
+                      message: 'กรุณาระบุแบบเสื้อ',
+                      validators: {
+                          notEmpty: {
+                              message: 'กรุณาระบุแบบเสื้อ'
+                          }
+                      }
+                  }
+              }
+            })//bootstrapValidator
+          .on('success.form.bv', function(e) {
+              // Prevent form submission
+              e.preventDefault();
 
-    var theform = $('#manage-shirt-type-form')[0];     
-    theform.onsubmit = function(){
-      event.preventDefault();
+              // Get the form instance
+              var $form = $(e.target);
+              // Get the BootstrapValidator instance
+              var bv = $form.data('bootstrapValidator');
 
-      $.ajax({
-          type: 'POST',
-          url: 'data/manageshirttype.data.php', 
-          data: $(this).serialize()
-      })
-      .done(function(data){
-        if (data.result === "success"){
-          Toast.init({
-              "selector": ".alert-success"
-          });
-          Toast.show("<strong>Save completed!!!</strong><br/>redirecting ...");
-          setTimeout(function(){ window.location = "listshirttype.php" }, 1000);
-        }else{
-          Toast.init({
-            "selector": ".alert-danger"
-          });
-          Toast.show("<strong>Error on saving!!!<strong> " + data);
-        }
-      })
-      .fail(function() {
-        bootbox.dialog({
-                    title: 'Fetal Error',
-                    message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
+              // Use Ajax to submit form data
+              goSave($form);
+          });//on success.form.bv
+      });//document.ready
+
+  function goSave($form){
+    $.ajax({
+        type: 'POST',
+        url: 'data/manageshirttype.data.php', 
+        data: $form.serialize()
+    })
+    .done(function(data){
+      if (data.result === "success"){
+        Toast.init({
+            "selector": ".alert-success"
         });
+        Toast.show("<strong>Save completed!!!</strong><br/>redirecting ...");
+        setTimeout(function(){ window.location = "listshirttype.php" }, 1000);
+      }else{
+        Toast.init({
+          "selector": ".alert-danger"
+        });
+        Toast.show("<strong>Error on saving!!!<strong> " + data);
+      }
+    })
+    .fail(function() {
+      bootbox.dialog({
+                  title: 'Fetal Error',
+                  message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
       });
-
-      // to prevent refreshing the whole page page
-      return false;
-    }
+    });
+  }
 
    var btnDelete = document.getElementById('btn-delete');
    btnDelete.onclick = function(){     	

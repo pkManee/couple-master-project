@@ -3,55 +3,66 @@ var cboAmphur = document.getElementById('cbo-amphur');
 var cboDistrict = document.getElementById('cbo-district');
 
 cboProvince.onchange = function(){
-	var att1 = document.createAttribute('disabled');
- 	cboDistrict.setAttributeNode(att1);
+  var att1 = document.createAttribute('disabled');
+  cboDistrict.setAttributeNode(att1);
 
-	cboAmphur.removeAttribute('disabled');
-	getAmphur(this.value.split("|")[0]);
-	
-	setTimeout(function() { cboAmphur.onchange(); }, 500);
+  cboAmphur.removeAttribute('disabled');
+  getAmphur(cboProvince.value.split("|")[0]);
+  
+  setTimeout(function() { cboAmphur.onchange(); }, 1000);
 }
-	
+  
 function getAmphur(province){
-	$.ajax({
-    	type: "POST",
-     	dataType: "json",
-    	url: "./service/servie",
-    	data: {method: "getAmphur", province_id: province},
-    	success: function(data){     
-      	cboAmphur.innerHTML = "";
+  $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "./service/servie",
+      data: {method: "getAmphur", province_id: province},
+      success: function(data){     
+        cboAmphur.innerHTML = "";
         //build object       
         data.forEach(function(amphur){
-        	var option = document.createElement("option");
-  		    option.text = amphur.amphur_name.trim();
-  		    option.value = amphur.amphur_id + "|" + amphur.amphur_name.trim();
-  		    cboAmphur.add(option);
+          var option = document.createElement("option");
+          option.text = amphur.amphur_name.trim();
+          option.value = amphur.amphur_id + "|" + amphur.amphur_name.trim();
+          cboAmphur.add(option);
         });
+        var formAmphurId = document.getElementById('hidden-amphur');
+        if (formAmphurId){
+          setSelectedIndex(cboAmphur, formAmphurId.value);           
+        }
+        cboAmphur.onchange();
       }
     });
 } 
 
-cboAmphur.onchange = function(){	
-	cboDistrict.removeAttribute("disabled");
-	getDistrict(cboProvince.value.split("|")[0], this.value.split("|")[0]);
-  setTimeout(function() { cboDistrict.onchange(); }, 500);
+cboAmphur.onchange = function(){  
+ 
+  cboDistrict.removeAttribute("disabled");
+  getDistrict(cboProvince.value.split("|")[0], cboAmphur.value.split("|")[0]);  
 }
 
 function getDistrict(province, amphur){
-	$.ajax({
-    	type: "POST",
-     	dataType: "json",
-    	url: "./service/servie",
-    	data: {method: "getDistrict", province_id: province, amphur_id: amphur},
-    	success: function(data){     
+  $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "./service/servie",
+      data: {method: "getDistrict", province_id: province, amphur_id: amphur},
+      success: function(data){     
       //build object        
-        cboDistrict.innerHTML = "";	
+        cboDistrict.innerHTML = ""; 
         data.forEach(function(tambol){
-        	var option = document.createElement("option");
-  		    option.text = tambol.district_name.trim();
-  		    option.value = tambol.district_id +"|" + tambol.district_name.trim() + "|" + tambol.zipcode.trim();
-  		    cboDistrict.add(option);
+          var option = document.createElement("option");
+          option.text = tambol.district_name.trim();
+          option.value = tambol.district_id +"|" + tambol.district_name.trim() + "|" + tambol.zipcode.trim();
+          cboDistrict.add(option);
         });      
+
+        var formDistrictId = document.getElementById('hidden-district');
+        if (formDistrictId){
+          setSelectedIndex(cboDistrict, formDistrictId.value);
+        }
+        cboDistrict.onchange();
       }
     });
 }
@@ -59,29 +70,14 @@ function getDistrict(province, amphur){
 cboDistrict.onchange = function(){
   var txtPostCode = document.getElementById('txt-post-code');
   if (txtPostCode){
-    txtPostCode.value = this.value.split("|")[2];
+    txtPostCode.value = cboDistrict.value.split("|")[2];
   }
 }
 
-var formAmphurId = document.getElementById('hidden-amphur');
-var formDistrictId = document.getElementById('hidden-district');
-function init(){
-	cboProvince.onchange();
 
-  setTimeout(function(){
-    if (formAmphurId){
-      setSelectedIndex(cboAmphur, formAmphurId.value);
-      cboAmphur.onchange();
-    }  
-  }, 500);
-  
-  setTimeout(function(){
-    if (formDistrictId){
-      setSelectedIndex(cboDistrict, formDistrictId.value);
-      cboDistrict.onchange();
-    }  
-  }, 500);
-  
+
+function init(){
+  cboProvince.onchange();
 }
 
 init();
@@ -100,3 +96,4 @@ function setSelectedIndex(s, valsearch)
   }
   return;
 }
+

@@ -39,10 +39,9 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">จัดการระบบ<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="editprofile.php">Account Settings</a></li>
             <li><a href="listshirttype.php">แบบเสื้อ</a></li>
             <li class="divider"></li>
-            <li><a href="#">เกี่ยวกับ</a></li>
+            <li><a href="#">Cell</a></li>
           </ul>
         </li>
       </ul>
