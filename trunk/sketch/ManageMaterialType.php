@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <?php
  require("header.php");
- if (!isset($_GET["shirttype"])){
- 	$_GET["shirttype"] = "";
+ if (!isset($_GET["materialtype"])){
+ 	$_GET["materialtype"] = "";
  }
 ?>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Shirt Type</title>
+    <title>Material Type</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.css" rel="stylesheet">       
     <link href="css/bootstrapValidator.css" rel="stylesheet">
@@ -26,7 +26,7 @@
     <div class="alert alert-danger" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
       <span></span>
     </div>
-    <input type="hidden" id="hidden-shirttype" name="isDelete" value="<?php echo $_GET["shirttype"]; ?>">
+    <input type="hidden" id="hidden-materialtype" name="isDelete" value="<?php echo $_GET["materialtype"]; ?>">
 
     <?php
       require("navbar.php");
@@ -34,14 +34,14 @@
       require("service/db_connect.php");
 
       //get data
-      class ShirtType
+      class materialtype
       {
-        public $shirt_type = "";
-        public $shirt_type_description = "";
+        public $material_type = "";
+        public $description = "";
       }
 
       //select user profile
-      if (isset($_GET["shirttype"]) && !empty($_GET["shirttype"])){           
+      if (isset($_GET["materialtype"]) && !empty($_GET["materialtype"])){           
           try {
               $dbh = dbConnect::getInstance()->dbh;
           } catch (PDOException $e) {
@@ -49,44 +49,45 @@
               die();
           }
 
-          $sql = "select shirt_type, shirt_type_description from shirt_type ";
-          $sql .= "where shirt_type = :shirt_type ";
+          $sql = "select material_type, description from material ";
+          $sql .= "where material_type = :material_type ";
           $stmt = $dbh->prepare($sql);
-          $stmt->bindValue(":shirt_type", $_GET["shirttype"]);
+          $stmt->bindValue(":material_type", $_GET["materialtype"]);
           if ($stmt->execute()){
-            $stmt->setFetchMode(PDO::FETCH_CLASS, "ShirtType");
-            $shirttype = $stmt->fetch();           
+            $stmt->setFetchMode(PDO::FETCH_CLASS, "materialtype");
+            $materialtype = $stmt->fetch();           
           }else{
             echo "error -> " .$stmt->errorInfo()[2];
           }
       }else{
-      	$shirttype = new ShirtType();
+      	$materialtype = new materialtype();
       }
     ?>
-    <form id="manage-shirt-type-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+    <form id="manage-material-type-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <div class="container">
     <div class="col-xs-6 col-md-4">   
     
       <div class="form-group">        
-        <label class="control-label" for="txt-shirt-type">แบบเสื้อ</label>
-        <input type="text" class="form-control" id="txt-shirt-type" name="txtShirtType" 
-        	     value="<?php echo $shirttype->shirt_type; ?>" >        
+        <label class="control-label" for="txt-material-type">ประเภทผ้า</label>
+        <input type="text" class="form-control" id="txt-material-type" name="txtMaterialType" 
+        	     value="<?php echo $materialtype->material_type; ?>" >        
       </div>
 
       <div class="form-group">        
-        <label class="control-label" for="txt-shirt-type-description">คำอธิบาย</label>
-        <input type="text" class="form-control" id="txt-shirt-type-description" name="txtShirtTypeDescription" 
-              value="<?php echo $shirttype->shirt_type_description; ?>" >      
+        <label class="control-label" for="txt-description">คำอธิบาย</label>
+        <input type="text" class="form-control" id="txt-description" name="txtDescription" 
+              value="<?php echo $materialtype->description; ?>" >      
       </div>     
         <button type="submit" class="btn btn-primary">Save</button>
-        <a role="button" class="btn btn-default" href="listshirttype.php">Cancel</a>
+        <a role="button" class="btn btn-default" href="listmaterialtype.php">Cancel</a>
         <button id="btn-delete" class="btn btn-warning">Delete</button>
     </div>
     </div>
     </form>    
     <script type="text/javascript">
+    
      $(document).ready(function() {
-      $('#manage-shirt-type-form')
+      $('#manage-material-type-form')
           .bootstrapValidator({
               //... options ...
               feedbackIcons: {
@@ -95,11 +96,11 @@
                 validating: 'glyphicon glyphicon-refresh'
               },
               fields: {
-                  txtShirtType: {
-                      message: 'กรุณาระบุแบบเสื้อ',
+                  txtMaterialType: {
+                      message: 'กรุณาระบุประเภทผ้า',
                       validators: {
                           notEmpty: {
-                              message: 'กรุณาระบุแบบเสื้อ'
+                              message: 'กรุณาระบุประเภทผ้า'
                           }
                       }
                   }
@@ -122,7 +123,7 @@
   function goSave($form){
     $.ajax({
         type: 'POST',
-        url: 'data/manageshirttype.data.php', 
+        url: 'data/managematerialtype.data.php', 
         data: $form.serialize()
     })
     .done(function(data){
@@ -131,7 +132,7 @@
             "selector": ".alert-success"
         });
         Toast.show("<strong>Save completed!!!</strong><br/>redirecting ...");
-        setTimeout(function(){ window.location = "listshirttype.php" }, 1000);
+        setTimeout(function(){ window.location = "listmaterialtype.php" }, 1000);
       }else{
         Toast.init({
           "selector": ".alert-danger"
@@ -148,7 +149,7 @@
   }
 
    var btnDelete = document.getElementById('btn-delete');
-   var isDelete = document.getElementById('hidden-shirttype');
+   var isDelete = document.getElementById('hidden-materialtype');
    btnDelete.onclick = function(){     	
    	event.preventDefault();
     if (!isDelete.value) return false;
@@ -157,17 +158,17 @@
 			title: '', 
 			message: '<div class="alert alert-info" role="alert">Are you sure to <strong>delete?</strong></div>',
 			callback: function(result) {
-				if (result) deleteShirtType();     
+				if (result) goDelete();     
 		}
   	}); 
    }
 
-   function deleteShirtType(){ 
+   function goDelete(){ 
 
    	$.ajax({
           type: 'POST',
-          url: 'data/manageshirttype.data.php', 
-          data: {isDelete: isDelete.value, txtShirtType: isDelete.value}
+          url: 'data/managematerialtype.data.php', 
+          data: {isDelete: isDelete.value, txtMaterialType: isDelete.value}
       })
       .done(function(data){
         if (data.result === "success"){
@@ -175,7 +176,7 @@
               "selector": ".alert-success"
           });
           Toast.show("<strong>Delete completed!!!</strong><br/>redirecting ...");
-          setTimeout(function(){ window.location = "listshirttype.php" }, 1000);
+          setTimeout(function(){ window.location = "listmaterialtype.php" }, 1000);
         }else{
           Toast.init({
             "selector": ".alert-danger"

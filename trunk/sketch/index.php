@@ -25,7 +25,7 @@ if (!isset($_SESSION['email'])){
   </head>
   <body>  
   <div class="alert alert-success" role="alert" style="display:none; z-index: 1000; position: absolute; left:0px; top: 50px;">
-      <span>The examples populate this alert with dummy content</span>
+      <span>populate alert</span>
   </div>
   <?php 
     require('navbar.php');

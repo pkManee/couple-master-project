@@ -40,6 +40,9 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">จัดการระบบ<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="listshirttype.php">แบบเสื้อ</a></li>
+            <li><a href="listmaterialtype.php">ประเภทผ้า</a></li>
+            <li><a href="listshirtsize.php">ขนาดเสื้อ</a></li>
+            <li><a href="listshirtcolor.php">สีเสื้อ</a></li>
             <li class="divider"></li>
             <li><a href="#">Cell</a></li>
           </ul>

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <?php
  require("header.php");
- if (!isset($_GET["shirttype"])){
- 	$_GET["shirttype"] = "";
+ if (!isset($_GET["sizecode"])){
+ 	$_GET["sizecode"] = "";
  }
 ?>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Shirt Type</title>
+    <title>Shirt Size</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.css" rel="stylesheet">       
     <link href="css/bootstrapValidator.css" rel="stylesheet">
@@ -26,7 +26,7 @@
     <div class="alert alert-danger" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
       <span></span>
     </div>
-    <input type="hidden" id="hidden-shirttype" name="isDelete" value="<?php echo $_GET["shirttype"]; ?>">
+    <input type="hidden" id="hidden-sizecode" name="isDelete" value="<?php echo $_GET["sizecode"]; ?>">
 
     <?php
       require("navbar.php");
@@ -34,14 +34,15 @@
       require("service/db_connect.php");
 
       //get data
-      class ShirtType
+      class Sizecode
       {
-        public $shirt_type = "";
-        public $shirt_type_description = "";
+        public $size_code = "";
+        public $chest_size = 0;
+        public $shirt_length = 0;
       }
 
       //select user profile
-      if (isset($_GET["shirttype"]) && !empty($_GET["shirttype"])){           
+      if (isset($_GET["sizecode"]) && !empty($_GET["sizecode"])){           
           try {
               $dbh = dbConnect::getInstance()->dbh;
           } catch (PDOException $e) {
@@ -49,44 +50,49 @@
               die();
           }
 
-          $sql = "select shirt_type, shirt_type_description from shirt_type ";
-          $sql .= "where shirt_type = :shirt_type ";
+          $sql = "select size_code, chest_size, shirt_length from shirt_size ";
+          $sql .= "where size_code = :size_code ";
           $stmt = $dbh->prepare($sql);
-          $stmt->bindValue(":shirt_type", $_GET["shirttype"]);
+          $stmt->bindValue(":size_code", $_GET["sizecode"]);
           if ($stmt->execute()){
-            $stmt->setFetchMode(PDO::FETCH_CLASS, "ShirtType");
-            $shirttype = $stmt->fetch();           
+            $stmt->setFetchMode(PDO::FETCH_CLASS, "sizecode");
+            $sizecode = $stmt->fetch();           
           }else{
             echo "error -> " .$stmt->errorInfo()[2];
           }
       }else{
-      	$shirttype = new ShirtType();
+      	$sizecode = new Sizecode();
       }
     ?>
-    <form id="manage-shirt-type-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+    <form id="manage-shirt-size-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <div class="container">
     <div class="col-xs-6 col-md-4">   
     
       <div class="form-group">        
-        <label class="control-label" for="txt-shirt-type">แบบเสื้อ</label>
-        <input type="text" class="form-control" id="txt-shirt-type" name="txtShirtType" 
-        	     value="<?php echo $shirttype->shirt_type; ?>" >        
+        <label class="control-label" for="txt-size-code">รหัสขนาดเสื้อ</label>
+        <input type="text" class="form-control" id="txt-size-code" name="txtSizecode" placeholder="รหัสขนาดเสื้อ"
+        	     value="<?php echo $sizecode->size_code; ?>" >        
       </div>
-
       <div class="form-group">        
-        <label class="control-label" for="txt-shirt-type-description">คำอธิบาย</label>
-        <input type="text" class="form-control" id="txt-shirt-type-description" name="txtShirtTypeDescription" 
-              value="<?php echo $shirttype->shirt_type_description; ?>" >      
-      </div>     
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a role="button" class="btn btn-default" href="listshirttype.php">Cancel</a>
-        <button id="btn-delete" class="btn btn-warning">Delete</button>
+        <label class="control-label" for="txt-chest-size">ความยาวรอบอก (ซม.)</label>
+        <input type="text" class="form-control" id="txt-chest-size" name="txtChestSize" placeholder="ความยาวรอบอก"
+              value="<?php echo $sizecode->chest_size; ?>" >      
+      </div>
+      <div class="form-group">        
+        <label class="control-label" for="txt-shirt-length">ความยาวเสื้อ (ซม.)</label>
+        <input type="text" class="form-control" id="txt-shirt-length" name="txtShirtLength" placeholder="ความยาวเสื้อ"
+              value="<?php echo $sizecode->shirt_length; ?>" >      
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a role="button" class="btn btn-default" href="listshirtsize.php">Cancel</a>
+      <button id="btn-delete" class="btn btn-warning">Delete</button>
     </div>
     </div>
     </form>    
     <script type="text/javascript">
+    
      $(document).ready(function() {
-      $('#manage-shirt-type-form')
+      $('#manage-shirt-size-form')
           .bootstrapValidator({
               //... options ...
               feedbackIcons: {
@@ -95,12 +101,41 @@
                 validating: 'glyphicon glyphicon-refresh'
               },
               fields: {
-                  txtShirtType: {
-                      message: 'กรุณาระบุแบบเสื้อ',
+                  txtSizecode: {
                       validators: {
-                          notEmpty: {
-                              message: 'กรุณาระบุแบบเสื้อ'
-                          }
+                        notEmpty: {
+                          message: 'กรุณาระบุรหัสขนาดเสื้อ'
+                        }
+                      }
+                  },
+                  txtChestSize: {
+                      validators: {
+                        notEmpty:{
+                          message: 'กรุณาระบุความยาวรอบอก'
+                        },
+                        numeric: {
+                          message: 'กรุณาระบุเป็นตัวเลข'
+                        },
+                        greaterThan: {
+                          value: 0,
+                          inclusive: false,
+                          message: 'กรุณาระบุตัวเลขที่มากกว่าศูนย์'
+                        }
+                      }
+                  },
+                  txtShirtLength: {
+                      validators: {
+                        notEmpty:{
+                          message: 'กรุณาระบุความยาวเสื้อ'
+                        },
+                        numeric: {
+                          message: 'กรุณาระบุเป็นตัวเลข'
+                        },
+                        greaterThan: {
+                          value: 0,
+                          inclusive: false,
+                          message: 'กรุณาระบุตัวเลขที่มากกว่าศูนย์'
+                        }
                       }
                   }
               }
@@ -122,7 +157,7 @@
   function goSave($form){
     $.ajax({
         type: 'POST',
-        url: 'data/manageshirttype.data.php', 
+        url: 'data/manageshirtsize.data.php', 
         data: $form.serialize()
     })
     .done(function(data){
@@ -131,7 +166,7 @@
             "selector": ".alert-success"
         });
         Toast.show("<strong>Save completed!!!</strong><br/>redirecting ...");
-        setTimeout(function(){ window.location = "listshirttype.php" }, 1000);
+        setTimeout(function(){ window.location = "listshirtsize.php" }, 1000);
       }else{
         Toast.init({
           "selector": ".alert-danger"
@@ -148,7 +183,7 @@
   }
 
    var btnDelete = document.getElementById('btn-delete');
-   var isDelete = document.getElementById('hidden-shirttype');
+   var isDelete = document.getElementById('hidden-sizecode');
    btnDelete.onclick = function(){     	
    	event.preventDefault();
     if (!isDelete.value) return false;
@@ -157,17 +192,17 @@
 			title: '', 
 			message: '<div class="alert alert-info" role="alert">Are you sure to <strong>delete?</strong></div>',
 			callback: function(result) {
-				if (result) deleteShirtType();     
+				if (result) goDelete();     
 		}
   	}); 
    }
 
-   function deleteShirtType(){ 
+   function goDelete(){ 
 
    	$.ajax({
           type: 'POST',
-          url: 'data/manageshirttype.data.php', 
-          data: {isDelete: isDelete.value, txtShirtType: isDelete.value}
+          url: 'data/manageshirtsize.data.php', 
+          data: {isDelete: isDelete.value, txtSizecode: isDelete.value}
       })
       .done(function(data){
         if (data.result === "success"){
@@ -175,7 +210,7 @@
               "selector": ".alert-success"
           });
           Toast.show("<strong>Delete completed!!!</strong><br/>redirecting ...");
-          setTimeout(function(){ window.location = "listshirttype.php" }, 1000);
+          setTimeout(function(){ window.location = "listshirtsize.php" }, 1000);
         }else{
           Toast.init({
             "selector": ".alert-danger"
