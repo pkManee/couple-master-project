@@ -14,7 +14,8 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>List Shirt Tye</title>   
     <!--CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">       
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css" rel="stylesheet">       
     <link href="css/bootstrapValidator.css" rel="stylesheet">
     <link href="css/iconfont.css" rel="stylesheet">
     <!--List -->

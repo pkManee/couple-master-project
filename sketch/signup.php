@@ -8,7 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Sign up</title>
     
-    <link href="css/bootstrap.css" rel="stylesheet">    
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
     <link href="css/bootstrapValidator.css" rel="stylesheet">
 
     <script src="js/jquery-2.1.1.min.js"></script>
