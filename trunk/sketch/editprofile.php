@@ -9,13 +9,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Edit Profile</title>
     <!-- Bootstrap -->
-    <link href="css/bootstrap.css" rel="stylesheet">    
+    <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrapValidator.css" rel="stylesheet">
 
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="js/bootbox.js"></script>
-    <script src="js/bootstrapValidator.js"></script>    
+    <script src="js/bootstrapValidator.js"></script>   
   </head>
   <body>
   <?php include("navbar.php"); ?>
@@ -158,7 +158,8 @@
     </form>  
     <script src="js/province.combo.js"></script>
     <script type="text/javascript">
-    $(document).ready(function() { 
+    $(document).ready(function() {
+
       $('#editprofile-form')
         .bootstrapValidator( {
           feedbackIcons: {
