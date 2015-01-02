@@ -11,7 +11,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Material Type</title>
     <!-- Bootstrap -->
-    <link href="css/bootstrap.css" rel="stylesheet">       
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css" rel="stylesheet">       
     <link href="css/bootstrapValidator.css" rel="stylesheet">
 
     <script src="js/jquery-2.1.1.min.js"></script>

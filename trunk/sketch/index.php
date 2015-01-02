@@ -15,7 +15,8 @@ if (!isset($_SESSION['email'])){
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>C Shirt</title>
 
-    <link href="css/bootstrap.css" rel="stylesheet">    
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css" rel="stylesheet">    
     <link href="css/bootstrapValidator.css" rel="stylesheet">
 
     <script src="js/jquery-2.1.1.min.js"></script>
