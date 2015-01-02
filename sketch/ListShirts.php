@@ -12,7 +12,7 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>List Shirt Size</title>   
+    <title>List Shirt Color</title>   
     <!--CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">       
     <link href="css/bootstrapValidator.css" rel="stylesheet">
@@ -32,18 +32,18 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
     require("service/db_connect.php");
 
   ?>  
-  <form class="form-inline" id="listshirtsize-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
+  <form class="form-inline" id="list-shirts-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
   <div class="container">
     <div class="col-xs-6 col-md-4">    
       <div class="input-group">
         <span class="input-group-btn">
           <button class="btn btn-default icon-search" type="submit"></button>
         </span>
-        <input type="text" class="form-control" id="txt-shirtsize" placeholder="ขนาดเสื้อ" 
-        name="txtShirtsize">
+        <input type="text" class="form-control" id="txt-search" placeholder="เสื้อ" 
+                name="txtSearch">
         
       </div>
-      <a role="button" class="btn btn-default" href="manageshirtsize.php?shirtsize=">New</a>
+      <a role="button" class="btn btn-default" href="ManageShirts.php?shirtid=">New</a>
     </div>    
   </div>
   </form>
@@ -58,14 +58,15 @@ try {
     die();
 }
 
-$sql = "select size_code, chest_size, shirt_length from shirt_size where 1 = 1 ";
+$sql = "select shirt_id, shirt_name, color, shirt_type, material_type, size_code, shirt_price ";
+$sql .= "from shirts where 1 = 1 ";
 
-if (!empty($_GET["txtShirtsize"])){
-  $sql .= "and size_code like :shirtsize order by size_code asc ";
+if (!empty($_GET["txtSearch"])){
+  $sql .= "and shirt_name like :shirt_name order by shirt_name asc ";
   $stmt = $dbh->prepare($sql);
-  $stmt->bindValue(":shirtsize", "%" .$_GET["txtShirtsize"]. "%");
+  $stmt->bindValue(":shirt_name", "%" .$_GET["txtSearch"]. "%");
 }else{
-  $sql .= "order by size_code asc ";
+  $sql .= "order by shirt_name asc ";
   $stmt = $dbh->prepare($sql);
 }
 
@@ -77,26 +78,38 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <thead>
       <tr>
         <th>#</th>
+        <th>เสื้อ</th>
+        <th>สีเสื้อ</th>
+        <th>แบบเสื้อ</th>    
+        <th>ประเภทผ้า</th>
         <th>ขนาดเสื้อ</th>
-        <th>ความยาวรอบอบ (ซม.)</th>       
-        <th>ความยาวเสื้อ (ซม.)</th>
+        <th>ราคาเสื้อ</th>
       </tr>
     </thead>
     <tbody data-link="row" class="rowlink">
       <?php
       $i = 1;
       foreach($result as $row) {
+        $shirt_id = $row["shirt_id"];
+        $shirt_name = $row["shirt_name"];
+        $color = $row["color"];
+        $shirt_type = $row["shirt_type"];
+        $material_type = $row["material_type"];
         $size_code = $row["size_code"];
-        $chest_size = $row["chest_size"];
-        $shirt_length = $row["shirt_length"];
+        $shirt_price = $row["shirt_price"];       
+
         echo "<tr>";
 
         echo "<th scope=\"row\">" .$i. "</th>";
-        echo "<td><a href=\"manageshirtsize.php?sizecode=" .urlencode($size_code). "\">" .$size_code. "</a></td>";
-        echo "<td>" .$chest_size. "</td>";
-        echo "<td>" .$shirt_length. "</td>";
+        echo "<td><a href=\"ManageShirts.php?shirtid=" .$shirt_id. "\">" .$shirt_name. "</a></td>";
+        echo "<td>" .$color. "</td>";
+        echo "<td>" .$shirt_type. "</td>";
+        echo "<td>" .$material_type. "</td>";
+        echo "<td>" .$size_code. "</td>";
+        echo "<td>" .$shirt_price. "</td>";
 
         echo "</tr>";
+
         $i ++;
       }
       ?>       

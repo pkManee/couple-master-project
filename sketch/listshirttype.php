@@ -25,10 +25,7 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
     <script src="js/bootbox.js"></script>
     <script src="js/bootstrapValidator.js"></script> 
   </head>
-  <body>  
-  <div class="alert alert-success" role="alert" style="display:none; z-index: 1000; position: absolute; left:0px; top: 50px;">
-      <span>The examples populate this alert with dummy content</span>
-  </div>
+  <body>
   <?php
     require("navbar.php");
     require("service/message_service.php");

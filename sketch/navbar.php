@@ -43,6 +43,7 @@
             <li><a href="listmaterialtype.php">ประเภทผ้า</a></li>
             <li><a href="listshirtsize.php">ขนาดเสื้อ</a></li>
             <li><a href="listshirtcolor.php">สีเสื้อ</a></li>
+            <li><a href="ListShirts.php">เสื้อ</a></li>
             <li class="divider"></li>
             <li><a href="#">Cell</a></li>
           </ul>
