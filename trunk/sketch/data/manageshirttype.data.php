@@ -1,4 +1,4 @@
-<?php
+<?php 
 require("../service/message_service.php");
 require("../service/db_connect.php");
 
