@@ -74,8 +74,6 @@ cboDistrict.onchange = function(){
   }
 }
 
-
-
 function init(){
   cboProvince.onchange();
 }
