@@ -179,7 +179,7 @@
                 $html ="<option data-content=\"<table style='width:100%'><tr><td style='width: 20%;'>" .$row["size_code"]. "</td><td style='width: '80%'; >รอบอก " .$row["chest_size"]." x ความยาว " .$row["shirt_length"]. "</td></tr></table>\" ";
                 $html .="value=\"" .$row["size_code"]. "\" selected>" .$row["size_code"]. "</option>";
               }else{
-                $html ="<option data-content=\"<table style='width:100%'><tr><td style='width: 20%;'>" .$row["size_code"]. "</td><td style='width: '80%'; >" .$row["chest_size"]." x " .$row["shirt_length"]. "</td></tr></table>\" ";
+                $html ="<option data-content=\"<table style='width:100%'><tr><td style='width: 20%;'>" .$row["size_code"]. "</td><td style='width: '80%'; >รอบอก " .$row["chest_size"]." x ความยาว " .$row["shirt_length"]. "</td></tr></table>\" ";
                 $html .="value=\"" .$row["size_code"]. "\" >" .$row["size_code"]. "</option>";
               }
               echo $html;              
