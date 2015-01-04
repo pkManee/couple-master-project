@@ -19,6 +19,9 @@
 	left: 880px;
 	width:229px;
 	z-index: 100;
+	-webkit-box-sizing: content-box !important;
+    -moz-box-sizing: content-box !important;
+    box-sizing: content-box !important;
 }
 #ColorPicker br {
 	clear:both;

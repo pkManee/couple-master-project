@@ -18,7 +18,7 @@
           <label class="sr-only" for="txt-password">รหัสผ่าน</label>
           <input id="txt-password" type="password" class="form-control" placeholder="รหัสผ่าน" value="111111">
         </div>
-        <input type="button" id="btn-sign-in" class="btn btn-primary" value="ล็อกอิน">
+        <button type="button" id="btn-sign-in" class="btn btn-primary">ล็อกอิน</button>
       </form>
 
       <ul class="nav navbar-nav">
@@ -29,7 +29,8 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ข้อมูลสมาชิก<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="editprofile.php">ปรับแต่งแอคเคาน์</a></li>            
+            <li><a href="EditProfile.php">ปรับแต่งแอคเคาน์</a></li>
+            <li><a href="AccountWearer.php">ข้อมูลผู้สวมใส่</a></li>
             <li class="divider"></li>
             <li><a href="#">เกี่ยวกับ</a></li>
           </ul>
@@ -64,8 +65,9 @@ var btnSigninText = 'ล็อกอิน';
 var btnSignoutText= 'ล็อกเอาท์';
 
 btnSignin.onclick = function(){
+
   //sign in
-  if (btnSignin.value === btnSigninText){
+  if (btnSignin.innerHTML === btnSigninText){
     $.ajax({
       type: "POST",
       dataType: "json",
@@ -100,7 +102,7 @@ btnSignin.onclick = function(){
     // txtPassword.removeAttribute('disabled');
     // txtPassword.value = '';
     //window.location = "index.php";
-  }
+  }  
 }
 
 function doLogin(data){
@@ -129,7 +131,7 @@ function doLogin(data){
   txtEmail.setAttributeNode(att1);
   var att2 = document.createAttribute('disabled');
   txtPassword.setAttributeNode(att2);
-  btnSignin.value = btnSignoutText;
+  btnSignin.innerHTML = btnSignoutText;
   dropdown.style.display = 'block';
 
   $.post("member_session.php", {email: obj.email, member_name: obj.member_name});
@@ -162,7 +164,7 @@ function init(){
     txtEmail.setAttributeNode(att1);
     var att2 = document.createAttribute('disabled');
     txtPassword.setAttributeNode(att2);
-    btnSignin.value = btnSignoutText;
+    btnSignin.innerHTML = btnSignoutText;
     dropdown.style.display = 'block';
   }
   else{
