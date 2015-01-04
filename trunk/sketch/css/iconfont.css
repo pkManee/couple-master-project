@@ -121,3 +121,8 @@
   content: "\e6e6";
   font-size: 20px;
 }
+.icon-erase:before{
+  content: "\e60b";
+  width: 30px;
+  height: 30px;
+}

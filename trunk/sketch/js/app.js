@@ -16,9 +16,7 @@ var A4 = {
 var svgNS = "http://www.w3.org/2000/svg";
 var isShirtMode = false;
 
-var $ = function(id){return document.getElementById(id)};
-
-var div = $('canvas-area');
+var div = document.getElementById('canvas-area');
 div.style.width = areaWidth;
 div.style.height = areaHeight;
 
@@ -66,7 +64,7 @@ var screenShirt1 = undefined, screenShirt2 = undefined,
     borderShirt1 = undefined, borderShirt2 = undefined;
 
 
-//shirt mode
+// toggle mode
 var btnShirt = document.getElementById('btn-shirt');
 btnShirt.onclick = function(){
     isShirtMode = !isShirtMode;
@@ -77,39 +75,34 @@ btnShirt.onclick = function(){
         loadShirt();
     }
 }
+var btnDesign = document.getElementById('btn-design');
+btnDesign.onclick = function(){
+    btnShirt.onclick();
+}
 
 function toggleMode(){
 
-    var upperShelf = document.getElementsByClassName('upper-shelf');
-    var brushShelf = $('brush-image-shelf');
-    var shirtShelf = $('shirt-shelf');    
-
+    var designShelf = document.getElementById('design-shelf');
+    var brushShelf = document.getElementById('brush-image-shelf');
+    var shirtShelf = document.getElementById('shirt-shelf');    
+    //to shirt mode
     if (isShirtMode){
         canvas.wrapperEl.style.zIndex = -1;
         shirtCanvas.wrapperEl.style.zIndex = 1;
-
-        for (var i = 0; i < upperShelf.length; i++){
-            upperShelf[i].style.display = 'none';           
-        }
-        brushShelf.style.display = 'none';
-        shirtShelf.style.paddingLeft = '610px';
-
+         $('.nav-tabs > .active').next('li').find('a').trigger('click');
+         if (PICKER) PICKER.toggle(false);
     }else{
+    //to design mode
         canvas.wrapperEl.style.zIndex = 1;
         shirtCanvas.wrapperEl.style.zIndex = -1;
-
-         for (var i = 0; i < upperShelf.length; i++){
-            upperShelf[i].style.display = 'inline-block';           
-        }
-        brushShelf.style.display = 'inline-block';
-        shirtShelf.style.paddingLeft = '10px';
+       $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+       if (PICKER) PICKER.toggle(true);
     }
-    shirtShelf.style.display = 'inline-block';   
 }
 //============================================================================================================
 //insert svg geometry
 //============================================================================================================
-var btnRect = $('btn-rectangle');
+var btnRect = document.getElementById('btn-rectangle');
 btnRect.onclick = function(){         
 
     var rect = new fabric.Rect({
@@ -125,7 +118,7 @@ btnRect.onclick = function(){
     canvas.renderAll();
     btnSelect.onclick();
 }
-var btnTri = $('btn-triangle');
+var btnTri = document.getElementById('btn-triangle');
 btnTri.onclick = function(){
     var triangle = new fabric.Triangle({
       width: 100, 
@@ -140,7 +133,7 @@ btnTri.onclick = function(){
     canvas.renderAll();
     btnSelect.onclick();
 }
-var btnRound = $('btn-round');
+var btnRound = document.getElementById('btn-round');
 btnRound.onclick = function(){
     var circle = new fabric.Circle({
       radius: 50, 
@@ -210,7 +203,7 @@ function insertGeoSVG(svg){
     });    
 }
 //upload file
-var imageLoader = $('upload-button');
+var imageLoader = document.getElementById('upload-button');
 imageLoader.addEventListener('change', handleImage, false);
 function handleImage(e){
 
@@ -241,7 +234,7 @@ function handleImage(e){
 }
 
 //insert text
-var btnText = $('btn-text');
+var btnText = document.getElementById('btn-text');
 btnText.onclick = function(){
     var text = new fabric.IText('Tap and Type', { 
                               fontFamily: 'arial',
@@ -256,7 +249,7 @@ btnText.onclick = function(){
     btnSelect.onclick();
 }
 //button clone
-var btnClone = $('btn-clone');
+var btnClone = document.getElementById('btn-clone');
 btnClone.onclick = function(){
     var obj = canvas.getActiveObject();
     if (obj === null || obj === undefined) return;
@@ -276,7 +269,7 @@ btnClone.onclick = function(){
     canvas.renderAll();
 }
 //button flip
-var btnFlip = $('btn-flip');
+var btnFlip = document.getElementById('btn-flip');
 btnFlip.onclick = function(){
     var obj = canvas.getActiveObject();
     if (obj === null || obj === undefined) return;
@@ -297,7 +290,7 @@ var selection_object_left = 0;
 var selection_object_top = 0;
 var crop = false;
 //button crop event
-var btnCrop = $('btn-crop');
+var btnCrop = document.getElementById('btn-crop');
 btnCrop.onclick = function(){  
 
     //start crop
@@ -412,7 +405,7 @@ fabric.Canvas.prototype.toDataURLWithCropping = function (format, cropping, qual
 }
 
 //brush size slider
-var lineWidthSlider = $('brush-size-slider');
+var lineWidthSlider = document.getElementById('brush-size-slider');
 lineWidthSlider.onchange = function(){   
     setColor();
 }
@@ -422,13 +415,13 @@ lineWidthSlider.onmouseover = function(){
 lineWidthSlider.onmouseup = function(){
     this.title = this.value;
 }
-var btnPencil = $('btn-pencil');
+var btnPencil = document.getElementById('btn-pencil');
 btnPencil.onclick = function(){
     canvas.isDrawingMode = true;    
     canvas.freeDrawingBrush = new fabric[btnPencil.getAttribute('title') + 'Brush'](canvas);
     setColor();
 }
-var btnBrush = $('btn-brush');
+var btnBrush = document.getElementById('btn-brush');
 btnBrush.onclick = function(){
     canvas.isDrawingMode = true;
     canvas.freeDrawingBrush = new fabric[btnBrush.getAttribute('title') + 'Brush'](canvas);
@@ -436,7 +429,7 @@ btnBrush.onclick = function(){
 }
 
 //use fabricjs-painter
-var btnSpray = $('btn-spray');
+var btnSpray = document.getElementById('btn-spray');
 btnSpray.onclick = function(data){
     canvas.isDrawingMode = false;   
     isPainterOn = true;
@@ -461,12 +454,14 @@ function setColor(){
     return;
     }
 }
+//clear button
+var btnClear = document.getElementById('btn-erase');
+btnClear.onclick = function(){ canvas.clear(); }
 
 //============================================================================================================
 //right side panel
 //============================================================================================================
-var btnClear = $('clear-button');
-btnClear.onclick = function(){ canvas.clear(); }
+
 
 //init method
 function init() { 
@@ -586,6 +581,7 @@ function onKeyDownHandler(e) {
 
 init();
 
+//shirt canvas
 var splitLineScreen = [];
 var finalLineScreen = [];
 function loadShirt(){
