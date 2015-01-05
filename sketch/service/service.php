@@ -129,6 +129,63 @@ class MyService extends  REST {
 			$this->response('',406);
 		}
 
+		//begin upload file
+		$data = $this->_request["fileToUpload"];
+
+		$img = $data;
+		$img = str_replace('data:image/png;base64,', '', $img);
+		$img = str_replace(' ', '+', $img);
+		$data = base64_decode($img);
+		
+		$target_dir = "../uploads/";
+		//$target_file = $target_dir . basename($_FILES[$this->_request["fileToUpload"]]["name"]);
+		header('Content-Type: image/png');
+		file_put_contents($target_dir . 'img.png', $data);
+
+		// $uploadOk = 1;
+		// $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+		// // Check if image file is a actual image or fake image		
+	 //    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+	 //    if($check !== false) {
+	 //        //$this->response("File is an image - " . $check["mime"] . ".", 222);
+	 //        $uploadOk = 1;
+	 //    } else {
+	 //        $this->response("File is not an image.", 500);
+	 //        $uploadOk = 0;
+	 //    }
+
+		// // Check if file already exists
+		// if (file_exists($target_file)) {
+		//     $this->response("Sorry, file already exists.", 500);
+		//     $uploadOk = 0;
+		// }
+
+		// // Check file size
+		// if ($_FILES["fileToUpload"]["size"] > 500000) {
+		//     $this->response("Sorry, your file is too large.", 500);
+		//     $uploadOk = 0;
+		// }
+
+		// // Allow certain file formats
+		// if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+		// && $imageFileType != "gif" ) {
+		//     $this->response("Sorry, only JPG, JPEG, PNG & GIF files are allowed.", 500);
+		//     $uploadOk = 0;
+		// }
+
+		// // Check if $uploadOk is set to 0 by an error
+		// if ($uploadOk == 0) {
+		//     $this->response("Sorry, your file was not uploaded.", 500);
+		// // if everything is ok, try to upload file
+		// } else {
+		//     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+		//         $this->response("The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.", 200);
+		//     } else {
+		//         $this->response("Sorry, there was an error uploading your file.", 500);
+		//     }
+		// }//upload file
+
 		try {
 		  $dbh = dbConnect::getInstance()->dbh;
 		} catch (PDOException $e) {
@@ -140,7 +197,7 @@ class MyService extends  REST {
 		$sql .= ",province_id = :province_id, province_name = :province_name ";
 		$sql .= ",amphur_id = :amphur_id, amphur_name = :amphur_name ";
 		$sql .= ",district_id = :district_id, district_name = :district_name ";
-		$sql .= ",postcode = :postcode, photo = :photo, height_1 = :height_1, height_2 = :height_2 ";
+		$sql .= ",postcode = :postcode, height_1 = :height_1, height_2 = :height_2 ";
 		$sql .= "where email = :email";
 
 		$stmt = $dbh->prepare($sql);
@@ -155,7 +212,7 @@ class MyService extends  REST {
 		$stmt->bindValue(":district_id", doExplode($this->_request["cboDistrict"])[0]);
 		$stmt->bindValue(":district_name", doExplode($this->_request["cboDistrict"])[1]);
 		$stmt->bindValue(":postcode", $this->_request["txtPostCode"]);
-		$stmt->bindValue(":photo", $this->_request["uploadPhoto"]);
+		//$stmt->bindValue(":photo", $this->_request["fileName"]);
 		$stmt->bindValue(":height_1", $this->_request["txtHeight_1"]);
 		$stmt->bindValue(":height_2", $this->_request["txtHeight_2"]);
 
@@ -166,8 +223,9 @@ class MyService extends  REST {
 			$this->response(json_encode(array("result"=>"success")), 200);
 		}else{		
 			$this->response(json_encode($stmt->errorInfo()), 500);
-		}
-	}//updateProfile
+		}	
+
+	}//updateMember
 
  }//class 
 
