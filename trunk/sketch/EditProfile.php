@@ -12,11 +12,13 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-theme.css" rel="stylesheet">
     <link href="css/bootstrapValidator.css" rel="stylesheet">
+    <link href="css/jasny-bootstrap.css" rel="stylesheet">
 
     <script src="js/jquery-2.1.1.min.js"></script>    
     <script src="js/bootstrap.js"></script>
     <script src="js/bootbox.js"></script>
-    <script src="js/bootstrapValidator.js"></script>   
+    <script src="js/bootstrapValidator.js"></script>
+    <script src="js/jasny-bootstrap.min.js"></script>
   </head>
   <body>
   <?php include("navbar.php"); ?>
@@ -90,7 +92,6 @@
                 <input type="email" class="form-control" id="txt-form-email" 
                     value="<?php echo $member->email; ?>" name="txtEmail" disabled >        
               </div>
-
               <div class="form-group">
                 <label class="control-label" for="txt-member-name">ชื่อ นามสกุล</label>
                 <input type="text" class="form-control" id="txt-member-name" placeholder="ชื่อ นามสกุล" name="txtName" value="<?php echo $member->member_name ?>">
@@ -170,17 +171,24 @@
                 </div>
               </div>
               <button type="submit" class="btn btn-primary">Save</button>
-              <button type="button" class="btn btn-default" onclick="window.location='index.php'">Cancel</a>
-            </div>
-           
+              <button type="button" class="btn btn-default" onclick="window.location='index.php'">Cancel</button>
+            </div>          
           </div>
           <!--end of tab 1 -->
+          <!--tab 2-->
           <div role="tabpanel" class="tab-pane" id="wearer-profile">            
             <div class="col-md-4">    
-              <div class="form-group">        
-                <label class="control-label" for="upload-photo">รูปถ่าย</label>
-                <input type="text" class="form-control" id="upload-photo" 
-                    name="uploadPhoto" value="<?php echo $member->photo; ?>" >        
+              <div class="form-group">
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                  <div class="fileinput-new thumbnail" style="width: 300px; height: 225px;">
+                    <img alt="...">
+                  </div>
+                  <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 300px; max-height: 225px;"></div>
+                  <div>
+                    <span class="btn btn-default btn-file"><span class="fileinput-new">รูปถ่าย</span><span class="fileinput-exists">เปลี่ยน</span><input type="file" name="fileToUpload" id="file-upload"></span>
+                    <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">ลบ</a>
+                  </div>
+                </div>                      
               </div>
               <div class="form-group">
                 <label class="control-label" for="txt-height-boy">ส่วนสูง (ชาย)</label>
@@ -285,7 +293,34 @@
             goSave($form);
         });//on success.form.bv
 
-    });//document.ready
+    });//document.ready    
+ 
+    var imageLoader = document.getElementById('file-upload');
+    var fileUpload = undefined;
+    imageLoader.addEventListener('change', handleImage, false);
+    function handleImage(e){
+
+        var files = e.target.files;
+        for (var i = 0; i < files.length; i++) {
+            if (files[i].type.match(/image.svg*/)) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                  //
+                   fileUpload = event.target.result;
+                }
+                reader.readAsDataURL(files[i]);
+               
+            }else if (files[i].type.match(/image.*/)){
+                var reader = new FileReader();
+                reader.onload = function(event){
+                    //
+                    fileUpload = event.target.result;
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        } 
+    }
+
     function goSave($form){
       var email = document.getElementById('txt-form-email');      
 
@@ -293,7 +328,7 @@
           type: 'POST',
           dataType: 'json',
           url: './service/', 
-          data: $form.serialize() + "&email=" + email.value + "&method=updateMember"
+          data: $form.serialize() + "&email=" + email.value + "&method=updateMember" + "&fileToUpload=" + fileUpload
       })//ajax
       .done(function(data){
         if (data.result === "success"){
