@@ -1,6 +1,8 @@
 <?php
 require_once("Rest.inc.php");
-require("db_connect.php");
+require_once("db_connect.php");
+require_once("message_service.php");
+
 class MyService extends  REST {
 	public function __construct()
 	{
@@ -16,7 +18,7 @@ class MyService extends  REST {
 		if((int)method_exists($this,$func) > 0)
 			$this->$func();
 		else
-			$this->response('',404); 
+			$this->response('', 404); 
 		// If the method not exist with in this class, response would be "Page not found".
 	}
 
@@ -26,7 +28,7 @@ class MyService extends  REST {
 			$this->response('',406);
 		}
 
-		$str = 'youname is '. $this->_request['youname'];
+		$str = 'your name is '. $this->_request['yourname'];
         $this->response(json_encode($str), 200);
     }
 
@@ -121,7 +123,53 @@ class MyService extends  REST {
 		}
 	}//function getTambol
 
- }//class
+	function updateMember(){
+		if($this->get_request_method() != "POST")
+		{
+			$this->response('',406);
+		}
+
+		try {
+		  $dbh = dbConnect::getInstance()->dbh;
+		} catch (PDOException $e) {
+		  $this->response("Error!: " . $e->getMessage() . "<br/>", 500);
+		  die();
+		}		
+
+		$sql = "update member set member_name = :member_name, address = :address, password = :password ";
+		$sql .= ",province_id = :province_id, province_name = :province_name ";
+		$sql .= ",amphur_id = :amphur_id, amphur_name = :amphur_name ";
+		$sql .= ",district_id = :district_id, district_name = :district_name ";
+		$sql .= ",postcode = :postcode, photo = :photo, height_1 = :height_1, height_2 = :height_2 ";
+		$sql .= "where email = :email";
+
+		$stmt = $dbh->prepare($sql);
+
+		$stmt->bindValue(":member_name", $this->_request["txtName"]);
+		$stmt->bindValue(":address", $this->_request["txtAddress"]);
+		$stmt->bindValue(":password", $this->_request["txtPassword"]);
+		$stmt->bindValue(":province_id", doExplode($this->_request["cboProvince"])[0]);
+		$stmt->bindValue(":province_name", doExplode($this->_request["cboProvince"])[1]);
+		$stmt->bindValue(":amphur_id", doExplode($this->_request["cboAmphur"])[0]);
+		$stmt->bindValue(":amphur_name", doExplode($this->_request["cboAmphur"])[1]);
+		$stmt->bindValue(":district_id", doExplode($this->_request["cboDistrict"])[0]);
+		$stmt->bindValue(":district_name", doExplode($this->_request["cboDistrict"])[1]);
+		$stmt->bindValue(":postcode", $this->_request["txtPostCode"]);
+		$stmt->bindValue(":photo", $this->_request["uploadPhoto"]);
+		$stmt->bindValue(":height_1", $this->_request["txtHeight_1"]);
+		$stmt->bindValue(":height_2", $this->_request["txtHeight_2"]);
+
+		$stmt->bindValue(":email", $this->_request["email"]);
+
+
+		if ($stmt->execute()){
+			$this->response(json_encode(array("result"=>"success")), 200);
+		}else{		
+			$this->response(json_encode($stmt->errorInfo()), 500);
+		}
+	}//updateProfile
+
+ }//class 
 
 // Initiiate Library
 $myservice = new MyService;

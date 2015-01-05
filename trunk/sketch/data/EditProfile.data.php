@@ -1,6 +1,6 @@
 <?php 
-require("../service/message_service.php");
-require("../service/db_connect.php");
+require("./service/message_service.php");
+require("./service/db_connect.php");
 
 if(isset($_POST) && !empty($_POST)) {
   doWork();
@@ -14,11 +14,11 @@ function doWork(){
       die();
   }
 
-  $sql = "update member set member_name = :member_name, address = :address, password = :password, ";
-  $sql .= "province_id = :province_id, province_name = :province_name, ";
-  $sql .= "amphur_id = :amphur_id, amphur_name = :amphur_name, ";
-  $sql .= "district_id = :district_id, district_name = :district_name, ";
-  $sql .= "postcode = :postcode ";
+  $sql = "update member set member_name = :member_name, address = :address, password = :password ";
+  $sql .= ",province_id = :province_id, province_name = :province_name ";
+  $sql .= ",amphur_id = :amphur_id, amphur_name = :amphur_name, ";
+  $sql .= ",district_id = :district_id, district_name = :district_name ";
+  $sql .= ",postcode = :postcode ";
   $sql .= "where email = :email";
 
   $stmt = $dbh->prepare($sql);
