@@ -29,8 +29,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ข้อมูลสมาชิก<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="EditProfile.php">ปรับแต่งแอคเคาน์</a></li>
-            <li><a href="AccountWearer.php">ข้อมูลผู้สวมใส่</a></li>
+            <li><a href="EditProfile.php">ข้อมูลแอคเคาน์ และผู้สวมใส่</a></li>
             <li class="divider"></li>
             <li><a href="#">เกี่ยวกับ</a></li>
           </ul>

@@ -16,7 +16,7 @@ function getAmphur(province){
   $.ajax({
       type: "POST",
       dataType: "json",
-      url: "./service/servie",
+      url: "./service/",
       data: {method: "getAmphur", province_id: province},
       success: function(data){     
         cboAmphur.innerHTML = "";
@@ -46,7 +46,7 @@ function getDistrict(province, amphur){
   $.ajax({
       type: "POST",
       dataType: "json",
-      url: "./service/servie",
+      url: "./service/",
       data: {method: "getDistrict", province_id: province, amphur_id: amphur},
       success: function(data){     
       //build object        
