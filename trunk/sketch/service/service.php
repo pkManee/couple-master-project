@@ -132,15 +132,22 @@ class MyService extends  REST {
 		//begin upload file
 		$data = $this->_request["fileToUpload"];
 
+		if (!empty($data) && $data != 'undefined'){
+
 		$img = $data;
 		$img = str_replace('data:image/png;base64,', '', $img);
 		$img = str_replace(' ', '+', $img);
 		$data = base64_decode($img);
 		
-		$target_dir = "../uploads/";
+		$target_dir = "uploads/";
 		//$target_file = $target_dir . basename($_FILES[$this->_request["fileToUpload"]]["name"]);
 		header('Content-Type: image/png');
-		file_put_contents($target_dir . 'img.png', $data);
+		$photo = $target_dir . $this->_request['email'] . '.png';
+		$data = imagepng($data);
+		file_put_contents('../' . $photo, $data);		
+		}else{
+			$photo = null;
+		}
 
 		// $uploadOk = 1;
 		// $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
@@ -198,6 +205,7 @@ class MyService extends  REST {
 		$sql .= ",amphur_id = :amphur_id, amphur_name = :amphur_name ";
 		$sql .= ",district_id = :district_id, district_name = :district_name ";
 		$sql .= ",postcode = :postcode, height_1 = :height_1, height_2 = :height_2 ";
+		$sql .= ",photo = :photo ";
 		$sql .= "where email = :email";
 
 		$stmt = $dbh->prepare($sql);
@@ -212,18 +220,16 @@ class MyService extends  REST {
 		$stmt->bindValue(":district_id", doExplode($this->_request["cboDistrict"])[0]);
 		$stmt->bindValue(":district_name", doExplode($this->_request["cboDistrict"])[1]);
 		$stmt->bindValue(":postcode", $this->_request["txtPostCode"]);
-		//$stmt->bindValue(":photo", $this->_request["fileName"]);
+		$stmt->bindValue(":photo", $photo);
 		$stmt->bindValue(":height_1", $this->_request["txtHeight_1"]);
 		$stmt->bindValue(":height_2", $this->_request["txtHeight_2"]);
-
 		$stmt->bindValue(":email", $this->_request["email"]);
-
 
 		if ($stmt->execute()){
 			$this->response(json_encode(array("result"=>"success")), 200);
 		}else{		
 			$this->response(json_encode($stmt->errorInfo()), 500);
-		}	
+		}
 
 	}//updateMember
 
