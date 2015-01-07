@@ -463,6 +463,163 @@ btnClear.onclick = function(){ canvas.clear(); }
 //============================================================================================================
 
 
+// canvas.on('mouse:dblclick', function (options){
+//     console.log('double click removed');
+// });
+document.onkeydown = onKeyDownHandler;
+function onKeyDownHandler(e) {
+   switch (e.keyCode) {
+      case 46: // delete
+         var activeObject = canvas.getActiveObject();
+         if (activeObject !== null) {
+            canvas.remove(activeObject);            
+            canvas.renderAll();
+            return;
+        }
+   }
+};
+
+
+//shirt canvas
+var splitLineScreen = [];
+var finalLineScreen = [];
+function loadShirt(){
+    if (!isShirtMode) return;
+
+    shirtCanvas.clear();
+    splitCanvas()
+
+    //shirt 1
+    //men
+    var rectBorder = new fabric.Rect({
+        width: 190,
+        height: 340,
+        top: 100,
+        left: 119,
+        strokeWidth: 1,
+        fill: 'rgba(0, 0, 0, 0)',
+        stroke: 'rgba(0, 0, 0, 0.5)',
+        selectable: false
+    });
+   
+    shirtCanvas.add(rectBorder);
+    borderShirt1 = rectBorder;
+
+    fabric.Image.fromURL('./img/shirts/tshirt_men_white.png', function(oImg) {
+        //oImg.selectable = true;
+        oImg.set({width: 415, height: 461, top: 5, left: 5}); 
+        shirtCanvas.add(oImg);
+
+        var filter = new fabric.Image.filters.Multiply({
+            color: COLOR
+        });
+        oImg.filters.push(filter);
+        oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
+        shirtCanvas.sendToBack(oImg);   
+    });
+    fabric.Image.fromURL(splitLineScreen[0], function(oImg) {        
+        oImg.set({top: 105 ,left: 125, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
+        shirtCanvas.add(oImg);        
+        oImg.selectable = true;
+        oImg.set('hasRotatingPoint', false);
+        shirtCanvas.bringToFront(oImg);
+        shirtCanvas.renderAll();
+        finalLineScreen.push(oImg);
+    });
+
+    //shirt 2
+    //women
+     var rectBorder2 = new fabric.Rect({
+        width: 190,
+        height: 340,
+        top: 100,
+        left: 555,
+        strokeWidth: 1,
+        fill: 'rgba(0, 0, 0, 0)',
+        stroke: 'rgba(0, 0, 0, 0.5)',
+        selectable: false
+    });
+   
+    shirtCanvas.add(rectBorder2);
+    borderShirt2 = rectBorder2;
+
+    fabric.Image.fromURL('./img/shirts/tshirt_women_white.png', function(oImg) {
+        //oImg.selectable = true;
+        oImg.set({width: 363, height: 450, top: 15, left: 465}); 
+        shirtCanvas.add(oImg);
+
+        var filter = new fabric.Image.filters.Multiply({
+            color: COLOR
+        });
+        oImg.filters.push(filter);
+        oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
+        shirtCanvas.sendToBack(oImg);   
+    });
+    fabric.Image.fromURL(splitLineScreen[1], function(oImg) {        
+        oImg.set({top: 105 ,left: 560, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
+        shirtCanvas.add(oImg);
+        oImg.selectable = true;
+        oImg.set('hasRotatingPoint', false);
+        shirtCanvas.bringToFront(oImg);
+        shirtCanvas.renderAll();
+        finalLineScreen.push(oImg);
+    });
+}
+
+function splitCanvas() {
+    splitLineScreen.length = 0;
+    finalLineScreen.length = 0;
+
+    var format = 'png',
+        quality = '10',       
+        cropping1 = {
+        y: 0,
+        x: 0,
+        width: 425,
+        height: 600
+    };
+    var cropping2 = {
+        y: 0,
+        x: 425,
+        width: 425,
+        height: 600
+    };
+  
+    canvas.deactivateAll();
+    splitLineScreen.push(canvas.toDataURLWithCropping(format, cropping1, quality));
+    splitLineScreen.push(canvas.toDataURLWithCropping(format, cropping2, quality));
+}
+
+var cboMen = document.getElementById('cbo-shirt-men');
+var cboWomen = document.getElementById('cbo-shirt-women');
+
+cboMen.onchange = function() {
+    getShirtInfo(this.value, this);
+}
+
+function getShirtInfo(shirtId, cbo) {    
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "./service/",
+        data: {method: "getShirtInfo", shirt_id: shirtId}       
+    })
+    .done(function(data) {
+        var shirt = data[0];   
+        //cbo.setAttribute("title", "size: " + shirt.size_code + " ขนาด: " + shirt.chest_size + "x" + shirt.shirt_length); 
+        //var txt =  "size: " + shirt.size_code + " ขนาด: " + shirt.chest_size + "x" + shirt.shirt_length;
+        cbo.setAttribute("data-original-title", "size: " + shirt.size_code + " ขนาด: " + shirt.chest_size + "x" + shirt.shirt_length);
+        $('#cbo-shirt-men').tooltip();     
+    })//done
+    .fail(function(data) { 
+        bootbox.dialog({
+                title: 'Fatal Error',
+                message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
+        });
+    });//fail
+}
+
 //init method
 function init() { 
     // Initiate color picker widget.
@@ -561,132 +718,7 @@ function init() {
 
     btnSelect.onclick();
     toggleMode();
-}
 
-// canvas.on('mouse:dblclick', function (options){
-//     console.log('double click removed');
-// });
-document.onkeydown = onKeyDownHandler;
-function onKeyDownHandler(e) {
-   switch (e.keyCode) {
-      case 46: // delete
-         var activeObject = canvas.getActiveObject();
-         if (activeObject !== null) {
-            canvas.remove(activeObject);            
-            canvas.renderAll();
-            return;
-        }
-   }
-};
-
+    getShirtInfo(cboMen.value, cboMen);
+}//init
 init();
-
-//shirt canvas
-var splitLineScreen = [];
-var finalLineScreen = [];
-function loadShirt(){
-    if (!isShirtMode) return;
-
-    shirtCanvas.clear();
-    splitCanvas()
-
-    //shirt 1
-    //men
-    var rectBorder = new fabric.Rect({
-        width: 190,
-        height: 340,
-        top: 100,
-        left: 119,
-        strokeWidth: 1,
-        fill: 'rgba(0, 0, 0, 0)',
-        stroke: 'rgba(0, 0, 0, 0.5)',
-        selectable: false
-    });
-   
-    shirtCanvas.add(rectBorder);
-    borderShirt1 = rectBorder;
-
-    fabric.Image.fromURL('./img/shirts/tshirt_men_white.png', function(oImg) {
-        //oImg.selectable = true;
-        oImg.set({width: 415, height: 461, top: 5, left: 5}); 
-        shirtCanvas.add(oImg);
-
-        var filter = new fabric.Image.filters.Multiply({
-            color: COLOR
-        });
-        oImg.filters.push(filter);
-        oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
-        shirtCanvas.sendToBack(oImg);   
-    });
-    fabric.Image.fromURL(splitLineScreen[0], function(oImg) {        
-        oImg.set({top: 105 ,left: 125, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
-        shirtCanvas.add(oImg);        
-        oImg.selectable = true;
-        oImg.set('hasRotatingPoint', false);
-        shirtCanvas.bringToFront(oImg);
-        shirtCanvas.renderAll();
-        finalLineScreen.push(oImg);
-    });
-
-    //shirt 2
-    //women
-     var rectBorder2 = new fabric.Rect({
-        width: 190,
-        height: 340,
-        top: 100,
-        left: 555,
-        strokeWidth: 1,
-        fill: 'rgba(0, 0, 0, 0)',
-        stroke: 'rgba(0, 0, 0, 0.5)',
-        selectable: false
-    });
-   
-    shirtCanvas.add(rectBorder2);
-    borderShirt2 = rectBorder2;
-
-    fabric.Image.fromURL('./img/shirts/tshirt_women_white.png', function(oImg) {
-        //oImg.selectable = true;
-        oImg.set({width: 363, height: 450, top: 15, left: 465}); 
-        shirtCanvas.add(oImg);
-
-        var filter = new fabric.Image.filters.Multiply({
-            color: COLOR
-        });
-        oImg.filters.push(filter);
-        oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
-        shirtCanvas.sendToBack(oImg);   
-    });
-    fabric.Image.fromURL(splitLineScreen[1], function(oImg) {        
-        oImg.set({top: 105 ,left: 560, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
-        shirtCanvas.add(oImg);
-        oImg.selectable = true;
-        oImg.set('hasRotatingPoint', false);
-        shirtCanvas.bringToFront(oImg);
-        shirtCanvas.renderAll();
-        finalLineScreen.push(oImg);
-    });
-}
-
-function splitCanvas(){
-    splitLineScreen.length = 0;
-    finalLineScreen.length = 0;
-
-    var format = 'png',
-        quality = '10',       
-        cropping1 = {
-        y: 0,
-        x: 0,
-        width: 425,
-        height: 600
-    };
-    var cropping2 = {
-        y: 0,
-        x: 425,
-        width: 425,
-        height: 600
-    };
-  
-    canvas.deactivateAll();
-    splitLineScreen.push(canvas.toDataURLWithCropping(format, cropping1, quality));
-    splitLineScreen.push(canvas.toDataURLWithCropping(format, cropping2, quality));
-}

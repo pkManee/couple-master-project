@@ -40,6 +40,7 @@
         public $size_code = "";
         public $chest_size = 0;
         public $shirt_length = 0;
+        public $gender = "M";
       }
 
       //select user profile
@@ -51,12 +52,12 @@
               die();
           }
 
-          $sql = "select size_code, chest_size, shirt_length from shirt_size ";
+          $sql = "select size_code, chest_size, shirt_length, gender from shirt_size ";
           $sql .= "where size_code = :size_code ";
           $stmt = $dbh->prepare($sql);
           $stmt->bindValue(":size_code", $_GET["sizecode"]);
           if ($stmt->execute()){
-            $stmt->setFetchMode(PDO::FETCH_CLASS, "sizecode");
+            $stmt->setFetchMode(PDO::FETCH_CLASS, "Sizecode");
             $sizecode = $stmt->fetch();           
           }else{
             echo "error -> " .$stmt->errorInfo()[2];
@@ -84,6 +85,24 @@
         <input type="text" class="form-control" id="txt-shirt-length" name="txtShirtLength" placeholder="ความยาวเสื้อ"
               value="<?php echo $sizecode->shirt_length; ?>" >      
       </div>
+      <div class="form-group">
+        
+      <?php        
+        $active = $sizecode->gender=="M"?"active":"";
+        $checked = $sizecode->gender=="M"?"checked":"";
+       
+        echo "<div class=\"btn-group\" data-toggle=\"buttons\">";
+        echo    "<label class=\"btn btn-primary " .$active. " \">";
+        echo      "<input type=\"radio\" name=\"rdoGender\" value=\"M\" " .$checked. ">สำหรับชาย";
+        echo    "</label>";
+        $active = $sizecode->gender=="F"?"active":"";
+        $checked = $sizecode->gender=="F"?"checked":"";
+        echo    "<label class=\"btn btn-primary ".$active." \">";
+        echo      "<input type=\"radio\" name=\"rdoGender\" value=\"F\" " .$checked. " >สำหรับหญิง";
+        echo    "</label>";
+        echo "</div>";
+      ?>
+      </div>
       <button type="submit" class="btn btn-primary">Save</button>
       <a role="button" class="btn btn-default" href="listshirtsize.php">Cancel</a>
       <button id="btn-delete" class="btn btn-warning">Delete</button>
@@ -93,6 +112,8 @@
     <script type="text/javascript">
     
      $(document).ready(function() {
+      $('.btn-group').button();
+
       $('#manage-shirt-size-form')
           .bootstrapValidator({
               //... options ...

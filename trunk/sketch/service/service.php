@@ -123,7 +123,44 @@ class MyService extends  REST {
 		}
 	}//function getTambol
 
-	function updateMember(){
+	function getBytesFromHexString($hexdata) {
+	  for($count = 0; $count < strlen($hexdata); $count+=2)
+	    $bytes[] = chr(hexdec(substr($hexdata, $count, 2)));
+
+	  return implode($bytes);
+	}
+
+	function getImageMimeType($imagedata) {	
+	  $imagemimetypes = array( 
+	    "jpg" => "FFD8", 
+	    "png" => "89504E47", 
+	    "gif" => "474946",
+	    "bmp" => "424D", 
+	    "tiff" => "4949",
+	    "tiff" => "4D4D"
+	  );
+
+	  foreach ($imagemimetypes as $mime => $hexbytes)
+	  {
+	    $bytes = $this::getBytesFromHexString($hexbytes);
+	    if (substr($imagedata, 0, strlen($bytes)) == $bytes)
+	      return $mime;
+	  }
+
+	  return NULL;
+	}
+
+	function deleteOldFile($target_dir) {
+		//delete old file
+
+		$files = glob('../'.$target_dir.$this->_request['email'].'*.*'); // get all file names
+		foreach($files as $file){ // iterate files
+		  if(is_file($file))
+		    unlink($file); // delete file
+		}
+	}
+
+	function updateMember() {
 		if($this->get_request_method() != "POST")
 		{
 			$this->response('',406);
@@ -131,22 +168,23 @@ class MyService extends  REST {
 
 		//begin upload file
 		$data = $this->_request["fileToUpload"];
-
-		if (!empty($data) && $data != 'undefined'){
-
-		$img = $data;
-		$img = str_replace('data:image/png;base64,', '', $img);
-		$img = str_replace(' ', '+', $img);
-		$data = base64_decode($img);
-		
 		$target_dir = "uploads/";
-		//$target_file = $target_dir . basename($_FILES[$this->_request["fileToUpload"]]["name"]);
-		header('Content-Type: image/png');
-		$photo = $target_dir . $this->_request['email'] . '.png';
-		$data = imagepng($data);
-		file_put_contents('../' . $photo, $data);		
-		}else{
-			$photo = null;
+
+		if (!empty($data) && $data != 'undefined') {
+			$this::deleteOldFile($target_dir);
+
+			list($type, $data) = explode(';', $data);
+			list(, $data)      = explode(',', $data);
+			$data = str_replace(' ', '+', $data);
+			$data = base64_decode($data);
+			$mimetype = $this::getImageMimeType($data);			
+			
+			//$target_file = $target_dir . basename($_FILES[$this->_request["fileToUpload"]]["name"]);			
+			$photo = $target_dir . $this->_request['email'] . '.' . $mimetype;			
+			file_put_contents('../' . $photo, $data);		
+			} else {
+				$photo = null;
+				$this::deleteOldFile($target_file);		
 		}
 
 		// $uploadOk = 1;
@@ -230,10 +268,50 @@ class MyService extends  REST {
 		}else{		
 			$this->response(json_encode($stmt->errorInfo()), 500);
 		}
-
 	}//updateMember
 
- }//class 
+	function getShirtInfo() {
+		if($this->get_request_method() != "POST")
+		{
+			$this->response('',406);
+		}
+
+		try {
+		  $dbh = dbConnect::getInstance()->dbh;
+		} catch (PDOException $e) {
+		  $this->response("Error!: " . $e->getMessage() . "<br/>", 500);
+		  die();
+		}
+
+		$shirt_id = $this->_request["shirt_id"];
+
+		$sql = "select s.shirt_id, s.shirt_name, s.color, s.shirt_type, s.material_type, s.size_code, s.shirt_price ";
+		$sql .= ",z.chest_size, z.shirt_length ";
+		$sql .= ",c.color_hex ";
+		$sql .= "from shirts s inner join shirt_size z on s.size_code = z.size_code ";
+		$sql .= "inner join shirt_color c on s.color = c.color ";
+		$sql .= "where 1 = 1 ";
+
+		if (!empty($shirt_id)){
+			$sql .= "and s.shirt_id = :shirt_id ";
+			$sql .= "order by s.shirt_name asc ";
+			$stmt = $dbh->prepare($sql);
+			$stmt->bindValue(":shirt_id", $shirt_id);
+
+		} else {
+			$sql .= "order by s.shirt_name asc ";
+			$stmt = $dbh->prepare($sql);
+		}		
+
+		if ($stmt->execute()){
+			$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$this->response(json_encode($results), 200);
+		} else {
+			$this->response(json_encode($stmt->errorInfo()), 500);
+		}		
+	}
+
+}//class 
 
 // Initiiate Library
 $myservice = new MyService;

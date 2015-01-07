@@ -45,7 +45,8 @@
         public $shirt_type = "";
         public $material_type = "";
         public $size_code = "";
-        public $shirt_price = 0;    
+        public $shirt_price = 0;
+        public $gender = "M";
       }
 
       try {
@@ -57,7 +58,7 @@
 
       //select shirts
       if (isset($_GET["shirtid"]) && !empty($_GET["shirtid"])){
-          $sql = "select shirt_id, shirt_name, color, shirt_type, material_type, size_code, shirt_price ";
+          $sql = "select shirt_id, shirt_name, color, shirt_type, material_type, size_code, shirt_price, gender ";
           $sql .= "from shirts ";
           $sql .= "where shirt_id = :shirt_id ";
           $stmt = $dbh->prepare($sql);
@@ -104,8 +105,10 @@
       }
       //get size
       $sql = "select size_code, chest_size, shirt_length from shirt_size ";
+      $sql .= "where gender = :gender ";
       $sql .= "order by size_code asc ";
       $stmt = $dbh->prepare($sql);
+      $stmt->bindValue(":gender", $shirts->gender);
       if ($stmt->execute()){
         $result_shirt_size = $stmt->fetchAll(PDO::FETCH_ASSOC);
       }else{
@@ -169,6 +172,23 @@
             }
           ?>
         </select>
+      </div>
+      <div class="form-group">
+        <?php        
+        $active = $shirts->gender=="M"?"active":"";
+        $checked = $shirts->gender=="M"?"checked":"";
+       
+        echo "<div class=\"btn-group\" data-toggle=\"buttons\">";
+        echo    "<label class=\"btn btn-primary " .$active. " \">";
+        echo      "<input type=\"radio\" id=\"radio-male\" name=\"rdoGender\" value=\"M\" " .$checked. ">สำหรับชาย";
+        echo    "</label>";
+        $active = $shirts->gender=="F"?"active":"";
+        $checked = $shirts->gender=="F"?"checked":"";
+        echo    "<label class=\"btn btn-primary ".$active." \">";
+        echo      "<input type=\"radio\" id=\"radio-female\" name=\"rdoGender\" value=\"F\" " .$checked. " >สำหรับหญิง";
+        echo    "</label>";
+        echo "</div>";
+        ?>
       </div>
       <div class="form-group">
         <label class="control-label" for="cbo-shirt-size">ขนาดเสื้อ</label>
@@ -315,14 +335,48 @@
           });
           Toast.show("<strong>Error on deleting!!!<strong> " + data);
         }
-      })
+      })//done
       .fail(function() {
         bootbox.dialog({
                     title: 'Fatal Error',
                     message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
-        });
-      });
+        });//fail
+      });//ajax
    }
+
+    var rdoMale = document.getElementById('radio-male');
+    var rdoFemale = document.getElementById('radio-female');
+    rdoMale.onchange = function() {
+        $.ajax({
+          type: 'POST',
+          url: 'data/ManageShirts.data.php', 
+          data: {isDelete: isDelete.value, txtShirtId: isDelete.value}
+      })
+      .done(function(data){
+        if (data.result === "success"){
+          Toast.init({
+              "selector": ".alert-success"
+          });
+          Toast.show("<strong>Delete completed!!!</strong><br/>redirecting ...");
+          setTimeout(function(){ window.location = "ListShirts.php" }, 1000);
+        }else{
+          Toast.init({
+            "selector": ".alert-danger"
+          });
+          Toast.show("<strong>Error on deleting!!!<strong> " + data);
+        }
+      })//done
+      .fail(function() {
+        bootbox.dialog({
+                    title: 'Fatal Error',
+                    message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
+        });//fail
+      });//ajax
+    }
+    rdoFemale.onchange = function() {
+      
+    }
+
     </script>
   </body>
 </html>
