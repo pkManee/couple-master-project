@@ -53,9 +53,10 @@
           }
 
           $sql = "select size_code, chest_size, shirt_length, gender from shirt_size ";
-          $sql .= "where size_code = :size_code ";
+          $sql .= "where size_code = :size_code and gender = :gender ";
           $stmt = $dbh->prepare($sql);
           $stmt->bindValue(":size_code", $_GET["sizecode"]);
+          $stmt->bindValue(":gender", $_GET["gender"]);
           if ($stmt->execute()){
             $stmt->setFetchMode(PDO::FETCH_CLASS, "Sizecode");
             $sizecode = $stmt->fetch();           
@@ -180,7 +181,7 @@
     $.ajax({
         type: 'POST',
         url: 'data/manageshirtsize.data.php', 
-        data: $form.serialize()
+        data: $form.serialize() + "&method=insert"
     })
     .done(function(data){
       if (data.result === "success"){
@@ -224,7 +225,7 @@
    	$.ajax({
           type: 'POST',
           url: 'data/manageshirtsize.data.php', 
-          data: {isDelete: isDelete.value, txtSizecode: isDelete.value}
+          data: {method: 'delete', size_code: isDelete.value}
       })
       .done(function(data){
         if (data.result === "success"){

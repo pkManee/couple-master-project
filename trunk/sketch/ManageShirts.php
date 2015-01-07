@@ -276,7 +276,7 @@
     $.ajax({
         type: 'POST',
         url: 'data/ManageShirts.data.php', 
-        data: $form.serialize() + "&txtShirtId=1"
+        data: $form.serialize() + "&method=insert"
     })
     .done(function(data){
       if (data.result === "success"){
@@ -320,7 +320,7 @@
    	$.ajax({
           type: 'POST',
           url: 'data/ManageShirts.data.php', 
-          data: {isDelete: isDelete.value, txtShirtId: isDelete.value}
+          data: {method: 'delete', shirtId: isDelete.value}
       })
       .done(function(data){
         if (data.result === "success"){
@@ -347,23 +347,28 @@
     var rdoMale = document.getElementById('radio-male');
     var rdoFemale = document.getElementById('radio-female');
     rdoMale.onchange = function() {
-        $.ajax({
-          type: 'POST',
-          url: 'data/ManageShirts.data.php', 
-          data: {isDelete: isDelete.value, txtShirtId: isDelete.value}
+      getShirtSize('M');
+    }
+    rdoFemale.onchange = function() {
+      getShirtSize('F');
+    }
+    function getShirtSize(gender) {
+      $.ajax({
+        type: 'POST',
+        url: 'data/ManageShirtSize.data.php', 
+        data: {method: 'get_shirt_size', gender: gender}
       })
       .done(function(data){
         if (data.result === "success"){
           Toast.init({
-              "selector": ".alert-success"
+            "selector": ".alert-success"
           });
-          Toast.show("<strong>Delete completed!!!</strong><br/>redirecting ...");
-          setTimeout(function(){ window.location = "ListShirts.php" }, 1000);
-        }else{
+          Toast.show("<strong>Success!!!<strong>");
+        } else {
           Toast.init({
             "selector": ".alert-danger"
           });
-          Toast.show("<strong>Error on deleting!!!<strong> " + data);
+          Toast.show("<strong>Error on get shirt size!!!<strong> " + data);
         }
       })//done
       .fail(function() {
@@ -373,10 +378,6 @@
         });//fail
       });//ajax
     }
-    rdoFemale.onchange = function() {
-      
-    }
-
     </script>
   </body>
 </html>
