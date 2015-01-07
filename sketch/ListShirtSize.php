@@ -31,7 +31,6 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
     require("navbar.php");
     require("service/message_service.php");
     require("service/db_connect.php");
-
   ?>  
   <form class="form-inline" id="listshirtsize-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
   <div class="container">
@@ -59,7 +58,7 @@ try {
     die();
 }
 
-$sql = "select size_code, chest_size, shirt_length from shirt_size where 1 = 1 ";
+$sql = "select size_code, chest_size, shirt_length, gender from shirt_size where 1 = 1 ";
 
 if (!empty($_GET["txtShirtsize"])){
   $sql .= "and size_code like :shirtsize order by size_code asc ";
@@ -79,6 +78,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <tr>
         <th>#</th>
         <th>ขนาดเสื้อ</th>
+        <th></th>
         <th>ความยาวรอบอบ (ซม.)</th>       
         <th>ความยาวเสื้อ (ซม.)</th>
       </tr>
@@ -90,10 +90,12 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $size_code = $row["size_code"];
         $chest_size = $row["chest_size"];
         $shirt_length = $row["shirt_length"];
+        $gender = ($row["gender"]=="M")?"ชาย":"หญิง";
         echo "<tr>";
 
         echo "<th scope=\"row\">" .$i. "</th>";
-        echo "<td><a href=\"manageshirtsize.php?sizecode=" .urlencode($size_code). "\">" .$size_code. "</a></td>";
+        echo "<td><a href=\"manageshirtsize.php?sizecode=" .urlencode($size_code). "&gender=" .$row["gender"]. "\">" .$size_code. "</a></td>";
+        echo "<td>" .$gender. "</td>";
         echo "<td>" .$chest_size. "</td>";
         echo "<td>" .$shirt_length. "</td>";
 
