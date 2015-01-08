@@ -315,8 +315,7 @@
     }); 
   }
 
-   function goDelete(){ 
-
+   function goDelete(){
    	$.ajax({
           type: 'POST',
           url: 'data/ManageShirts.data.php', 
@@ -359,11 +358,15 @@
         data: {method: 'get_shirt_size', gender: gender}
       })
       .done(function(data){
-        if (data.result === "success"){
-          Toast.init({
-            "selector": ".alert-success"
+        if (data){ 
+          var text = '';
+          data.forEach(function(size){
+            text +="<option data-content=\"<table style='width:100%'><tr><td style='width: 20%;'>" +size.size_code+ "</td><td style='width: '80%'; >รอบอก "+size.chest_size+" x ความยาว " +size.shirt_length+ "</td></tr></table>\" ";
+            text +="value=\"" +size.size_code+ "\" selected>" +size.size_code+ "</option>";            
           });
-          Toast.show("<strong>Success!!!<strong>");
+
+          $('#cbo-shirt-size').html(text).selectpicker('refresh');
+
         } else {
           Toast.init({
             "selector": ".alert-danger"
@@ -371,7 +374,7 @@
           Toast.show("<strong>Error on get shirt size!!!<strong> " + data);
         }
       })//done
-      .fail(function() {
+      .fail(function(data) {
         bootbox.dialog({
                     title: 'Fatal Error',
                     message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
