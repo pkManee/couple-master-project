@@ -40,11 +40,12 @@ function getShirtSize() {
   $sql .= "where 1 = 1 ";
   $sql .= "and gender = :gender ";
   $stmt = $dbh->prepare($sql);
-  $stmt->bindValue(":gender", $gender); 
-  
+  $stmt->bindValue(":gender", $gender);
+
   if ($stmt->execute()){    
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     header("Content-Type: application/json");
-    echo json_encode(array("result"=>"success"));
+    echo json_encode($results);
 
   }else{
     header("Content-Type: application/json");

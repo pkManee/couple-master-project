@@ -59,7 +59,7 @@ try {
     die();
 }
 
-$sql = "select shirt_id, shirt_name, color, shirt_type, material_type, size_code, shirt_price ";
+$sql = "select shirt_id, shirt_name, color, shirt_type, material_type, size_code, shirt_price, gender ";
 $sql .= "from shirts where 1 = 1 ";
 
 if (!empty($_GET["txtSearch"])){
@@ -80,6 +80,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <tr>
         <th>#</th>
         <th>เสื้อ</th>
+        <th></th>
         <th>สีเสื้อ</th>
         <th>แบบเสื้อ</th>    
         <th>ประเภทผ้า</th>
@@ -93,6 +94,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
       foreach($result as $row) {
         $shirt_id = $row["shirt_id"];
         $shirt_name = $row["shirt_name"];
+        $gender = $row["gender"] == "M" ? "ชาย" : "หญิง";
         $color = $row["color"];
         $shirt_type = $row["shirt_type"];
         $material_type = $row["material_type"];
@@ -103,6 +105,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         echo "<th scope=\"row\">" .$i. "</th>";
         echo "<td><a href=\"ManageShirts.php?shirtid=" .$shirt_id. "\">" .$shirt_name. "</a></td>";
+        echo "<td>" .$gender. "</td>";
         echo "<td>" .$color. "</td>";
         echo "<td>" .$shirt_type. "</td>";
         echo "<td>" .$material_type. "</td>";
