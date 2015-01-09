@@ -18,10 +18,64 @@ switch ($method) {
   case 'delete':
     deleteShirts();
     break;
+  case 'getAllShirtsByGender':
+    getAllShirtsByGender();
+    break;
+  case 'getShirtColor':
+    getShirtColor();
+    break;
   default:
     header("Content-Type: application/json");
     echo json_encode(array("result"=>"no_method"));
     break;
+}
+
+function getShirtColor() {
+  try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      echo "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+
+  $sql = "select distinct s.color, c.color_hex from shirts s inner join shirt_color c on s.color = c.color ";
+  $sql .= "where s.gender = :gender and s.shirt_type = :shirt_type";
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindValue(":gender", $_POST["gender"]);
+  $stmt->bindValue(":shirt_type", $_POST["shirt_type"]);
+
+  if ($stmt->execute()){    
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    header("Content-Type: application/json");
+    echo json_encode($results);
+
+  } else {
+    header("Content-Type: application/json");
+    echo json_encode($stmt->errorInfo());
+  }
+}
+
+function getAllShirtsByGender() {
+  try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      echo "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+
+  $sql = "select * from shirts where gender = :gender ";
+  $stmt = $dbh->prepare($sql);
+
+  $stmt->bindValue(":gender", $_POST["gender"]);
+  if ($stmt->execute()){    
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    header("Content-Type: application/json");
+    echo json_encode($results);
+
+  } else {
+    header("Content-Type: application/json");
+    echo json_encode($stmt->errorInfo());
+  }
 }
 
 function insertShirts(){
@@ -60,6 +114,13 @@ function insertShirts(){
 }
 
 function deleteShirts() {
+  try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      echo "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+  
   $sql = "delete from shirts where shirt_id = :shirt_id ";
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":shirt_id", $_POST["shirtId"]);

@@ -12,16 +12,17 @@
     <!--bootstrap -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <link href="css/bootstrap-select.css" rel="stylesheet">
     <!--sketch-->
   	<link rel="stylesheet" type="text/css" href="css/sketch.css">  	
     <link rel="stylesheet" type="text/css" href="css/Color.Picker.Classic.css">
-    <link rel="stylesheet" type="text/css" href="css/iconfont.css">
-    
+    <link rel="stylesheet" type="text/css" href="css/iconfont.css">    
 
   	<script src="js/jquery-2.1.1.min.js"></script>
     <!--bootstrap-->
     <script src="js/bootstrap.js"></script>
     <script src="js/bootbox.js"></script>
+    <script src="js/bootstrap-select.js"></script>
     <!--sketch-->
     <script src="TinyColor/tinycolor.js"></script>
     <script src="HSBRect/HSBRect.js"></script>
@@ -68,68 +69,22 @@
       <div class="upper-shelf">
         <button id="btn-design" title="Shirt view" class="geo-button icon-shirt" type="button"></button>        
       </div>
-      <div class="upper-shelf">
-        <div class="form-group form-inline">
-        <?php
-          require("service/message_service.php");
-          require("service/db_connect.php");
-
-          try {
-              $conn = dbConnect::getInstance();
-              $dbh = $conn->dbh;
-          } catch (PDOException $e) {
-              print "Error!: " . $e->getMessage() . "<br/>";
-              die();
-          }
-
-          $sql = "select s.shirt_id, s.shirt_name, s.color, s.shirt_type, s.material_type, s.size_code, s.shirt_price ";
-          $sql .= ",z.chest_size, z.shirt_length ";
-          $sql .= "from shirts s inner join shirt_size z on s.size_code = z.size_code ";
-          $sql .= "where 1 = 1 ";
-          $sql .= "order by s.shirt_name asc ";
-          $stmt = $dbh->prepare($sql);
-          $stmt->execute();
-          $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        ?>
-        <div class="form-group">
-          <label class="control-label" for="cbo-shirt-men">เสื้อชาย</label>
-          <select class="form-control" id="cbo-shirt-men" data-toggle="tooltip" data-placement="bottom">
-            <?php            
-            foreach($result as $row) {
-              $shirt_id = $row["shirt_id"];
-              $shirt_name = $row["shirt_name"];
-              $color = $row["color"];
-              $shirt_type = $row["shirt_type"];
-              $material_type = $row["material_type"];
-              $size_code = $row["size_code"];
-              $shirt_price = $row["shirt_price"];    
-              $chest_size = $row["chest_size"];
-              $shirt_length = $row["shirt_length"];
-
-              echo "<option value=\"".$shirt_id."\" >".$shirt_name."</option>";
-            }
-            ?>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="contorl-label" for="cbo-shirt-women">เสื้อหญิง</label>
-          <select class="form-control" id="cbo-shirt-women" data-toggle="tooltip" data-placement="bottom">
-            <?php            
-            foreach($result as $row) {
-              $shirt_id = $row["shirt_id"];
-              $shirt_name = $row["shirt_name"];
-              $color = $row["color"];
-              $shirt_type = $row["shirt_type"];
-              $material_type = $row["material_type"];
-              $size_code = $row["size_code"];
-              $shirt_price = $row["shirt_price"];       
-
-              echo "<option value=\"".$shirt_id."\">".$shirt_name."</option>";
-            }
-            ?>
-          </select>
-        </div>
-        </div>
+      <div class="upper-shelf"  >
+            <div class="upper-shelf">
+              <select class="form-control selectpicker" id="cbo-gender-1">
+                <option value="M">ชาย</option>
+                <option value="F">หญิง</option>
+              </select>
+            </div>
+            <div class="upper-shelf">
+            <select class="form-control selectpicker" id="cbo-shirt-type-1" >
+            </select>
+            </div>
+            <div class="upper-shelf">
+            <select class="form-control selectpicker" id="cbo-shirt-color-1" >
+            </select>
+            </div>
+        
       </div>
     </div>
   </div>
@@ -142,10 +97,7 @@
         <span>Line width: </span>        
         <input id="brush-size-slider" type="range" min="1" max="100" value="30">
         <hr>
-        <br>
-        <div>
-          
-        </div>
+        <br>        
       </div>      
   </div>
     <script src="./js/Event.js" type="text/javascript"></script> 
@@ -154,6 +106,12 @@
     <script src="./js/fabricjs-painter.js" type="text/javascript"></script>
     <script src="./js/resolutionCal.js" type="text/javascript"></script>    
     <script src="./js/app.js" type="text/javascript"></script>
-    
+    <script src="./js/Design.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      // $(document).ready(function() {
+      //   $('.selectpicker').selectpicker();
+      // });        
+      
+    </script>
 	</body>
 </html>

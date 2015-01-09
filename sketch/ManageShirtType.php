@@ -124,7 +124,7 @@
     $.ajax({
         type: 'POST',
         url: 'data/manageshirttype.data.php', 
-        data: $form.serialize()
+        data: $form.serialize() + "&method=insertShirtType"
     })
     .done(function(data){
       if (data.result === "success"){
@@ -168,7 +168,7 @@
    	$.ajax({
           type: 'POST',
           url: 'data/manageshirttype.data.php', 
-          data: {isDelete: isDelete.value, txtShirtType: isDelete.value}
+          data: {isDelete: isDelete.value, method: 'deleteShirtType'}
       })
       .done(function(data){
         if (data.result === "success"){
