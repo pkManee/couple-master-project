@@ -10,6 +10,9 @@ cboShirtType1.onchange = function() {
 cboGender1.onchange = function() {
     getShirtColor();
 }
+cboShirtColor1.onchange =  function() {
+    setShirtColor();
+}
 
 function getShirtInfo(shirtId, cbo) {    
 
@@ -76,7 +79,7 @@ function getShirtColor() {
         if (data) {
             var text = '';
             data.forEach(function(item){
-                text += "<option data-content=\"<table style='width:100%'><tr><td style='width: 50%;'>" +item.color+ "</td><td style='width: '50%'; text-aligh: right' bgcolor='" +item.color_hex+ "'></td></tr></table>\" ";
+                text += "<option data-content=\"<table style='width:100%; text-aligh:left;'><tr><td style='width: 50%;'>" +item.color+ "</td><td style='width: '50%'; text-aligh: right' bgcolor='" +item.color_hex+ "'></td></tr></table>\" ";
                 text +="value=\"" +item.color_hex+ "\" >" +item.color+ "</option>";
             });
 
@@ -102,8 +105,10 @@ function setShirtColor() {
     if (!shirtArray) return;
 
     var filter = new fabric.Image.filters.Multiply({
-            color: cboShirtColor1.value
-        });
+                    color: cboShirtColor1.value
+                });
+    shirtArray[0].filters = [];
+    shirtArray[0].applyFilters();
     shirtArray[0].filters.push(filter);
     shirtArray[0].applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));
 
