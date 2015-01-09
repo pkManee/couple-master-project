@@ -73,6 +73,7 @@ btnShirt.onclick = function(){
 
     if (isShirtMode){       
         loadShirt();
+        designInit();
     }
 }
 var btnDesign = document.getElementById('btn-design');
@@ -479,7 +480,7 @@ function onKeyDownHandler(e) {
    }
 };
 
-
+var shirtArray = [];
 //shirt canvas
 var splitLineScreen = [];
 var finalLineScreen = [];
@@ -488,7 +489,7 @@ function loadShirt(){
 
     shirtCanvas.clear();
     splitCanvas()
-
+    shirtArray.length = 0;
     //shirt 1
     //men
     var rectBorder = new fabric.Rect({
@@ -515,7 +516,8 @@ function loadShirt(){
         });
         oImg.filters.push(filter);
         oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
-        shirtCanvas.sendToBack(oImg);   
+        shirtCanvas.sendToBack(oImg);
+        shirtArray.push(oImg);
     });
     fabric.Image.fromURL(splitLineScreen[0], function(oImg) {        
         oImg.set({top: 105 ,left: 125, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
@@ -553,7 +555,8 @@ function loadShirt(){
         });
         oImg.filters.push(filter);
         oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
-        shirtCanvas.sendToBack(oImg);   
+        shirtCanvas.sendToBack(oImg);
+        shirtArray.push(oImg);
     });
     fabric.Image.fromURL(splitLineScreen[1], function(oImg) {        
         oImg.set({top: 105 ,left: 560, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
@@ -588,36 +591,6 @@ function splitCanvas() {
     canvas.deactivateAll();
     splitLineScreen.push(canvas.toDataURLWithCropping(format, cropping1, quality));
     splitLineScreen.push(canvas.toDataURLWithCropping(format, cropping2, quality));
-}
-
-var cboMen = document.getElementById('cbo-shirt-men');
-var cboWomen = document.getElementById('cbo-shirt-women');
-
-cboMen.onchange = function() {
-    getShirtInfo(this.value, this);
-}
-
-function getShirtInfo(shirtId, cbo) {    
-
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: "./service/",
-        data: {method: "getShirtInfo", shirt_id: shirtId}       
-    })
-    .done(function(data) {
-        var shirt = data[0];   
-        //cbo.setAttribute("title", "size: " + shirt.size_code + " ขนาด: " + shirt.chest_size + "x" + shirt.shirt_length); 
-        //var txt =  "size: " + shirt.size_code + " ขนาด: " + shirt.chest_size + "x" + shirt.shirt_length;
-        cbo.setAttribute("data-original-title", "size: " + shirt.size_code + " ขนาด: " + shirt.chest_size + "x" + shirt.shirt_length);
-        $('#cbo-shirt-men').tooltip();     
-    })//done
-    .fail(function(data) { 
-        bootbox.dialog({
-                title: 'Fatal Error',
-                message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
-        });
-    });//fail
 }
 
 //init method
@@ -718,7 +691,6 @@ function init() {
 
     btnSelect.onclick();
     toggleMode();
-
-    getShirtInfo(cboMen.value, cboMen);
+   
 }//init
 init();
