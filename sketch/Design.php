@@ -68,24 +68,21 @@
     <div role="tabpanel" class="tab-pane" id="shirt-shelf">
       <div class="upper-shelf">
         <button id="btn-design" title="Shirt view" class="geo-button icon-shirt" type="button"></button>        
-      </div>
-      <div class="upper-shelf"  >
-            <div class="upper-shelf">
-              <select class="form-control selectpicker" id="cbo-gender-1">
-                <option value="M">ชาย</option>
-                <option value="F">หญิง</option>
-              </select>
-            </div>
-            <div class="upper-shelf">
-            <select class="form-control selectpicker" id="cbo-shirt-type-1" >
-            </select>
-            </div>
-            <div class="upper-shelf">
-            <select class="form-control selectpicker" id="cbo-shirt-color-1" >
-            </select>
-            </div>
-        
-      </div>
+      </div>      
+        <div class="upper-shelf">
+          <select class="form-control selectpicker" id="cbo-gender-1">
+            <option value="M">ชาย</option>
+            <option value="F">หญิง</option>
+          </select>
+        </div>
+        <div class="upper-shelf">
+          <select class="form-control selectpicker" id="cbo-shirt-type-1" >
+          </select>
+        </div>
+        <div class="upper-shelf" style="width: 150px;">
+          <select class="form-control selectpicker" id="cbo-shirt-color-1" >
+          </select>
+        </div>
     </div>
   </div>
     <br/>

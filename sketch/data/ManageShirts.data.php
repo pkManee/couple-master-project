@@ -90,7 +90,7 @@ function insertShirts(){
   $sql .= "(shirt_name, color, shirt_type, material_type, size_code, shirt_price, gender) ";
   $sql .= "values";
   $sql .= "(:shirt_name, :color, :shirt_type, :material_type, :size_code, :shirt_price, :gender) ";
-  $sql .= "on duplicate key update color = :color, shirt_type = :shirt_type, material_type = :material_type ";
+  $sql .= "on duplicate key update shirt_name = :shirt_name, color = :color, shirt_type = :shirt_type, material_type = :material_type ";
   $sql .= ",size_code = :size_code, shirt_price = :shirt_price, gender = :gender ";
 
   $stmt = $dbh->prepare($sql);
