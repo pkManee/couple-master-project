@@ -67,7 +67,7 @@ if (!empty($_GET["txtSearch"])){
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":shirt_name", "%" .$_GET["txtSearch"]. "%");
 }else{
-  $sql .= "order by shirt_name asc ";
+  $sql .= "order by shirt_id asc ";
   $stmt = $dbh->prepare($sql);
 }
 

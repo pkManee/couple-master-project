@@ -27,8 +27,7 @@
     <script src="TinyColor/tinycolor.js"></script>
     <script src="HSBRect/HSBRect.js"></script>
   	<script src="js/fabric.js"></script>
-  	<script src="js/fabric.canvasex.js"></script>    
-
+  	<script src="js/fabric.canvasex.js"></script>
 	</head>
 	<body>
   <ul class="nav nav-tabs" role="tablist" id="myTab">
@@ -68,34 +67,53 @@
     <div role="tabpanel" class="tab-pane" id="shirt-shelf">
       <div class="upper-shelf">
         <button id="btn-design" title="Shirt view" class="geo-button icon-shirt" type="button"></button>        
-      </div>      
-        <div class="upper-shelf">
-          <select class="form-control selectpicker" id="cbo-gender-1">
-            <option value="M">ชาย</option>
-            <option value="F">หญิง</option>
-          </select>
+        <div class="container">
+            <div class="upper-shelf" >
+              <select class="form-control selectpicker" id="cbo-gender-1" >
+                <option value="M">ชาย</option>
+                <option value="F">หญิง</option>
+              </select>
+            </div>
+            <div class="upper-shelf">
+              <select class="form-control" id="cbo-shirt-type-1" >
+              </select>
+            </div>
+            <div class="upper-shelf" >
+              <select class="form-control " id="cbo-shirt-size-1" ></select>
+            </div> 
+
+            <div class="upper-shelf" style="padding-left: 150px;" >
+              <select class="form-control selectpicker" id="cbo-gender-2" >
+                <option value="M">ชาย</option>
+                <option value="F" selected>หญิง</option>
+              </select>
+            </div>
+            <div class="upper-shelf">
+              <select class="form-control" id="cbo-shirt-type-2">
+              </select>
+            </div>
+            <div class="upper-shelf" >
+              <select class="form-control " id="cbo-shirt-size-2" ></select>
+            </div>
+
         </div>
-        <div class="upper-shelf">
-          <select class="form-control selectpicker" id="cbo-shirt-type-1" >
-          </select>
-        </div>
-        <div class="upper-shelf" style="width: 150px;">
-          <select class="form-control selectpicker" id="cbo-shirt-color-1" >
-          </select>
-        </div>
+      </div>  
     </div>
   </div>
     <br/>
   <div id="canvas-area">
     <div id="the-devide"></div>
   </div>
-	<div id="right-side">
-      <div id="brush-shelf">        
-        <span>Line width: </span>        
-        <input id="brush-size-slider" type="range" min="1" max="100" value="30">
-        <hr>
-        <br>        
-      </div>      
+	<div id="right-side" class="well">
+      <div id="line-width">        
+        <span>ขนาดเส้น</span>        
+        <input id="brush-size-slider" class="form-control" type="range" min="1" max="100" value="30">              
+      </div>
+      <div id="panel-color" style="width: 150px;">
+        <span>สีเสื้อ</span>
+        <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
+        <select class="form-control selectpicker" id="cbo-shirt-color-2" ></select>        
+      </div>    
   </div>
     <script src="./js/Event.js" type="text/javascript"></script> 
     <script src="./js/Color.Picker.Classic.js" type="text/javascript"></script>
@@ -103,12 +121,6 @@
     <script src="./js/fabricjs-painter.js" type="text/javascript"></script>
     <script src="./js/resolutionCal.js" type="text/javascript"></script>    
     <script src="./js/app.js" type="text/javascript"></script>
-    <script src="./js/Design.js" type="text/javascript"></script>
-    <script type="text/javascript">
-      // $(document).ready(function() {
-      //   $('.selectpicker').selectpicker();
-      // });        
-      
-    </script>
+    <script src="./js/Design.js" type="text/javascript"></script>    
 	</body>
 </html>
