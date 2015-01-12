@@ -27,10 +27,35 @@ switch ($method) {
   case 'getShirtSize':
     getShirtSize();
     break;
+  case 'getShirtTypeByGender' :
+    getShirtTypeByGender();
+    break;
   default:
     header("Content-Type: application/json");
     echo json_encode(array("result"=>"no_method"));
     break;
+}
+
+function getShirtTypeByGender() {
+  try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      echo "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+  $sql = "select distinct s.shirt_type from shirts s ";
+  $sql .= "where s.gender = :gender ";
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindValue(":gender", $_POST["gender"]);
+  if ($stmt->execute()){    
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    header("Content-Type: application/json");
+    echo json_encode($results);
+
+  } else {
+    header("Content-Type: application/json");
+    echo json_encode($stmt->errorInfo());
+  }
 }
 
 function getShirtSize() {

@@ -2,65 +2,96 @@ var cboGender1 = document.getElementById('cbo-gender-1');
 var cboShirtType1 = document.getElementById('cbo-shirt-type-1');
 var cboShirtColor1 = document.getElementById('cbo-shirt-color-1');
 
+var cboChange = false;
 cboShirtType1.onchange = function() { 
+    cboChange = true;
     getShirtColor1();    
-
-    loadShirt(getURI1(cboShirtType1.value), cboShirtColor1.value, getURI2(cboShirtType2.value), cboShirtColor2.value); 
 }
-
-cboGender1.onchange = function() { getShirtColor1(); }
+cboGender1.onchange = function() { 
+    cboChange = true;
+    getShirtType1(); 
+}
 cboShirtColor1.onchange =  function() { setShirtColor(0); }
 
 var cboGender2 = document.getElementById('cbo-gender-2');
 var cboShirtType2 = document.getElementById('cbo-shirt-type-2');
 var cboShirtColor2 = document.getElementById('cbo-shirt-color-2');
 
-cboShirtType2.onchange = function() { 
+cboShirtType2.onchange = function() {
+    cboChange = false;
     getShirtColor2();
-    
-    loadShirt(getURI1(cboShirtType1.value), cboShirtColor1.value, getURI2(cboShirtType2.value), cboShirtColor2.value); 
 }
-cboGender2.onchange = function() { getShirtColor2(); }
+cboGender2.onchange = function() { 
+    cboChange = false;
+    getShirtColor2(); 
+}
 cboShirtColor2.onchange = function() { setShirtColor(1); }
 
-function getURI1(shirtType) {
+function getURI1(shirtType) {    
     var uri;
-    switch (shirtType) {
-    case 'คอกลม':
-        uri = roundType.type_m;
-        break;
-    case 'คอวี':
-        uri = vType.type_m;
-        break;
-    case 'คอโปโล':
-        uri = poloType.type_m;
-        break;
+    if (cboGender1.value === 'M'){
+        switch (shirtType) {
+        case 'คอกลม':
+            uri = roundType.type_m;
+            break;
+        case 'คอวี':
+            uri = vType.type_m;
+            break;
+        case 'คอโปโล':
+            uri = poloType.type_m;
+            break;
+        }
+    } else {
+        switch (shirtType) {
+        case 'คอกลม':
+            uri = roundType.type_w;
+            break;
+        case 'คอวี':
+            uri = vType.type_w;
+            break;
+        case 'คอโปโล':
+            uri = poloType.type_w;
+            break;
+        }
     }
 
     return uri;
 }
 function getURI2(shirtType) {
     var uri;
-    switch (shirtType) {
-    case 'คอกลม':
-        uri = roundType.type_w;
-        break;
-    case 'คอวี':
-        uri = vType.type_w;
-        break;
-    case 'คอโปโล':
-        uri = poloType.type_w;
-        break;
+    if (cboGender2.value === 'M'){
+        switch (shirtType) {
+        case 'คอกลม':
+            uri = roundType.type_m;
+            break;
+        case 'คอวี':
+            uri = vType.type_m;
+            break;
+        case 'คอโปโล':
+            uri = poloType.type_m;
+            break;
+        }
+    } else {
+        switch (shirtType) {
+        case 'คอกลม':
+            uri = roundType.type_w;
+            break;
+        case 'คอวี':
+            uri = vType.type_w;
+            break;
+        case 'คอโปโล':
+            uri = poloType.type_w;
+            break;
+        }
     }
     return uri;
 }
-
-function getShitType1() {
+function getShirtType1() {
     $.ajax({
         type: "POST",
         dataType: "json",
-        url: "data/ManageShirtType.data.php",
-        data: {method: "getAll"}       
+        url: "data/ManageShirts.data.php",
+        data: {method: "getShirtTypeByGender", gender: cboGender1.value}       
     })
     .done(function(data) {
         if (data) {
@@ -75,24 +106,23 @@ function getShitType1() {
             Toast.init({
                 "selector": ".alert-danger"
             });
-            Toast.show("<strong>Error on get shirt type!!!<strong> " + data);
+            Toast.show("<strong>Error on getShirtType1!!!<strong> " + data);
         }
 
     })//done
     .fail(function(data) { 
         bootbox.dialog({
                 title: 'Fatal Error',
-                message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
+                message : '<div class="alert alert-danger" role="alert"><strong>Error in getShirtType1 !!!</strong></div>'
         });
     });//fail
 }
-
-function getShitType2() {
+function getShirtType2() {
     $.ajax({
         type: "POST",
         dataType: "json",
-        url: "data/ManageShirtType.data.php",
-        data: {method: "getAll"}       
+        url: "data/ManageShirts.data.php",
+        data: {method: "getShirtTypeByGender", gender: cboGender2.value}       
     })
     .done(function(data) {
         if (data) {
@@ -107,18 +137,17 @@ function getShitType2() {
             Toast.init({
                 "selector": ".alert-danger"
             });
-            Toast.show("<strong>Error on get shirt getShitType2!!!<strong> " + data);
+            Toast.show("<strong>Error on get shirt getShirtType2!!!<strong> " + data);
         }
 
     })//done
     .fail(function(data) { 
         bootbox.dialog({
                 title: 'Fatal Error',
-                message : '<div class="alert alert-danger" role="alert"><strong>Error in getShitType2 !!!</strong></div>'
+                message : '<div class="alert alert-danger" role="alert"><strong>Error in getShirtType2 !!!</strong></div>'
         });
     });//fail
 }
-
 function getShirtColor1() {
     $.ajax({
         type: "POST",
@@ -134,7 +163,9 @@ function getShirtColor1() {
                 text +="value=\"" +item.color_hex+ "\" >" +item.color+ "</option>";
             });
 
-            $(cboShirtColor1).html(text).selectpicker('refresh');           
+            $(cboShirtColor1).html(text).selectpicker('refresh');
+            shirtCanvas.clear();
+            loadShirt(getURI1(cboShirtType1.value), cboShirtColor1.value, getURI2(cboShirtType2.value), cboShirtColor2.value); 
             getShirtSize1(); 
         } else {
             Toast.init({
@@ -167,6 +198,8 @@ function getShirtColor2() {
             });
 
             $(cboShirtColor2).html(text).selectpicker('refresh');
+            shirtCanvas.clear();
+            loadShirt(getURI1(cboShirtType1.value), cboShirtColor1.value, getURI2(cboShirtType2.value), cboShirtColor2.value); 
             getShirtSize2();            
         } else {
             Toast.init({
@@ -200,6 +233,12 @@ function getShirtSize1() {
 
             $('#cbo-shirt-size-1').html(text).selectpicker('refresh');           
             setShirtColor(0);
+            
+            //do this method from designInit() command only, skip when combobox change
+            if (!cboChange) {
+               getShirtType2();
+            }
+
         } else {
             Toast.init({
                 "selector": ".alert-danger"
@@ -229,8 +268,8 @@ function getShirtSize2() {
                 text += "<option value=\"" +item.size_code+ "\" >" +item.size_code+ "</option>";
             });
 
-            $('#cbo-shirt-size-2').html(text).selectpicker('refresh');          
-            setShirtColor(1);
+            $('#cbo-shirt-size-2').html(text).selectpicker('refresh');
+            setTimeout(setShirtColor(1), 300);            
         } else {
             Toast.init({
                 "selector": ".alert-danger"
@@ -267,19 +306,22 @@ function setShirtColor(sequenceNo) {
         if (shirt.id === shirtId) obj = shirt;
     });
 
-    var filter = new fabric.Image.filters.Multiply({
-                    color: color
-                });
-    obj.filters = [];
-    obj.applyFilters();
-    obj.filters.push(filter);
-    obj.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));
-    shirtCanvas.renderAll();
+    if (obj){
+        var filter = new fabric.Image.filters.Multiply({
+                        color: color
+                    });
+        obj.filters = [];
+        obj.applyFilters();
+        obj.filters.push(filter);
+        obj.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));
+        shirtCanvas.renderAll();
+    }
 }
 
 function designInit() {
     $('.selectpicker').selectpicker();
-    getShitType1();
-    getShitType2();
+    cboChange = false;
+    getShirtType1();
+    //getShirtType2();
 }
 

@@ -82,20 +82,21 @@
               <select class="form-control " id="cbo-shirt-size-1" ></select>
             </div> 
 
-            <div class="upper-shelf" style="padding-left: 150px;" >
-              <select class="form-control selectpicker" id="cbo-gender-2" >
-                <option value="M">ชาย</option>
-                <option value="F" selected>หญิง</option>
-              </select>
+            <div class="upper-shelf" style="padding-left: 150px; position: absolute;" >
+              <div class="upper-shelf" >
+                <select class="form-control selectpicker" id="cbo-gender-2" >
+                  <option value="M">ชาย</option>
+                  <option value="F" selected>หญิง</option>
+                </select>
+              </div>
+              <div class="upper-shelf">
+                <select class="form-control" id="cbo-shirt-type-2">
+                </select>
+              </div>
+              <div class="upper-shelf" >
+                <select class="form-control " id="cbo-shirt-size-2" ></select>
+              </div>
             </div>
-            <div class="upper-shelf">
-              <select class="form-control" id="cbo-shirt-type-2">
-              </select>
-            </div>
-            <div class="upper-shelf" >
-              <select class="form-control " id="cbo-shirt-size-2" ></select>
-            </div>
-
         </div>
       </div>  
     </div>
