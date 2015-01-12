@@ -35,7 +35,9 @@ function getAll() {
       die();
   }
   $sql = "select shirt_type, shirt_type_description from shirt_type ";
+  
   $stmt = $dbh->prepare($sql);
+
   if ($stmt->execute()){        
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     header("Content-Type: application/json");
