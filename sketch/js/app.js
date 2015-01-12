@@ -85,19 +85,26 @@ function toggleMode(){
 
     var designShelf = document.getElementById('design-shelf');
     var brushShelf = document.getElementById('brush-image-shelf');
-    var shirtShelf = document.getElementById('shirt-shelf');    
+    var shirtShelf = document.getElementById('shirt-shelf');
+    var lineWidth = document.getElementById('line-width');
+    var panelColor = document.getElementById('panel-color');
     //to shirt mode
     if (isShirtMode){
         canvas.wrapperEl.style.zIndex = -1;
         shirtCanvas.wrapperEl.style.zIndex = 1;
-         $('.nav-tabs > .active').next('li').find('a').trigger('click');
-         if (PICKER) PICKER.toggle(false);
+        lineWidth.style.display = 'none';
+        panelColor.style.display = 'inline-block';
+
+        $('.nav-tabs > .active').next('li').find('a').trigger('click');
+        if (PICKER) PICKER.toggle(false);
     }else{
     //to design mode
         canvas.wrapperEl.style.zIndex = 1;
         shirtCanvas.wrapperEl.style.zIndex = -1;
-       $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-       if (PICKER) PICKER.toggle(true);
+        lineWidth.style.display = 'inline-block';
+        panelColor.style.display = 'none';
+        $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+        if (PICKER) PICKER.toggle(true);
     }
 }
 //============================================================================================================
@@ -278,7 +285,7 @@ btnFlip.onclick = function(){
     canvas.renderAll()
 }
 //switch between draw <--> select Mode
-var btnSelect = $('btn-selector');
+var btnSelect = document.getElementById('btn-selector');
 btnSelect.onclick = function(){
     isPainterOn = false;
     canvas.isDrawingMode = false;   
@@ -484,89 +491,108 @@ var shirtArray = [];
 //shirt canvas
 var splitLineScreen = [];
 var finalLineScreen = [];
-function loadShirt(){
+var vType = {
+            type_m: {uri: './img/shirts/v_white_front_m02.png', width: 190, height: 340,top: 100, left: 125},
+            type_w: {uri: './img/shirts/v_white_front_w01.png', width: 190, height: 340,top: 100, left: 555}
+            };
+var roundType = {
+            type_m: {uri: './img/shirts/tshirt_men_white.png', width: 190, height: 340,top: 100, left: 119},
+            type_w: {uri: './img/shirts/tshirt_women_white.png', width: 190, height: 340,top: 100, left: 555}
+            };
+var poloType = {
+            type_m: {uri: './img/shirts/white-polo.png', width: 190, height: 340,top: 100, left: 119},
+            type_w: {uri: './img/shirts/2168060063_6717_png_raw_3.png', width: 190, height: 340,top: 100, left: 555}
+            }
+function loadShirt(typeMen, color1, typeWomen, color2){
     if (!isShirtMode) return;
 
+    if (typeMen === undefined) typeMen = roundType.type_m;
+    if (color1 === undefined) color1 = COLOR;
+    if (typeWomen === undefined) typeWomen = roundType.type_w;
+    if (color2 === undefined) color2 = COLOR;
     shirtCanvas.clear();
     splitCanvas()
     shirtArray.length = 0;
     //shirt 1
     //men
-    var rectBorder = new fabric.Rect({
-        width: 190,
-        height: 340,
-        top: 100,
-        left: 119,
-        strokeWidth: 1,
-        fill: 'rgba(0, 0, 0, 0)',
-        stroke: 'rgba(0, 0, 0, 0.5)',
-        selectable: false
-    });
-   
-    shirtCanvas.add(rectBorder);
-    borderShirt1 = rectBorder;
-
-    fabric.Image.fromURL('./img/shirts/tshirt_men_white.png', function(oImg) {
-        //oImg.selectable = true;
-        oImg.set({width: 415, height: 461, top: 5, left: 5}); 
-        shirtCanvas.add(oImg);
-
-        var filter = new fabric.Image.filters.Multiply({
-            color: COLOR
+    if (typeMen) {        
+        var rectBorder = new fabric.Rect({
+            width: typeMen.width,
+            height: typeMen.height,
+            top: typeMen.top,
+            left: typeMen.left,
+            strokeWidth: 1,
+            fill: 'rgba(0, 0, 0, 0)',
+            stroke: 'rgba(0, 0, 0, 0.5)',
+            selectable: true
         });
-        oImg.filters.push(filter);
-        oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
-        shirtCanvas.sendToBack(oImg);
-        shirtArray.push(oImg);
-    });
-    fabric.Image.fromURL(splitLineScreen[0], function(oImg) {        
-        oImg.set({top: 105 ,left: 125, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
-        shirtCanvas.add(oImg);        
-        oImg.selectable = true;
-        oImg.set('hasRotatingPoint', false);
-        shirtCanvas.bringToFront(oImg);
-        shirtCanvas.renderAll();
-        finalLineScreen.push(oImg);
-    });
+       
+        shirtCanvas.add(rectBorder);
+        borderShirt1 = rectBorder;
 
+        fabric.Image.fromURL(typeMen.uri, function(oImg) {
+            //oImg.selectable = true;
+            oImg.set({id: 'shirt1',width: 415, height: 461, top: 5, left: 5}); 
+            shirtCanvas.add(oImg);
+
+            var filter = new fabric.Image.filters.Multiply({
+                color: color1
+            });
+            oImg.filters.push(filter);
+            oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
+            shirtCanvas.sendToBack(oImg);
+            shirtArray.push(oImg);
+        });
+        fabric.Image.fromURL(splitLineScreen[0], function(oImg) {        
+            oImg.set({top: 105 ,left: 125, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
+            shirtCanvas.add(oImg);        
+            oImg.selectable = true;
+            oImg.set('hasRotatingPoint', false);
+            shirtCanvas.bringToFront(oImg);
+            shirtCanvas.renderAll();
+            finalLineScreen.push(oImg);
+        });
+    }
     //shirt 2
     //women
-     var rectBorder2 = new fabric.Rect({
-        width: 190,
-        height: 340,
-        top: 100,
-        left: 555,
-        strokeWidth: 1,
-        fill: 'rgba(0, 0, 0, 0)',
-        stroke: 'rgba(0, 0, 0, 0.5)',
-        selectable: false
-    });
-   
-    shirtCanvas.add(rectBorder2);
-    borderShirt2 = rectBorder2;
-
-    fabric.Image.fromURL('./img/shirts/tshirt_women_white.png', function(oImg) {
-        //oImg.selectable = true;
-        oImg.set({width: 363, height: 450, top: 15, left: 465}); 
-        shirtCanvas.add(oImg);
-
-        var filter = new fabric.Image.filters.Multiply({
-            color: COLOR
+    if (typeWomen) {
+        var rectBorder2 = new fabric.Rect({
+            width: typeWomen.width,
+            height: typeWomen.height,
+            top: typeWomen.top,
+            left: typeWomen.left,
+            strokeWidth: 1,
+            fill: 'rgba(0, 0, 0, 0)',
+            stroke: 'rgba(0, 0, 0, 0.5)',
+            selectable: false
         });
-        oImg.filters.push(filter);
-        oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
-        shirtCanvas.sendToBack(oImg);
-        shirtArray.push(oImg);
-    });
-    fabric.Image.fromURL(splitLineScreen[1], function(oImg) {        
-        oImg.set({top: 105 ,left: 560, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
-        shirtCanvas.add(oImg);
-        oImg.selectable = true;
-        oImg.set('hasRotatingPoint', false);
-        shirtCanvas.bringToFront(oImg);
-        shirtCanvas.renderAll();
-        finalLineScreen.push(oImg);
-    });
+       
+        shirtCanvas.add(rectBorder2);
+        borderShirt2 = rectBorder2;
+
+        fabric.Image.fromURL(typeWomen.uri, function(oImg) {
+            //oImg.selectable = true;
+            oImg.set({id: 'shirt2', width: 363, height: 450, top: 15, left: 465}); 
+            shirtCanvas.add(oImg);
+
+            var filter = new fabric.Image.filters.Multiply({
+                color: color2
+            });
+            oImg.filters.push(filter);
+            oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
+            shirtCanvas.sendToBack(oImg);
+            shirtArray.push(oImg);
+        });
+        fabric.Image.fromURL(splitLineScreen[1], function(oImg) {        
+            oImg.set({top: 105 ,left: 560, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
+            shirtCanvas.add(oImg);
+            oImg.selectable = true;
+            oImg.set('hasRotatingPoint', false);
+            shirtCanvas.bringToFront(oImg);
+            shirtCanvas.renderAll();
+            finalLineScreen.push(oImg);
+        });
+    }
 }
 
 function splitCanvas() {

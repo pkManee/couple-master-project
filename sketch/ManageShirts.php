@@ -148,7 +148,7 @@
         <select class="form-control selectpicker" id="cbo-shirt-type" name="cboShirtType">
           <?php
             foreach($result_shirt_type as $row) {
-              if ($shirts->shirt_type == $row["color"]){
+              if ($shirts->shirt_type == $row["shirt_type"]){
                 $html ="<option value=\"" .$row["shirt_type"]. "\" selected>" .$row["shirt_type"]. "</option>";
               }else{
                 $html = "<option value=\"" .$row["shirt_type"]. "\">" .$row["shirt_type"]. "</option>";
