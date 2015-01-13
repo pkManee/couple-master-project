@@ -290,8 +290,7 @@ function setShirtColor() {
     if (!shirtArray) return;
 
     var obj = undefined;   
-    var color = undefined;
-    
+    var color = undefined;    
  
     shirtArray.forEach(function(shirt) {
         if (shirt.id === 'shirt1') {
