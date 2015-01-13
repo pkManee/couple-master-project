@@ -113,6 +113,7 @@
       <div id="panel-color" style="width: 150px;">
         <span>สีเสื้อ</span>
         <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
+        <hr>
         <select class="form-control selectpicker" id="cbo-shirt-color-2" ></select>        
       </div>    
   </div>
