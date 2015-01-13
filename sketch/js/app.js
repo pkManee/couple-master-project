@@ -491,24 +491,23 @@ var shirtArray = [];
 //shirt canvas
 var splitLineScreen = [];
 var finalLineScreen = [];
-var side_1 = {width: 190, height: 340,top: 100, left: 125};
-var side_2 = {width: 190, height: 340,top: 100, left: 555};
+var side_1 = {width: 190, height: 300,top: 160, left: 118};
+var side_2 = {width: 190, height: 300,top: 160, left: 545};
 var vType = {
-            type_m: {uri: './img/shirts/v_white_front_m02.png'},             
-            type_w: {uri: './img/shirts/v_white_front_w01.png'}
+            type_m: {uri: './img/shirts/v-white-front-m01.png'},             
+            type_w: {uri: './img/shirts/v-white-front-w01.png'}
             };
 var roundType = {
-            type_m: {uri: './img/shirts/tshirt_men_white.png'}, 
-            type_w: {uri: './img/shirts/tshirt_women_white.png'}
+            type_m: {uri: './img/shirts/white-front-m01.png'}, 
+            type_w: {uri: './img/shirts/white-front-w01.png'}
             };
 var poloType = {
-            type_m: {uri: './img/shirts/white-polo.png'},
-            type_w: {uri: './img/shirts/2168060063_6717_png_raw_3.png'}
+            type_m: {uri: './img/shirts/polo-white-front-m01.png'},
+            type_w: {uri: './img/shirts/polo-white-front-w01.png'}
             }
 
-function loadShirt(type_1, color1, type_2, color2){
+function loadShirt(type_1, color1, type_2, color2){    
     
-    console.log('count ' + callCount);
     if (!isShirtMode) return;
 
     if (type_1 === undefined) type_1 = roundType.type_m;
@@ -517,7 +516,6 @@ function loadShirt(type_1, color1, type_2, color2){
     if (color2 === undefined) color2 = COLOR;
     shirtCanvas.clear();    
     shirtArray.length = 0;    
-    console.log('start ' + shirtCanvas.getObjects().length);
     //shirt 1
     //men
     if (type_1) {        
@@ -533,20 +531,12 @@ function loadShirt(type_1, color1, type_2, color2){
         });
        
         shirtCanvas.add(rectBorder);
-        console.log('shirtCanvas.add(rectBorder) ' + shirtCanvas.getObjects().length);
         borderShirt1 = rectBorder;
 
         fabric.Image.fromURL(type_1.uri, function(oImg) {            
-            oImg.set({id: 'shirt1',width: 363, height: 450, top: 5, left: 5}); 
+            oImg.set({id: 'shirt1',width: 417, height: 471, top: 35, left: 3}); 
             shirtCanvas.add(oImg);
-            console.log('shirtCanvas.add(type_1) ' + shirtCanvas.getObjects().length);
-            oImg.selectable = true;
-
-            // var filter = new fabric.Image.filters.Multiply({
-            //     color: color1
-            // });
-            // oImg.filters.push(filter);
-            // oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
+            //oImg.selectable = true;    
 
             shirtCanvas.sendToBack(oImg);
             shirtArray.push(oImg);
@@ -554,7 +544,6 @@ function loadShirt(type_1, color1, type_2, color2){
         fabric.Image.fromURL(splitLineScreen[0], function(oImg) {        
             oImg.set({top: 105 ,left: 125, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
             shirtCanvas.add(oImg);
-            console.log('shirtCanvas.add(splitLineScreen[0]) ' + shirtCanvas.getObjects().length);
             oImg.selectable = true;
             oImg.set('hasRotatingPoint', false);
             shirtCanvas.bringToFront(oImg);
@@ -577,20 +566,12 @@ function loadShirt(type_1, color1, type_2, color2){
         });
        
         shirtCanvas.add(rectBorder2);
-        console.log('shirtCanvas.add(rectBorder2) ' + shirtCanvas.getObjects().length);
         borderShirt2 = rectBorder2;
 
         fabric.Image.fromURL(type_2.uri, function(oImg) {           
-            oImg.set({id: 'shirt2', width: 363, height: 450, top: 15, left: 465}); 
+            oImg.set({id: 'shirt2', width: 417, height: 471, top: 35, left: 430}); 
             shirtCanvas.add(oImg);
-            console.log('shirtCanvas.add(type_2) ' + shirtCanvas.getObjects().length);
-            oImg.selectable = true;
-
-            // var filter = new fabric.Image.filters.Multiply({
-            //     color: color2
-            // });
-            // oImg.filters.push(filter);
-            // oImg.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));       
+            //oImg.selectable = true;      
 
             shirtCanvas.sendToBack(oImg);
             shirtArray.push(oImg);
@@ -598,7 +579,6 @@ function loadShirt(type_1, color1, type_2, color2){
         fabric.Image.fromURL(splitLineScreen[1], function(oImg) {        
             oImg.set({top: 105 ,left: 560, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
             shirtCanvas.add(oImg);
-            console.log('shirtCanvas.add(splitLineScreen[1]) ' + shirtCanvas.getObjects().length);
             oImg.selectable = true;
             oImg.set('hasRotatingPoint', false);
             shirtCanvas.bringToFront(oImg);

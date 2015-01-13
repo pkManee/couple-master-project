@@ -11,7 +11,7 @@ cboGender1.onchange = function() {
     cboChange = true;
     getShirtType1(); 
 }
-cboShirtColor1.onchange =  function() { setShirtColor(0); }
+cboShirtColor1.onchange =  function() { setShirtColor(); }
 
 var cboGender2 = document.getElementById('cbo-gender-2');
 var cboShirtType2 = document.getElementById('cbo-shirt-type-2');
@@ -25,7 +25,7 @@ cboGender2.onchange = function() {
     cboChange = false;
     getShirtColor2(); 
 }
-cboShirtColor2.onchange = function() { setShirtColor(1); }
+cboShirtColor2.onchange = function() { setShirtColor(); }
 
 function getURI1(shirtType) {    
     var uri;
@@ -232,7 +232,7 @@ function getShirtSize1() {
             });
 
             $('#cbo-shirt-size-1').html(text).selectpicker('refresh');           
-            setShirtColor(0);
+            setShirtColor();
             
             //do this method from designInit() command only, skip when combobox change
             if (!cboChange) {
@@ -269,7 +269,7 @@ function getShirtSize2() {
             });
 
             $('#cbo-shirt-size-2').html(text).selectpicker('refresh');
-            setTimeout(setShirtColor(1), 300);            
+            setTimeout(setShirtColor(), 300);            
         } else {
             Toast.init({
                 "selector": ".alert-danger"
@@ -286,42 +286,44 @@ function getShirtSize2() {
     });//fail
 }
 
-function setShirtColor(sequenceNo) {
+function setShirtColor() {
     if (!shirtArray) return;
 
-    var obj = undefined;
-    var shirtId = '';
+    var obj = undefined;   
     var color = undefined;
-    switch (sequenceNo) {
-    case 0:
-        shirtId = 'shirt1';    
-        color = cboShirtColor1.value;
-        break;
-    case 1:
-        shirtId = 'shirt2';
-        color = cboShirtColor2.value;
-        break;
-    }
+    
+ 
     shirtArray.forEach(function(shirt) {
-        if (shirt.id === shirtId) obj = shirt;
-    });
-
-    if (obj){
-        var filter = new fabric.Image.filters.Multiply({
+        if (shirt.id === 'shirt1') {
+            obj = shirt;
+            color = cboShirtColor1.value;
+            var filter = new fabric.Image.filters.Multiply({
                         color: color
                     });
-        obj.filters = [];
-        obj.applyFilters();
-        obj.filters.push(filter);
-        obj.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));
-        shirtCanvas.renderAll();
-    }
+            obj.filters = [];
+            obj.applyFilters();
+            obj.filters.push(filter);
+            obj.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));
+            shirtCanvas.renderAll();
+        }
+        if (shirt.id === 'shirt2'){
+            obj = shirt;
+            color = cboShirtColor2.value;
+            var filter = new fabric.Image.filters.Multiply({
+                        color: color
+                    });
+            obj.filters = [];
+            obj.applyFilters();
+            obj.filters.push(filter);
+            obj.applyFilters(shirtCanvas.renderAll.bind(shirtCanvas));
+            shirtCanvas.renderAll();
+        }
+    });
 }
 
 function designInit() {
     $('.selectpicker').selectpicker();
     cboChange = false;
-    getShirtType1();
-    //getShirtType2();
+    getShirtType1();    
 }
 
