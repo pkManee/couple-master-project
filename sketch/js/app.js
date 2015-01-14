@@ -676,7 +676,7 @@ function init() {
     var goodScaleX, goodScaleY
     shirtCanvas.on("object:scaling", function(e){
         if (isShirtMode){
-            var obj = e.target; //shirtCanvas.getActiveObject();;
+            var obj = e.target; //shirtCanvas.getActiveObject();
             var bounds = undefined;           
 
             if (obj.sideOfCanvas === 'left') {
