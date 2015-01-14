@@ -23,13 +23,14 @@
     <script src="js/bootstrap.js"></script>
     <script src="js/bootbox.js"></script>
     <script src="js/bootstrap-select.js"></script>
+    <script src="js/bootstrapValidator.js"></script>
     <!--sketch-->
     <script src="TinyColor/tinycolor.js"></script>
     <script src="HSBRect/HSBRect.js"></script>
   	<script src="js/fabric.js"></script>
   	<script src="js/fabric.canvasex.js"></script>
 	</head>
-	<body>
+	<body>  
   <ul class="nav nav-tabs" role="tablist" id="myTab">
     <li role="button" class="active hide"><a href="#design-shelf" aria-controls="design-shelf" role="tab" data-toggle="tab">Design</a></li>
     <li role="button" class="hide"><a href="#shirt-shelf" aria-controls="shirt-shelf" role="tab" data-toggle="tab">Shirt</a></li> 
@@ -101,28 +102,136 @@
       </div>  
     </div>
   </div>
-    <br/>
+  <br/>
+  <?php
+    include("service/message_service.php");
+    include("service/db_connect.php");
+
+    class Member
+    {
+      public $email;
+      public $member_name = "";
+      public $address;
+      public $province_id;
+      public $amphur_id;
+      public $district_id;
+      public $password;
+      public $postcode;
+      public $photo;
+      public $height_1 = 0;
+      public $height_2 = 0;
+    }
+           
+    try {
+        $dbh = dbConnect::getInstance()->dbh;
+    } catch (PDOException $e) {
+        print "Error!: " . $e->getMessage() . "<br/>";
+        die();
+    }
+
+    $sql = "select email, member_name, address, province_id, amphur_id, district_id, password, postcode ";
+    $sql .= ",photo, height_1, height_2 ";
+    $sql .= "from member where email = :email ";
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(":email", $_SESSION["email"]);
+    if ($stmt->execute()){
+      $stmt->setFetchMode(PDO::FETCH_CLASS, "Member");
+      $member = $stmt->fetch();      
+    }else{
+      echo "error -> " .$stmt->errorInfo()[2];
+    }
+    
+  ?>
   <div id="canvas-area">
     <div id="the-devide"></div>
   </div>
 	<div id="right-side" class="well">
       <div id="line-width">        
-        <span>ขนาดเส้น</span>        
+        <label class="control-label" for="brush-size-slider">ขนาดเส้น</label>        
         <input id="brush-size-slider" class="form-control" type="range" min="1" max="100" value="30">              
       </div>
-      <div id="panel-color" style="width: 150px;">
-        <span>สีเสื้อ</span>
-        <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
-        <hr>
-        <select class="form-control selectpicker" id="cbo-shirt-color-2" ></select>        
+      <div id="panel-color" style="width: 200px;">
+        <form id="member-profile-form">
+          <div class="form-group">
+            <label class="control-label" for="cbo-shirt-color-1">เสื้อด้านซ้าย</label>
+            <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="txt-height-1">ส่วนสูงของผู้ใส่</label>
+            <input type="text" class="form-control" id="txt-height-1" name="txtHeight1"
+              placeholder="ส่วนสูงของผู้ใส่" value="<?php echo $member->height_1; ?>">
+          </div>          
+          <div class="form-group">
+            <label class="control-label" for="cbo-shirt-color-2">เสื้อด้านขวา</label>   
+            <select class="form-control selectpicker" id="cbo-shirt-color-2" ></select>
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="txt-height-2">ส่วนสูงของผู้ใส่</label>     
+            <input type="text" class="form-control" id="txt-height-2" name="txtHeight2" 
+              placeholder="ส่วนสูงของผู้ใส่" value="<?php echo $member->height_2; ?>">
+          </div>
+        </form>
       </div>    
   </div>
+  
     <script src="./js/Event.js" type="text/javascript"></script> 
     <script src="./js/Color.Picker.Classic.js" type="text/javascript"></script>
     <script src="./js/Color.Space.js" type="text/javascript"></script>
     <script src="./js/fabricjs-painter.js" type="text/javascript"></script>
     <script src="./js/resolutionCal.js" type="text/javascript"></script>    
     <script src="./js/app.js" type="text/javascript"></script>
-    <script src="./js/Design.js" type="text/javascript"></script>    
+    <script src="./js/Design.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      //document ready
+    $(document).ready(function() {      
+
+      $('#member-profile-form')
+        .bootstrapValidator( {
+          feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+          },         
+          fields: {
+              txtHeight1: {
+                  validators: {
+                      numeric: {
+                      message: 'กรุณาระบุเป็นตัวเลข'
+                    },
+                    greaterThan: {
+                      value: 0,
+                      inclusive: false,
+                      message: 'กรุณาระบุตัวเลขที่มากกว่าศูนย์'
+                    }
+                }
+              },
+              txtHeight2: {
+                  validators: {
+                      numeric: {
+                      message: 'กรุณาระบุเป็นตัวเลข'
+                    },
+                    greaterThan: {
+                      value: 0,
+                      inclusive: false,
+                      message: 'กรุณาระบุตัวเลขที่มากกว่าศูนย์'
+                    }
+                }
+              }
+            }//fields
+        })//bootstrapValidator
+        .on('success.form.bv', function(e){
+           // Prevent form submission
+            e.preventDefault();
+
+            // Get the form instance
+            var $form = $(e.target);
+            
+            //go process here
+            //goSave($form);
+        });//on success.form.bv
+
+    });//document.ready  
+    </script>
+
 	</body>
 </html>
