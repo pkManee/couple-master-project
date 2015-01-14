@@ -196,12 +196,12 @@
                 </div>                 
              
             <div class="form-group">
-              <label class="control-label" for="txt-height-boy">ส่วนสูง (ชาย)</label>
+              <label class="control-label" for="txt-height-boy">ส่วนสูง (คนที่ 1)</label>
               <input type="text" class="form-control" id="txt-height-boy" placeholder="ซม." 
                     name="txtHeight_1" value="<?php echo $member->height_1; ?>" >
             </div>      
             <div class="form-group">
-              <label class="control-label" for="txt-height-girl">ส่วนสูง (หญิง)</label>
+              <label class="control-label" for="txt-height-girl">ส่วนสูง (คนที่ 2)</label>
               <input type="text" class="form-control" id="txt-height-girl" placeholder="ซม." 
                     name="txtHeight_2" value="<?php echo $member->height_2; ?>">
             </div>            
