@@ -639,10 +639,13 @@ function scaleToFit() {
             obj.set({scaleY: tmpScaleY});
             obj.setCoords();
         }
-       
     });
 
     shirtCanvas.renderAll();
+}
+
+function adjustTop() {
+    
 }
 
 function splitCanvas() {
