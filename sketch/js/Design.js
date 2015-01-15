@@ -269,7 +269,7 @@ function getShirtSize2() {
             });
 
             $('#cbo-shirt-size-2').html(text).selectpicker('refresh');
-            setTimeout(setShirtColor(), 300);            
+            setShirtColor();
         } else {
             Toast.init({
                 "selector": ".alert-danger"
