@@ -54,7 +54,8 @@
           <button id="btn-heart" title="Heart [hit del button to delete]" class="geo-button icon-heart"></button>
           <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;">
             <button id="btn-open" class="geo-button icon-folder" title="Open file"></button>
-            <input type="file" id="upload-button" capture="camera" name="files[]" style="position: absolute; top: 0px; z-index: 1000; font-size: 1000px; text-align: right; width: inherit; height: inherit; cursor: pointer; right: 0px; opacity: 0;">
+            <input type="file" id="upload-button" capture="camera" name="files[]" 
+                    style="position: absolute; top: 0px; z-index: 1000; font-size: 1000px; text-align: right; width: inherit; height: inherit; cursor: pointer; right: 0px; opacity: 0;">
           </span>
           <button id="btn-erase" title="Erase All" class="geo-button icon-erase"></button>
         </div>

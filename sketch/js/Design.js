@@ -165,7 +165,7 @@ function getShirtColor1() {
 
             $(cboShirtColor1).html(text).selectpicker('refresh');
             shirtCanvas.clear();
-            loadShirt(getURI1(cboShirtType1.value), cboShirtColor1.value, getURI2(cboShirtType2.value), cboShirtColor2.value); 
+            loadShirt(getURI1(cboShirtType1.value), getURI2(cboShirtType2.value)); 
             getShirtSize1(); 
         } else {
             Toast.init({
@@ -199,7 +199,7 @@ function getShirtColor2() {
 
             $(cboShirtColor2).html(text).selectpicker('refresh');
             shirtCanvas.clear();
-            loadShirt(getURI1(cboShirtType1.value), cboShirtColor1.value, getURI2(cboShirtType2.value), cboShirtColor2.value); 
+            loadShirt(getURI1(cboShirtType1.value), getURI2(cboShirtType2.value)); 
             getShirtSize2();            
         } else {
             Toast.init({
@@ -328,5 +328,7 @@ function designInit() {
 
 var btnCal = document.getElementById('btn-calculation');
 btnCal.onclick = function() {
-    scaleToFit();
+    loadShirt(getURI1(cboShirtType1.value), getURI2(cboShirtType2.value));
+    setTimeout(function() { scaleToFit(); }, 300);
+    setTimeout(function() { setShirtColor(); }, 300);
 }
