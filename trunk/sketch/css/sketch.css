@@ -75,10 +75,15 @@ body {
 .geo-button:hover{
   opacity: 1;
 }
-
 .geo-button:active{
   color: #00f;
 }
 .fakeInputContainer {
   display: inline-block;
+}
+.fakeInputContainer:hover {
+  opacity: 1;
+}
+.fakeInputContainer:active {
+  color: #00f;
 }

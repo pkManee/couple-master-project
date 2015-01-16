@@ -501,12 +501,12 @@ var poloType = {
             type_w: {uri: './img/shirts/polo-white-front-w02.png'}
             }
 
-function loadShirt(type_1, color1, type_2, color2){ 
+function loadShirt(type_1, type_2){ 
    
     if (!isShirtMode) return;
 
-    var txtHeight1 = document.getElementById('txt-height-1').value;
-    var txtHeight2 = document.getElementById('txt-height-2').value;
+    var txtHeight1 = parseInt(document.getElementById('txt-height-1').value);
+    var txtHeight2 = parseInt(document.getElementById('txt-height-2').value);
 
     var offset = Math.abs(txtHeight1 - txtHeight2);
     if (txtHeight1 > txtHeight2) {
@@ -526,19 +526,20 @@ function loadShirt(type_1, color1, type_2, color2){
         side_cal_2.top = side_2.top + offset;
 
         side_cal_1.height = side_cal_2.height;
-        side_cal_2.top = side_cal_1.top;
+        side_cal_1.top = side_cal_2.top;
     } else if (txtHeight1 === txtHeight2) {
         side_1.offsetTop = 0;
         side_2.offsetTop = 0;
 
         side_cal_1.height = side_1.height;
+        side_cal_1.top = side_1.top;
+
         side_cal_2.height = side_2.height;
+        side_cal_2.top = side_2.top;
     }
 
     if (type_1 === undefined) type_1 = roundType.type_m;
-    if (color1 === undefined) color1 = COLOR;
     if (type_2 === undefined) type_2 = roundType.type_w;
-    if (color2 === undefined) color2 = COLOR;
 
     shirtCanvas.clear();
     shirtArray.length = 0;
@@ -626,7 +627,7 @@ function scaleToFit() {
             adjustPosition(obj);            
         }
 
-        //snap to the right side
+        //snap to the righ side
         if (obj.sideOfCanvas === 'left') {
             var offset = parseInt(Math.abs(obj.left + obj.currentWidth - side_cal_1.right));
             obj.set({left: obj.left + offset});
