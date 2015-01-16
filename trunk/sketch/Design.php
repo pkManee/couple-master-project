@@ -170,6 +170,9 @@
             <input type="text" class="form-control" id="txt-height-2" name="txtHeight2" 
               placeholder="ส่วนสูงของผู้ใส่" value="<?php echo $member->height_2; ?>">
           </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-default" id="btn-calculation">คำนวณตำแหน่ง</button>
+          </div>
         </form>
       </div>    
   </div>

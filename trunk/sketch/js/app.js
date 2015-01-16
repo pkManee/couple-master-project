@@ -472,8 +472,22 @@ var shirtArray = [];
 //shirt canvas
 var splitLineScreen = [];
 var finalLineScreen = [];
-var side_1 = {width: 190, height: 280,top: 160, left: 118, offsetTop: 0};
-var side_2 = {width: 190, height: 280,top: 160, left: 545, offsetTop: 0};
+var side_1 = {width: 190, height: 280, top: 160, left: 118, offsetTop: 0};
+var side_2 = {width: 190, height: 280, top: 160, left: 545, offsetTop: 0};
+var side_cal_1 = {
+                    width: side_1.width, 
+                    height: 0, 
+                    top: side_1.top + side_1.offsetTop, 
+                    left: side_1.left, 
+                    right: side_1.width + side_1.left
+                };
+var side_cal_2 = {
+                    width: side_2.width, 
+                    height: 0, 
+                    top: side_2.top + side_2.offsetTop, 
+                    left: side_2.left, 
+                    right: side_2.width + side_2.left
+                };
 var vType = {
             type_m: {uri: './img/shirts/v-white-front-m01.png'},             
             type_w: {uri: './img/shirts/v-white-front-w01.png'}
@@ -487,25 +501,38 @@ var poloType = {
             type_w: {uri: './img/shirts/polo-white-front-w02.png'}
             }
 
-var loadShirtCount = 0;
-function loadShirt(type_1, color1, type_2, color2){    
+function loadShirt(type_1, color1, type_2, color2){ 
    
-    loadShirtCount ++;
     if (!isShirtMode) return;
 
     var txtHeight1 = document.getElementById('txt-height-1').value;
     var txtHeight2 = document.getElementById('txt-height-2').value;
+
+    var offset = Math.abs(txtHeight1 - txtHeight2);
     if (txtHeight1 > txtHeight2) {
-        //left taller than right
-        side_1.offsetTop = 0;
-        side_2.offsetTop = Math.abs(txtHeight1 - txtHeight2);
+        //person on the left taller than right
+        side_1.offsetTop = 0;        
+        side_2.offsetTop = offset
+        side_cal_1.height =  side_1.height - side_2.offsetTop;        
+        side_cal_1.top = side_1.top + offset;
+
+        side_cal_2.height = side_cal_1.height;
+        side_cal_2.top = side_cal_1.top;
     } else if( txtHeight1 < txtHeight2) {
-        //right taller left
-        side_1.offsetTop = Math.abs(txtHeight1 - txtHeight2);
+        //person on the right taller left       
+        side_1.offsetTop = offset
         side_2.offsetTop = 0;
+        side_cal_2.height = side_2.height - side_1.offsetTop;
+        side_cal_2.top = side_2.top + offset;
+
+        side_cal_1.height = side_cal_2.height;
+        side_cal_2.top = side_cal_1.top;
     } else if (txtHeight1 === txtHeight2) {
         side_1.offsetTop = 0;
         side_2.offsetTop = 0;
+
+        side_cal_1.height = side_1.height;
+        side_cal_2.height = side_2.height;
     }
 
     if (type_1 === undefined) type_1 = roundType.type_m;
@@ -547,7 +574,7 @@ function loadShirt(type_1, color1, type_2, color2){
         fabric.Image.fromURL(splitLineScreen[0], function(oImg) {        
             oImg.set({top: side_1.top + side_1.offsetTop + 3 ,left: side_1.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
             shirtCanvas.add(oImg);              
-            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'left', goodTop: 0, goodLeft: 0});           
+            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'left', goodTop: 0, goodLeft: 0, goodScaleX: 1, goodScaleY: 1});           
             shirtCanvas.bringToFront(oImg);
             shirtCanvas.renderAll();
             finalLineScreen.push(oImg);
@@ -581,71 +608,87 @@ function loadShirt(type_1, color1, type_2, color2){
         fabric.Image.fromURL(splitLineScreen[1], function(oImg) {        
             oImg.set({top: side_2.top + side_2.offsetTop + 3 ,left: side_2.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
             shirtCanvas.add(oImg);
-            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'right', goodTop: 0, goodLeft: 0});
+            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'right', goodTop: 0, goodLeft: 0, goodScaleX: 1, goodScaleY: 1});
             shirtCanvas.bringToFront(oImg);
             shirtCanvas.renderAll();
             finalLineScreen.push(oImg);
         });
-    }
-
-    //run for last call only
-    //prevent cbo in design.js call 2 times
-    if (loadShirtCount === 2) {
-        loadShirtCount = 0;        
-        setTimeout(function(){scaleToFit();}, 300);
-    }
-       
+    }          
 }
 
-function scaleToFit() {
-    console.log('run');
-    var side = side_1;
+function scaleToFit() {    
     
     finalLineScreen.forEach(function(obj) {
-        var expectHeight = 0;
+        scaling(obj);       
 
-        //scale X
-        var tmpScaleX = obj.scaleX;
-        while (obj.currentWidth < side.width - 10) {
-            tmpScaleX += 0.01;
-            obj.set({scaleX: tmpScaleX});
-            obj.setCoords();
-
-            //width and height should maintain aspect ratio 1.41:1
-            expectHeight = obj.currentWidth * 1.41;
-            while (expectHeight > side.height) {
-                tmpScaleX -= 0.1;
-                obj.set({scaleX: tmpScaleX});
-                obj.setCoords();
-                expectHeight = obj.currentWidth * 1.41;
-            }            
+        while (!adjustPosition(obj)) {
+            console.log('call adjustPosition');
+            adjustPosition(obj);            
         }
-        while (obj.currentWidth > side.width) {
-            tmpScaleX -= 0.01;
-            obj.set({scaleX: tmpScaleX});
+
+        //snap to the right side
+        if (obj.sideOfCanvas === 'left') {
+            var offset = parseInt(Math.abs(obj.left + obj.currentWidth - side_cal_1.right));
+            obj.set({left: obj.left + offset});
             obj.setCoords();
+        } else {
+            //do nothing
         }
         
-        //if (expectHeight > side.height) expectHeight = side.height;
-        //scale Y
-        var tmpScaleY = obj.scaleY;
-        while (obj.currentHeight < expectHeight) {
-            tmpScaleY += 0.01;
-            obj.set({scaleY: tmpScaleY});
-            obj.setCoords();
-        }
-        while (obj.currentHeight > expectHeight) {
-            tmpScaleY -= 0.01;
-            obj.set({scaleY: tmpScaleY});
-            obj.setCoords();
-        }
     });
 
     shirtCanvas.renderAll();
 }
 
-function adjustTop() {
-    
+function scaling(obj) {
+    var side = undefined;
+
+    if (obj.sideOfCanvas === 'left') {
+        side = side_cal_1;
+    } else {
+        side = side_cal_2;
+    }
+
+    var scaleFactor = 0.01;
+    while ((obj.currentWidth < side.width) && (obj.currentHeight < side.height)) {
+        obj.set({scaleX: obj.scaleX + scaleFactor, scaleY: obj.scaleY + scaleFactor, left: side.left + 3, top: side.top + 3});
+        scaleFactor += 0.01;
+        obj.setCoords();
+    }
+    while ((obj.currentWidth > side.width) || (obj.currentHeight > side.height)) {
+        scaleFactor -= 0.01;
+        obj.set({scaleX: obj.scaleX + scaleFactor, scaleY: obj.scaleY + scaleFactor, left: side.left + 3, top: side.top + 3});
+        obj.setCoords();
+    }
+}
+
+function adjustPosition(obj) {   
+
+    var TL, BR;
+    if (obj.sideOfCanvas === 'left') {
+        //bounds = borderShirt1;
+        TL = new fabric.Point(side_cal_1.left, side_cal_1.top);
+        BR = new fabric.Point(side_cal_1.left + side_cal_1.width, side_cal_1.top + side_cal_1.height);
+    } else if (obj.sideOfCanvas === 'right') {
+        //bounds = borderShirt2;
+        TL = new fabric.Point(side_cal_2.left, side_cal_2.top);
+        BR = new fabric.Point(side_cal_2.left + side_cal_2.width, side_cal_2.top + side_cal_2.height);
+    }
+
+    obj.setCoords();
+    // if(!obj.isContainedWithinObject(bounds)){ 
+
+    if (!obj.isContainedWithinRect(TL, BR)) {
+        obj.set({scaleX: obj.goodScaleX, scaleY: obj.goodScaleY, left: obj.goodLeft, top: obj.goodTop});
+        return false;
+                         
+    } else{
+        obj.goodTop = obj.top;
+        obj.goodLeft = obj.left;
+        obj.goodScaleX = obj.scaleX;
+        obj.goodScaleY = obj.scaleY;
+        return true;
+    }  
 }
 
 function splitCanvas() {
@@ -731,11 +774,10 @@ function init() {
             } else {
                 obj.goodTop = obj.top;
                 obj.goodLeft = obj.left;
-            }            
+            }
         }
     });
-    //set scaleing limit
-    var goodScaleX, goodScaleY
+    //set scaleing limit    
     shirtCanvas.on("object:scaling", function(e){
         if (isShirtMode){
             var obj = e.target; //shirtCanvas.getActiveObject();
@@ -749,13 +791,13 @@ function init() {
 
             obj.setCoords();
             if(!obj.isContainedWithinObject(bounds)){ 
-                obj.set({scaleX: goodScaleX, scaleY: goodScaleY, left: obj.goodLeft, top: obj.goodTop});
+                obj.set({scaleX: obj.goodScaleX, scaleY: obj.goodScaleY, left: obj.goodLeft, top: obj.goodTop});
                                  
             } else{
                 obj.goodTop = obj.top;
                 obj.goodLeft = obj.left;
-                goodScaleX = obj.scaleX;
-                goodScaleY = obj.scaleY;
+                obj.goodScaleX = obj.scaleX;
+                obj.goodScaleY = obj.scaleY;
             }
         }
     });

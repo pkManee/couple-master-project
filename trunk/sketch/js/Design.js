@@ -326,3 +326,7 @@ function designInit() {
     getShirtType1();    
 }
 
+var btnCal = document.getElementById('btn-calculation');
+btnCal.onclick = function() {
+    scaleToFit();
+}
