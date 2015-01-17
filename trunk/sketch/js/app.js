@@ -23,10 +23,10 @@ div.style.height = areaHeight;
 //draw canvas
 var c = document.createElement('canvas');
 c.id = 'c';
-c.width = A4.pxWidth;
-c.height = A4.pxHeight;
-// c.width = areaWidth;
-// c.height = areaHeight;
+// c.width = A4.pxWidth;
+// c.height = A4.pxHeight;
+c.width = areaWidth;
+c.height = areaHeight;
 c.style.width = areaWidth;
 c.style.height = areaHeight;
 div.appendChild(c);
@@ -96,17 +96,26 @@ function toggleMode(){
         shirtCanvas.wrapperEl.style.zIndex = 1;
         lineWidth.style.display = 'none';
         panelColor.style.display = 'inline-block';
-
+        //toggle tab page
         $('.nav-tabs > .active').next('li').find('a').trigger('click');
-        if (PICKER) PICKER.toggle(false);
+        //toggle picker
+        if (PICKER) { 
+            PICKER.toggle(false);
+            isShowPicker = false;
+        }
     }else{
     //to design mode
         canvas.wrapperEl.style.zIndex = 1;
         shirtCanvas.wrapperEl.style.zIndex = -1;
         lineWidth.style.display = 'inline-block';
         panelColor.style.display = 'none';
+        //toggle tab page
         $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-        if (PICKER) PICKER.toggle(true);
+        //toggle picker
+        if (PICKER) {
+            PICKER.toggle(true);
+            isShowPicker = true;
+        }
     }
 }
 //============================================================================================================
@@ -231,6 +240,8 @@ function handleImage(e){
             reader.onload = function(event){
                
                 fabric.Image.fromURL(event.target.result, function(oImg) {
+                    oImg.scaleX = canvas.width /oImg.width;
+                    oImg.scaleY = canvas.width /oImg.width;//canvas.height /oImg.height;
                     canvas.add(oImg);
                     canvas.renderAll();
                     oImg.selectable = true;
@@ -257,6 +268,72 @@ btnText.onclick = function(){
     canvas.renderAll();
 
     btnSelect.onclick();
+}
+
+//button cartoon
+var btnCartoon = document.getElementById('btn-cartoon');
+btnCartoon.onclick = function() {  
+    var obj = canvas.getActiveObject();
+    if (obj === null || obj === undefined) {         
+        return;
+    }
+
+    bootbox.dialog({
+                        title: 'Pleas wait',
+                        message : '<div class="alert alert-info" role="alert">Calculating ...</div>'
+                    });
+  
+    
+    setTimeout(function() { setFilter(obj); }, 500);
+    setTimeout(function() { bootbox.hideAll(); }, 500);
+}
+function setFilter(obj) {    
+
+    var f = fabric.Image.filters;
+
+    var noiseFilter = new f.Noise({ noise: 20 });
+    applyFilter(0, noiseFilter, obj);
+
+    // var sharpenFilter = new f.Convolute({
+    //                                       matrix: [  0, -1,  0,
+    //                                                 -1,  5, -1,
+    //                                                  0, -1,  0 ]
+    //                                     });
+    // applyFilter(1, sharpenFilter, obj);
+
+    // var blurFilter = new f.Convolute({
+    //                                   matrix: [ 1/9, 1/9, 1/9,
+    //                                             1/9, 1/9, 1/9,
+    //                                             1/9, 1/9, 1/9 ]
+    //                                 });
+    // applyFilter(1, blurFilter, obj);
+
+    var blurFilter = new f.Convolute({
+                                      matrix: [ 1/5, 1/5, 1/5,
+                                                1/5, 1/5, 1/5,
+                                                1/5, 1/5, 1/5 ]
+                                    });
+    applyFilter(1, blurFilter, obj);
+
+    var embossFilter = new f.Convolute({
+                                          matrix: [ 1,   1,  1,
+                                                    1, 0.7, -1,
+                                                   -1,  -1, -1 ]
+                                        });
+    applyFilter(2, embossFilter, obj);
+    bootbox.hideAll();
+}
+function applyFilter(index, filter, obj) {
+    
+    obj.filters[index] = filter;
+    obj.applyFilters(canvas.renderAll.bind(canvas));
+}
+function applyFilterValue(index, prop, value, obj) {
+    
+    if (obj.filters[index]) {
+      obj.filters[index][prop] = value;
+      obj.applyFilters(canvas.renderAll.bind(canvas));
+    }
 }
 //button clone
 var btnClone = document.getElementById('btn-clone');
@@ -391,6 +468,14 @@ fabric.Canvas.prototype.toDataURLWithCropping = function (format, cropping, qual
     this.contextTop && this.clearContext(this.contextTop);
     this.renderAll();
     return data;
+}
+
+//button color picker
+var isShowPicker = true;
+var btnPicker = document.getElementById('btn-color-picker');
+btnPicker.onclick = function() {
+    isShowPicker = !isShowPicker
+    if (PICKER) PICKER.toggle(isShowPicker);        
 }
 
 //brush size slider
