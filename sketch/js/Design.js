@@ -329,6 +329,32 @@ function designInit() {
 var btnCal = document.getElementById('btn-calculation');
 btnCal.onclick = function() {
     loadShirt(getURI1(cboShirtType1.value), getURI2(cboShirtType2.value));
-    setTimeout(function() { scaleToFit(); }, 300);
+    setTimeout(function() { 
+        scaleToFit(); 
+        Toast.init({"selector": ".alert-success"});
+        Toast.show("Calculation<br><strong>Completed ...</strong>");
+    }, 300);   
+
     setTimeout(function() { setShirtColor(); }, 300);
 }
+
+var Toast = (function() {
+    "use strict";
+
+    var elem,
+        hideHandler,
+        that = {};
+
+    that.init = function(options) {
+        elem = $(options.selector);
+    };
+
+    that.show = function(text) {
+        clearTimeout(hideHandler);
+
+        elem.find("span").html(text);
+        elem.delay(200).fadeIn().delay(1500).fadeOut();
+    };
+
+    return that;
+}());

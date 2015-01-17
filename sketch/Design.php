@@ -30,7 +30,10 @@
   	<script src="js/fabric.js"></script>
   	<script src="js/fabric.canvasex.js"></script>
 	</head>
-	<body>  
+	<body>
+  <div class="alert alert-info" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
+    <span></span>
+  </div>
   <ul class="nav nav-tabs" role="tablist" id="myTab">
     <li role="button" class="active hide"><a href="#design-shelf" aria-controls="design-shelf" role="tab" data-toggle="tab">Design</a></li>
     <li role="button" class="hide"><a href="#shirt-shelf" aria-controls="shirt-shelf" role="tab" data-toggle="tab">Shirt</a></li> 
@@ -60,6 +63,8 @@
           <button id="btn-erase" title="Erase All" class="geo-button icon-erase"></button>
         </div>
         <div class="upper-shelf">
+          <button id="btn-color-picker" title="Color PIcker" class="geo-button icon-color-picker"></button>
+          <button id="btn-cartoon" title="Cartoon" class="geo-button icon-cartoon"></button>
           <button id="btn-clone" title="Create copy" class="geo-button icon-clone"></button>
           <button id="btn-flip" title="Flip Horizontally" class="geo-button icon-flip"></button>
           <button id="btn-crop" title="Crop" class="geo-button icon-crop"></button>
