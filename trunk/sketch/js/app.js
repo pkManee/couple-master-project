@@ -15,6 +15,8 @@ var A4 = {
         };
 var svgNS = "http://www.w3.org/2000/svg";
 var isShirtMode = false;
+var isFilterMode = false;
+var filters = ['blur', 'sharpen', 'emboss', 'grayscale'];
 
 var div = document.getElementById('canvas-area');
 div.style.width = areaWidth;
@@ -88,13 +90,13 @@ function toggleMode(){
     var designShelf = document.getElementById('design-shelf');
     var brushShelf = document.getElementById('brush-image-shelf');
     var shirtShelf = document.getElementById('shirt-shelf');
-    var lineWidth = document.getElementById('line-width');
-    var panelColor = document.getElementById('panel-color');
+    var drawTools = document.getElementById('draw-tools');
+    var panelColor = document.getElementById('panel-color');    
     //to shirt mode
     if (isShirtMode){
         canvas.wrapperEl.style.zIndex = -1;
         shirtCanvas.wrapperEl.style.zIndex = 1;
-        lineWidth.style.display = 'none';
+        drawTools.style.display = 'none';
         panelColor.style.display = 'inline-block';
         //toggle tab page
         $('.nav-tabs > .active').next('li').find('a').trigger('click');
@@ -107,7 +109,7 @@ function toggleMode(){
     //to design mode
         canvas.wrapperEl.style.zIndex = 1;
         shirtCanvas.wrapperEl.style.zIndex = -1;
-        lineWidth.style.display = 'inline-block';
+        drawTools.style.display = 'inline-block';
         panelColor.style.display = 'none';
         //toggle tab page
         $('.nav-tabs > .active').prev('li').find('a').trigger('click');
@@ -240,8 +242,8 @@ function handleImage(e){
             reader.onload = function(event){
                
                 fabric.Image.fromURL(event.target.result, function(oImg) {
-                    oImg.scaleX = canvas.width /oImg.width;
-                    oImg.scaleY = canvas.width /oImg.width;//canvas.height /oImg.height;
+                    oImg.scaleX = 0.2//(canvas.width/2) /oImg.width;
+                    oImg.scaleY = 0.2//(canvas.height/2) /oImg.height;
                     canvas.add(oImg);
                     canvas.renderAll();
                     oImg.selectable = true;
@@ -270,61 +272,92 @@ btnText.onclick = function(){
     btnSelect.onclick();
 }
 
-//button cartoon
-var btnCartoon = document.getElementById('btn-cartoon');
-btnCartoon.onclick = function() {  
+//button filter
+document.getElementById('btn-filter').onclick = function() {
+    isFilterMode = !isFilterMode;
+    var filters = document.getElementById('panel-filter');
+    var lineWidth = document.getElementById('line-width');
+    if (isFilterMode) {
+        filters.style.display = 'inline-block';
+        lineWidth.style.display = 'none';
+    } else {
+        filters.style.display = 'none';
+        lineWidth.style.display = 'inline-block';
+    }
+}
+function filterLoading() {  
     var obj = canvas.getActiveObject();
     if (obj === null || obj === undefined) {         
-        return;
+        return false;
     }
 
     bootbox.dialog({
                         title: 'Pleas wait',
                         message : '<div class="alert alert-info" role="alert">Calculating ...</div>'
                     });
-  
-    
-    setTimeout(function() { setFilter(obj); }, 500);
+    return true;
+}
+var btnBlur = document.getElementById('blur');
+btnBlur.onchange = function() {
+    if (!filterLoading()) return;
+
+    var f = fabric.Image.filters;    
+    var filter = new f.Convolute({
+                                  matrix: [ 1/9, 1/9, 1/9,
+                                            1/9, 1/9, 1/9,
+                                            1/9, 1/9, 1/9 ]
+                                });
+    filter = this.checked && filter;    
+    setTimeout(function() { applyFilter(0, filter); }, 500);
     setTimeout(function() { bootbox.hideAll(); }, 500);
 }
-function setFilter(obj) {    
+var btnSharpen = document.getElementById('sharpen');
+btnSharpen.onchange = function() {
+    if (!filterLoading()) return;
+
+    var f = fabric.Image.filters;    
+    var filter = new f.Convolute({
+                                  matrix: [ -1,    -1,    -1,
+                                            -1,     9,    -1,
+                                            -1,    -1,    -1 ]
+                                });
+    filter = this.checked && filter;
+    setTimeout(function() { applyFilter(1, filter); }, 500);
+    setTimeout(function() { bootbox.hideAll(); }, 500);
+}
+var btnEmboss = document.getElementById('emboss');
+btnEmboss.onchange = function() {
+    if (!filterLoading()) return;
 
     var f = fabric.Image.filters;
+    // var f1 = new f.Convolute({
+    //                             matrix: [ -1, -1, -1,
+    //                                       -1, 11, -1,
+    //                                       -1, -1, -1 ]
+    //                         });
+    // applyFilter(2, f1, obj);    
 
-    var noiseFilter = new f.Noise({ noise: 20 });
-    applyFilter(0, noiseFilter, obj);
-
-    // var sharpenFilter = new f.Convolute({
-    //                                       matrix: [  0, -1,  0,
-    //                                                 -1,  5, -1,
-    //                                                  0, -1,  0 ]
-    //                                     });
-    // applyFilter(1, sharpenFilter, obj);
-
-    // var blurFilter = new f.Convolute({
-    //                                   matrix: [ 1/9, 1/9, 1/9,
-    //                                             1/9, 1/9, 1/9,
-    //                                             1/9, 1/9, 1/9 ]
-    //                                 });
-    // applyFilter(1, blurFilter, obj);
-
-    var blurFilter = new f.Convolute({
-                                      matrix: [ 1/5, 1/5, 1/5,
-                                                1/5, 1/5, 1/5,
-                                                1/5, 1/5, 1/5 ]
-                                    });
-    applyFilter(1, blurFilter, obj);
-
-    var embossFilter = new f.Convolute({
-                                          matrix: [ 1,   1,  1,
-                                                    1, 0.7, -1,
-                                                   -1,  -1, -1 ]
-                                        });
-    applyFilter(2, embossFilter, obj);
-    bootbox.hideAll();
+    var filter = new f.Convolute({  opaque: true,
+                                    matrix: [ -2, -1,  0,
+                                              -1,  1,  1,
+                                               0,  1,  2 ]
+                                });
+    filter = this.checked && filter;
+    setTimeout(function() { applyFilter(2, filter); }, 500);
+    setTimeout(function() { bootbox.hideAll(); }, 500);
 }
-function applyFilter(index, filter, obj) {
-    
+var btnGrascale = document.getElementById('grayscale');
+btnGrascale.onchange = function() {
+    if (!filterLoading()) return;
+    var f = fabric.Image.filters;
+    var filter = new f.Grayscale();
+    filter = this.checked && filter;
+    setTimeout(function() { applyFilter(3, filter); }, 500);
+    setTimeout(function() { bootbox.hideAll(); }, 500);  
+}
+
+function applyFilter(index, filter) {
+    var obj = canvas.getActiveObject();
     obj.filters[index] = filter;
     obj.applyFilters(canvas.renderAll.bind(canvas));
 }
@@ -548,6 +581,13 @@ function onKeyDownHandler(e) {
          if (activeObject !== null) {
             canvas.remove(activeObject);            
             canvas.renderAll();
+
+            if (isFilterMode) {
+                for (var i = 0; i < filters.length; i++) {
+                    document.getElementById(filters[i]).disabled = true;
+                    document.getElementById(filters[i]).checked = false;
+                }
+            }
             return;
         }
    }
@@ -839,6 +879,22 @@ function init() {
     canvas.on('mouse:up', function(data){
         isMouseDown = false;
         if (isMouseDownForPaint) isMouseDownForPaint = false;        
+    });
+
+    canvas.on('object:selected', function() { 
+        if (isFilterMode) {            
+            for (var i = 0; i < filters.length; i++) {
+                document.getElementById(filters[i]).disabled = false;
+                document.getElementById(filters[i]).checked = !!canvas.getActiveObject().filters[i];
+            }
+        }
+    });
+    canvas.on('selection:cleared', function() {
+        if (isFilterMode) {            
+            for (var i = 0; i < filters.length; i++) {
+                document.getElementById(filters[i]).disabled = true;
+            }
+        }
     });
 
     //set movement limit

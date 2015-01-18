@@ -64,7 +64,7 @@
         </div>
         <div class="upper-shelf">
           <button id="btn-color-picker" title="Color PIcker" class="geo-button icon-color-picker"></button>
-          <button id="btn-cartoon" title="Cartoon" class="geo-button icon-cartoon"></button>
+          <button id="btn-filter" title="Layer filters" class="geo-button icon-filter"></button>
           <button id="btn-clone" title="Create copy" class="geo-button icon-clone"></button>
           <button id="btn-flip" title="Flip Horizontally" class="geo-button icon-flip"></button>
           <button id="btn-crop" title="Crop" class="geo-button icon-crop"></button>
@@ -151,36 +151,65 @@
   <div id="canvas-area">
     <div id="the-devide"></div>
   </div>
-	<div id="right-side" class="well">
-      <div id="line-width">        
+	<div id="right-side" class="well" style="width:240px;">
+    <div id="draw-tools" style="width:100%;">
+      <div id="line-width" style="width:100%;">        
         <label class="control-label" for="brush-size-slider">ขนาดเส้น</label>        
         <input id="brush-size-slider" class="form-control" type="range" min="1" max="100" value="30">              
       </div>
-      <div id="panel-color" style="width: 200px;">
-        <form id="member-profile-form">
-          <div class="form-group">
-            <label class="control-label" for="cbo-shirt-color-1">เสื้อด้านซ้าย</label>
-            <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
+      <div id="panel-filter" style="width:100%; display:none;"> 
+        <div class="form-group">     
+          <div class="btn-group" style="width:100%;">            
+              <input type="checkbox" id="blur">
+              <label class="control-label" for="blur" >Blur</label>
           </div>
-          <div class="form-group">
-            <label class="control-label" for="txt-height-1">ส่วนสูงของผู้ใส่</label>
-            <input type="text" class="form-control" id="txt-height-1" name="txtHeight1"
-              placeholder="ส่วนสูงของผู้ใส่" value="<?php echo $member->height_1; ?>">
-          </div>          
-          <div class="form-group">
-            <label class="control-label" for="cbo-shirt-color-2">เสื้อด้านขวา</label>   
-            <select class="form-control selectpicker" id="cbo-shirt-color-2" ></select>
+        </div>
+        <div class="form-group">
+          <div class="btn-group" style="width:100%;">            
+              <input type="checkbox" id="sharpen">
+              <label class="control-label" for="sharpen">Sharpen</label>
           </div>
-          <div class="form-group">
-            <label class="control-label" for="txt-height-2">ส่วนสูงของผู้ใส่</label>     
-            <input type="text" class="form-control" id="txt-height-2" name="txtHeight2" 
-              placeholder="ส่วนสูงของผู้ใส่" value="<?php echo $member->height_2; ?>">
+        </div>
+        <div class="form-group">
+          <div class="btn-group" style="width:100%;">            
+              <input type="checkbox" id="emboss">
+              <label class="control-label" for="emboss" >Emboss</label>
           </div>
-          <div class="form-group">
-            <button type="button" class="btn btn-default" id="btn-calculation">คำนวณตำแหน่ง</button>
+        </div>
+        <div class="form-group">
+          <div class="btn-group" style="width:100%;">            
+              <input type="checkbox" id="grayscale">
+              <label class="control-label" for="grayscale" >Grayscale</label>
           </div>
-        </form>
-      </div>    
+        </div>
+      </div>
+    </div>
+    <div id="panel-color" style="width: 200px;">
+      <form id="member-profile-form">
+        <div class="form-group">
+          <label class="control-label" for="cbo-shirt-color-1">เสื้อด้านซ้าย</label>
+          <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="txt-height-1">ส่วนสูงของผู้ใส่</label>
+          <input type="text" class="form-control" id="txt-height-1" name="txtHeight1"
+            placeholder="ส่วนสูงของผู้ใส่" value="<?php echo $member->height_1; ?>">
+        </div>          
+        <div class="form-group">
+          <label class="control-label" for="cbo-shirt-color-2">เสื้อด้านขวา</label>   
+          <select class="form-control selectpicker" id="cbo-shirt-color-2" ></select>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="txt-height-2">ส่วนสูงของผู้ใส่</label>     
+          <input type="text" class="form-control" id="txt-height-2" name="txtHeight2" 
+            placeholder="ส่วนสูงของผู้ใส่" value="<?php echo $member->height_2; ?>">
+        </div>
+        <div class="form-group">
+          <button type="button" class="btn btn-default" id="btn-calculation">คำนวณตำแหน่ง</button>
+        </div>
+      </form>
+    </div>
+       
   </div>
   
     <script src="./js/Event.js" type="text/javascript"></script> 
