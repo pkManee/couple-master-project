@@ -161,7 +161,7 @@
         <div class="form-group">     
           <div class="btn-group" style="width:100%;">            
               <input type="checkbox" id="blur">
-              <label class="control-label" for="blur" >Blur</label>
+              <label class="control-label" for="blur">Blur</label>
           </div>
         </div>
         <div class="form-group">
@@ -186,37 +186,49 @@
     </div>
     <div id="panel-color" style="width: 200px;">
       <form id="member-profile-form">
+        <div class="form-group">         
+          <div id="recommend-color" class="recommend-color"></div>
+          <select class="form-control selectpicker" id="cbo-color-style">
+            <option value="">แนะนำสี</option>
+            <option value="analogous">Analogous</option>
+            <option value="triad">Triad</option>
+            <option value="complementary">Complementary</option>
+          </select>
+        </div>       
         <div class="form-group">
           <label class="control-label" for="cbo-shirt-color-1">เสื้อด้านซ้าย</label>
+          <div id="color-thief-1" class="span-color"></div>
           <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
         </div>
+        
         <div class="form-group">
-          <label class="control-label" for="txt-height-1">ส่วนสูงของผู้ใส่</label>
+          <label class="control-label" for="txt-height-1">ส่วนสูงของผู้ใส่</label>          
           <input type="text" class="form-control" id="txt-height-1" name="txtHeight1"
-            placeholder="ส่วนสูงของผู้ใส่" value="<?php echo $member->height_1; ?>">
+            placeholder="ส่วนสูงของผู้ใส่ (ซม.)" value="<?php echo $member->height_1; ?>">
         </div>          
         <div class="form-group">
-          <label class="control-label" for="cbo-shirt-color-2">เสื้อด้านขวา</label>   
+          <label class="control-label" for="cbo-shirt-color-2">เสื้อด้านขวา</label>
+          <div id="color-thief-2" class="span-color"></div>
           <select class="form-control selectpicker" id="cbo-shirt-color-2" ></select>
         </div>
         <div class="form-group">
           <label class="control-label" for="txt-height-2">ส่วนสูงของผู้ใส่</label>     
           <input type="text" class="form-control" id="txt-height-2" name="txtHeight2" 
-            placeholder="ส่วนสูงของผู้ใส่" value="<?php echo $member->height_2; ?>">
+            placeholder="ส่วนสูงของผู้ใส่ (ซม.)" value="<?php echo $member->height_2; ?>">
         </div>
         <div class="form-group">
           <button type="button" class="btn btn-default" id="btn-calculation">คำนวณตำแหน่ง</button>
         </div>
       </form>
-    </div>
-       
+    </div>       
   </div>
   
     <script src="./js/Event.js" type="text/javascript"></script> 
     <script src="./js/Color.Picker.Classic.js" type="text/javascript"></script>
     <script src="./js/Color.Space.js" type="text/javascript"></script>
     <script src="./js/fabricjs-painter.js" type="text/javascript"></script>
-    <script src="./js/resolutionCal.js" type="text/javascript"></script>    
+    <script src="./js/resolutionCal.js" type="text/javascript"></script>
+    <script src="./js/color-thief.js" type="text/javascript"></script>
     <script src="./js/app.js" type="text/javascript"></script>
     <script src="./js/Design.js" type="text/javascript"></script>
     <script type="text/javascript">
