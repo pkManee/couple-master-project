@@ -45,13 +45,15 @@ body {
 #brush-image-shelf{
   float: left; 
   display: inline-block;
+  padding-top: 2px;
   top:0px;
 }
 .upper-shelf{  
   float: left; 
   display: inline-block;
   padding-left: 10px;
-  top:0px;
+  padding-top: 2px;
+  top:0px;  
 }
 .info {
   display: inline-block;
@@ -86,4 +88,15 @@ body {
 }
 .fakeInputContainer:active {
   color: #00f;
+}
+.span-color {
+  float: right;
+  width: 80px;
+  height: 20px;
+}
+.recommend-color {
+  float: left;
+  width: 20px;
+  height: 20px;
+  padding-left: 1px;
 }

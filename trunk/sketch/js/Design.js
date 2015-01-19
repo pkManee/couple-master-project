@@ -332,10 +332,40 @@ btnCal.onclick = function() {
     setTimeout(function() { 
         scaleToFit(); 
         Toast.init({"selector": ".alert-success"});
-        Toast.show("Calculation<br><strong>Completed ...</strong>");
+        Toast.show("Calculation<br><strong>Adjust position completed ...</strong>");
     }, 300);   
 
     setTimeout(function() { setShirtColor(); }, 300);
+}
+
+var cboColorStyle = document.getElementById('cbo-color-style');
+cboColorStyle.onchange = function() {
+    var colorShirt = document.getElementById('color-thief-1').style.backgroundColor;
+    var recommend;
+    switch (this.value) {               
+       
+        case 'analogous':
+            recommend = tinycolor.analogous(colorShirt, 2);
+            break;
+        case 'triad':
+        break;
+         case 'complementary':            
+            break;
+    }
+
+    if (recommend) {
+        
+    }
+}
+
+function compareColor(color1, color2) {
+    var a = tinycolor(color1).toRgb();
+    var b = tinycolor(color2).toRgb();
+    var differences = distance(a.r, b.r) + distance(a.g, b.g) + distance(a.b, b.b);
+    return Math.sqrt(differences);
+}
+function distance(a, b) {
+    return (a - b) * (a - b);
 }
 
 var Toast = (function() {
