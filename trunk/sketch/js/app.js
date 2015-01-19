@@ -302,15 +302,37 @@ var btnBlur = document.getElementById('blur');
 btnBlur.onchange = function() {
     if (!filterLoading()) return;
 
+    // var f = fabric.Image.filters;    
+    // var filter = new f.Convolute({
+    //                               matrix: [ 1/9, 1/9, 1/9,
+    //                                         1/9, 1/9, 1/9,
+    //                                         1/9, 1/9, 1/9 ]
+    //                             });
+   
+    // filter = this.checked && filter;    
+    // setTimeout(function() { applyFilter(0, filter); }, 500);
+    // setTimeout(function() { bootbox.hideAll(); }, 500);
+
     var f = fabric.Image.filters;    
     var filter = new f.Convolute({
-                                  matrix: [ 1/9, 1/9, 1/9,
-                                            1/9, 1/9, 1/9,
-                                            1/9, 1/9, 1/9 ]
+                                  matrix: [ 0, 0, 0,
+                                            0, 1, 0,
+                                            0, 0, 0 ]
                                 });
+   
     filter = this.checked && filter;    
-    setTimeout(function() { applyFilter(0, filter); }, 500);
-    setTimeout(function() { bootbox.hideAll(); }, 500);
+    applyFilter(0, filter);
+
+    var filter = new f.Convolute({
+                                  matrix: [ 1, 1, 1,
+                                            1, 0, 1,
+                                            1, 1, 1 ]
+                                });
+   
+    filter = this.checked && filter;    
+    applyFilter(1, filter);
+    bootbox.hideAll();
+    
 }
 var btnSharpen = document.getElementById('sharpen');
 btnSharpen.onchange = function() {
