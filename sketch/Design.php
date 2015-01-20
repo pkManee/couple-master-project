@@ -42,7 +42,8 @@
     <div role="tabpanel" class="tab-pane active" id="design-shelf">
       <div class="upper-shelf">
         <div id="brush-image-shelf">
-          <button id="btn-shirt" title="Shirt view" class="geo-button icon-shirt" type="button"></button>     
+          <button id="btn-shirt" title="Shirt view" class="geo-button icon-shirt" type="button"></button>
+          <button id="btn-color-picker" title="Color PIcker" class="geo-button icon-color-picker"></button> 
           <button id="btn-pencil" title="Pencil" class="geo-button icon-pencil"></button>      
           <button id="btn-brush" title="Circle" class="geo-button icon-brush"></button>
           <button id="btn-spray" title="Glass storm" class="geo-button icon-spray"></button>
@@ -54,20 +55,20 @@
           <button id="btn-triangle" title="Triangle [hit del button to delete]" class="geo-button icon-tri"></button>
           <button id="btn-round" title="Round [hit del button to delete]" class="geo-button icon-round"></button>
           <button id="btn-star" title="Star [hit del button to delete]" class="geo-button icon-star"></button>
-          <button id="btn-heart" title="Heart [hit del button to delete]" class="geo-button icon-heart"></button>
+          <button id="btn-heart" title="Heart [hit del button to delete]" class="geo-button icon-heart"></button>          
+          <button id="btn-erase" title="Erase All" class="geo-button icon-erase"></button>
           <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;">
             <button id="btn-open" class="geo-button icon-folder" title="Open file"></button>
             <input type="file" id="upload-button" capture="camera" name="files[]" 
                     style="position: absolute; top: 0px; z-index: 1000; font-size: 1000px; text-align: right; width: inherit; height: inherit; cursor: pointer; right: 0px; opacity: 0;">
           </span>
-          <button id="btn-erase" title="Erase All" class="geo-button icon-erase"></button>
         </div>
-        <div class="upper-shelf">
-          <button id="btn-color-picker" title="Color PIcker" class="geo-button icon-color-picker"></button>
+        <div class="upper-shelf">          
           <button id="btn-filter" title="Layer filters" class="geo-button icon-filter"></button>
           <button id="btn-clone" title="Create copy" class="geo-button icon-clone"></button>
           <button id="btn-flip" title="Flip Horizontally" class="geo-button icon-flip"></button>
           <button id="btn-crop" title="Crop" class="geo-button icon-crop"></button>
+          <button id="btn-snn" title="Convert to water painting" class="geo-button icon-paint"></button>
         </div>
       </div>
     </div>
