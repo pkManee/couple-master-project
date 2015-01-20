@@ -504,7 +504,7 @@ btnPicker.onclick = function() {
     if (PICKER) PICKER.toggle(isShowPicker);        
 }
 
-//button conver to paint
+//button convert to paint
 //use Symmetric Nearest Neighbor
 var btnSnn = document.getElementById('btn-snn');
 btnSnn.onclick = function() {
