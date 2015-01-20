@@ -141,3 +141,8 @@
   width: 30px;
   height: 30px;
 }
+.icon-up:before {
+  content: "\e29f";
+  width: 30px;
+  height: 30px;
+}

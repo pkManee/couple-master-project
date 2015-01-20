@@ -15,7 +15,7 @@ var A4 = {
         };
 var svgNS = "http://www.w3.org/2000/svg";
 var isShirtMode = false;
-var isFilterMode = true;
+var isFilterMode = false;
 var filters = ['blur', 'sharpen', 'emboss', 'grayscale'];
 var colorThief = new ColorThief();
 
@@ -277,21 +277,38 @@ btnText.onclick = function(){
 
 //button filter
 var btnFilter = document.getElementById('btn-filter');
-btnFilter.onclick = function() {    
-    var filters = document.getElementById('panel-filter');
-    var lineWidth = document.getElementById('line-width');
-    if (isFilterMode) {
-        filters.style.display = 'inline-block';
-        lineWidth.style.display = 'none';
-    } else {
-        filters.style.display = 'none';
-        lineWidth.style.display = 'inline-block';
-    }
+btnFilter.onclick = function() {   
     isFilterMode = !isFilterMode;
+    toggleFilter();
+}
+function toggleFilter() {
+    var divFilters = document.getElementById('panel-filter');
+    var divLineWidth = document.getElementById('line-width');
+
+    if (isFilterMode) {
+        divFilters.style.display = 'inline-block';
+        divLineWidth.style.display = 'none';
+    } else {
+        divFilters.style.display = 'none';
+        divLineWidth.style.display = 'inline-block';
+    }
+
+    var obj = canvas.getActiveObject();
+    if (!obj) return;
+
+    for (var i = 0; i < filters.length; i++) {
+        if (obj.filters) {
+            document.getElementById(filters[i]).disabled = false;
+            document.getElementById(filters[i]).checked = !!canvas.getActiveObject().filters[i];
+        } else {
+            document.getElementById(filters[i]).disabled = true;
+            document.getElementById(filters[i]).checked = false;
+        }
+    }
 }
 function filterLoading() {  
     var obj = canvas.getActiveObject();
-    if (obj === null || obj === undefined) {         
+    if (obj === null || obj === undefined || obj.type != 'image') {         
         return false;
     }
 
@@ -397,7 +414,9 @@ btnFlip.onclick = function(){
 var btnSelect = document.getElementById('btn-selector');
 btnSelect.onclick = function(){
     isPainterOn = false;
-    canvas.isDrawingMode = false;   
+    canvas.isDrawingMode = false;
+    isFilterMode = false;
+    toggleFilter();   
 }
 
 var el;
@@ -543,6 +562,14 @@ btnSnn.onclick = function() {
     setTimeout(function() { bootbox.hideAll(); }, 500);
 }
 
+//button bring to front
+var btnBringToFront = document.getElementById('btn-bring-to-front');
+btnBringToFront.onclick = function() {
+    var obj = canvas.getActiveObject();
+    if (!obj) return;
+
+    obj.bringToFront();
+}
 
 //brush size slider
 var lineWidthSlider = document.getElementById('brush-size-slider');
@@ -559,7 +586,7 @@ var btnPencil = document.getElementById('btn-pencil');
 btnPencil.onclick = function(){
     canvas.isDrawingMode = true;
     isFilterMode = false;
-    btnFilter.onclick();
+    toggleFilter();
     canvas.freeDrawingBrush = new fabric[btnPencil.getAttribute('title') + 'Brush'](canvas);
     setColor();
 }
@@ -567,7 +594,7 @@ var btnBrush = document.getElementById('btn-brush');
 btnBrush.onclick = function(){
     canvas.isDrawingMode = true;
     isFilterMode = false;
-    btnFilter.onclick();
+    toggleFilter();
     canvas.freeDrawingBrush = new fabric[btnBrush.getAttribute('title') + 'Brush'](canvas);
     setColor();
 }
@@ -576,11 +603,10 @@ var btnSpray = document.getElementById('btn-spray');
 btnSpray.onclick = function(data){
     canvas.isDrawingMode = false;
     isFilterMode = false;
-    btnFilter.onclick();
+    toggleFilter();
     isPainterOn = true;
     setColor();
 }
-
 
 function setColor(){    
     var activeObject = canvas.getActiveObject();
@@ -942,16 +968,21 @@ function init() {
         if (isMouseDownForPaint) isMouseDownForPaint = false;        
     });
 
-    canvas.on('object:selected', function() { 
+    canvas.on('object:selected', function(e) { 
         if (isFilterMode) {            
             for (var i = 0; i < filters.length; i++) {
-                document.getElementById(filters[i]).disabled = false;
-                document.getElementById(filters[i]).checked = !!canvas.getActiveObject().filters[i];
+                if (e.target.filters) {
+                    document.getElementById(filters[i]).disabled = false;
+                    document.getElementById(filters[i]).checked = !!canvas.getActiveObject().filters[i];
+                } else {
+                    document.getElementById(filters[i]).disabled = true;
+                    document.getElementById(filters[i]).checked = false;
+                }
             }
         }
     });
     canvas.on('selection:cleared', function() {
-        if (isFilterMode) {            
+        if (isFilterMode) {           
             for (var i = 0; i < filters.length; i++) {
                 document.getElementById(filters[i]).disabled = true;
             }
