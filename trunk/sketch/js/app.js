@@ -15,7 +15,7 @@ var A4 = {
         };
 var svgNS = "http://www.w3.org/2000/svg";
 var isShirtMode = false;
-var isFilterMode = false;
+var isFilterMode = true;
 var filters = ['blur', 'sharpen', 'emboss', 'grayscale'];
 var colorThief = new ColorThief();
 
@@ -237,6 +237,8 @@ function handleImage(e){
                insertGeoSVG(event.target.result);
             }
             reader.readAsDataURL(files[i]);
+            btnSelect.onclick();
+            this.value = '';
            
         }else if (files[i].type.match(/image.*/)){
             var reader = new FileReader();
@@ -251,10 +253,10 @@ function handleImage(e){
                 });
             }
             reader.readAsDataURL(e.target.files[0]);
-
             btnSelect.onclick();
+            this.value = '';
         }
-    } 
+    }
 }
 
 //insert text
@@ -274,8 +276,8 @@ btnText.onclick = function(){
 }
 
 //button filter
-document.getElementById('btn-filter').onclick = function() {
-    isFilterMode = !isFilterMode;
+var btnFilter = document.getElementById('btn-filter');
+btnFilter.onclick = function() {    
     var filters = document.getElementById('panel-filter');
     var lineWidth = document.getElementById('line-width');
     if (isFilterMode) {
@@ -285,6 +287,7 @@ document.getElementById('btn-filter').onclick = function() {
         filters.style.display = 'none';
         lineWidth.style.display = 'inline-block';
     }
+    isFilterMode = !isFilterMode;
 }
 function filterLoading() {  
     var obj = canvas.getActiveObject();
@@ -513,25 +516,17 @@ btnSnn.onclick = function() {
     var obj = canvas.getActiveObject();
 
     var box = obj, //this is rect object
-            format = 'png',
-            quality = '10',
             boxTop = box.top,
-            boxLeft = box.left,
-            cropping = {
-            y: box.top,
-            x: box.left,
-            width: box.currentWidth,
-            height: box.currentHeight            
-        };     
+            boxLeft = box.left;
+           
     canvas.deactivateAll();
 
-    var dataURL = canvas.toDataURLWithCropping(format, cropping, quality);
-    var img = new Image();    
-    img.src = dataURL;
+    var dataURL = obj.toDataURL();
+    var img = new Image();
+    img.src = dataURL;    
     
-    var convertedURL;
     setTimeout(function() { 
-        convertedURL = snn(img, 3);
+        var convertedURL = snn(img, 3);
         fabric.Image.fromURL(convertedURL, function(oImg) {
             //canvas.clear();
             canvas.remove(obj);
@@ -562,21 +557,26 @@ lineWidthSlider.onmouseup = function(){
 }
 var btnPencil = document.getElementById('btn-pencil');
 btnPencil.onclick = function(){
-    canvas.isDrawingMode = true;    
+    canvas.isDrawingMode = true;
+    isFilterMode = false;
+    btnFilter.onclick();
     canvas.freeDrawingBrush = new fabric[btnPencil.getAttribute('title') + 'Brush'](canvas);
     setColor();
 }
 var btnBrush = document.getElementById('btn-brush');
 btnBrush.onclick = function(){
     canvas.isDrawingMode = true;
+    isFilterMode = false;
+    btnFilter.onclick();
     canvas.freeDrawingBrush = new fabric[btnBrush.getAttribute('title') + 'Brush'](canvas);
     setColor();
 }
-
 //use fabricjs-painter
 var btnSpray = document.getElementById('btn-spray');
 btnSpray.onclick = function(data){
-    canvas.isDrawingMode = false;   
+    canvas.isDrawingMode = false;
+    isFilterMode = false;
+    btnFilter.onclick();
     isPainterOn = true;
     setColor();
 }
@@ -595,8 +595,7 @@ function setColor(){
     }
     if (activeObject !== null && activeObject !== undefined) {        
         activeObject.set('fill', COLOR);
-        canvas.renderAll();       
-    return;
+        canvas.renderAll();        
     }
 }
 //clear button
