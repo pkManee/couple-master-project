@@ -69,6 +69,7 @@
           <button id="btn-flip" title="Flip Horizontally" class="geo-button icon-flip"></button>
           <button id="btn-crop" title="Crop" class="geo-button icon-crop"></button>
           <button id="btn-snn" title="Convert to water painting" class="geo-button icon-paint"></button>
+          <button id="btn-bring-to-front" title="Bring to front" class="geo-button icon-up"></button>
         </div>
       </div>
     </div>
@@ -161,25 +162,25 @@
       <div id="panel-filter" style="width:100%; display:none;"> 
         <div class="form-group">     
           <div class="btn-group" style="width:100%;">            
-              <input type="checkbox" id="blur">
+              <input type="checkbox" id="blur" disabled>
               <label class="control-label" for="blur">Blur</label>
           </div>
         </div>
         <div class="form-group">
           <div class="btn-group" style="width:100%;">            
-              <input type="checkbox" id="sharpen">
+              <input type="checkbox" id="sharpen" disabled>
               <label class="control-label" for="sharpen">Sharpen</label>
           </div>
         </div>
         <div class="form-group">
           <div class="btn-group" style="width:100%;">            
-              <input type="checkbox" id="emboss">
+              <input type="checkbox" id="emboss" disabled>
               <label class="control-label" for="emboss" >Emboss</label>
           </div>
         </div>
         <div class="form-group">
           <div class="btn-group" style="width:100%;">            
-              <input type="checkbox" id="grayscale">
+              <input type="checkbox" id="grayscale" disabled>
               <label class="control-label" for="grayscale" >Grayscale</label>
           </div>
         </div>
