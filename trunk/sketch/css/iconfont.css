@@ -136,3 +136,8 @@
   width: 30px;
   height: 30px;
 }
+.icon-paint:before {
+  content: "\e60e";
+  width: 30px;
+  height: 30px;
+}

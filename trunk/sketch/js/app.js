@@ -302,37 +302,15 @@ var btnBlur = document.getElementById('blur');
 btnBlur.onchange = function() {
     if (!filterLoading()) return;
 
-    // var f = fabric.Image.filters;    
-    // var filter = new f.Convolute({
-    //                               matrix: [ 1/9, 1/9, 1/9,
-    //                                         1/9, 1/9, 1/9,
-    //                                         1/9, 1/9, 1/9 ]
-    //                             });
-   
-    // filter = this.checked && filter;    
-    // setTimeout(function() { applyFilter(0, filter); }, 500);
-    // setTimeout(function() { bootbox.hideAll(); }, 500);
-
     var f = fabric.Image.filters;    
     var filter = new f.Convolute({
-                                  matrix: [ 0, 0, 0,
-                                            0, 1, 0,
-                                            0, 0, 0 ]
-                                });
-   
+                                  matrix: [ .1,  .1,  .1,
+                                            .1,  .2,  .1,
+                                            .1,  .1,  .1 ]
+                                });       
     filter = this.checked && filter;    
-    applyFilter(0, filter);
-
-    var filter = new f.Convolute({
-                                  matrix: [ 1, 1, 1,
-                                            1, 0, 1,
-                                            1, 1, 1 ]
-                                });
-   
-    filter = this.checked && filter;    
-    applyFilter(1, filter);
-    bootbox.hideAll();
-    
+    setTimeout(function() { applyFilter(0, filter); }, 500);
+    setTimeout(function() { bootbox.hideAll(); }, 500);
 }
 var btnSharpen = document.getElementById('sharpen');
 btnSharpen.onchange = function() {
@@ -340,9 +318,9 @@ btnSharpen.onchange = function() {
 
     var f = fabric.Image.filters;    
     var filter = new f.Convolute({
-                                  matrix: [ -1,    -1,    -1,
-                                            -1,     9,    -1,
-                                            -1,    -1,    -1 ]
+                                    matrix: [   0, -1,  0,
+                                               -1,  5, -1,
+                                                0, -1,  0 ]
                                 });
     filter = this.checked && filter;
     setTimeout(function() { applyFilter(1, filter); }, 500);
@@ -353,13 +331,6 @@ btnEmboss.onchange = function() {
     if (!filterLoading()) return;
 
     var f = fabric.Image.filters;
-    // var f1 = new f.Convolute({
-    //                             matrix: [ -1, -1, -1,
-    //                                       -1, 11, -1,
-    //                                       -1, -1, -1 ]
-    //                         });
-    // applyFilter(2, f1, obj);    
-
     var filter = new f.Convolute({  opaque: true,
                                     matrix: [ -2, -1,  0,
                                               -1,  1,  1,
@@ -496,7 +467,6 @@ btnCrop.onclick = function(){
         canvas.renderAll();
     }
 }
-
 fabric.Canvas.prototype.toDataURLWithCropping = function (format, cropping, quality) {
   var canvasEl = this.upperCanvasEl || this.lowerCanvasEl,
     ctx = this.contextTop || this.contextContainer,
@@ -533,6 +503,51 @@ btnPicker.onclick = function() {
     isShowPicker = !isShowPicker
     if (PICKER) PICKER.toggle(isShowPicker);        
 }
+
+//button conver to paint
+//use Symmetric Nearest Neighbor
+var btnSnn = document.getElementById('btn-snn');
+btnSnn.onclick = function() {
+    if (!filterLoading()) return;
+
+    var obj = canvas.getActiveObject();
+
+    var box = obj, //this is rect object
+            format = 'png',
+            quality = '10',
+            boxTop = box.top,
+            boxLeft = box.left,
+            cropping = {
+            y: box.top,
+            x: box.left,
+            width: box.currentWidth,
+            height: box.currentHeight            
+        };     
+    canvas.deactivateAll();
+
+    var dataURL = canvas.toDataURLWithCropping(format, cropping, quality);
+    var img = new Image();    
+    img.src = dataURL;
+    
+    var convertedURL;
+    setTimeout(function() { 
+        convertedURL = snn(img, 3);
+        fabric.Image.fromURL(convertedURL, function(oImg) {
+            //canvas.clear();
+            canvas.remove(obj);
+            oImg.set({top: boxTop ,left: boxLeft});
+            canvas.add(oImg);
+            canvas.renderAll();
+            oImg.selectable = true;
+        });
+     
+        canvas.renderAll();
+    },
+    500);
+
+    setTimeout(function() { bootbox.hideAll(); }, 500);
+}
+
 
 //brush size slider
 var lineWidthSlider = document.getElementById('brush-size-slider');
@@ -996,3 +1011,90 @@ function init() {
    
 }//init
 init();
+
+function snn(img, radius) {
+var _ctx = document.createElement('canvas').getContext('2d');
+var ctx = document.createElement('canvas').getContext('2d');
+var imgdata;
+
+ctx.canvas.width = img.width;
+ctx.canvas.height = img.height;
+ctx.drawImage(img, 0, 0);
+imgdata = ctx.getImageData(0, 0, img.width, img.height);
+
+var data = imgdata;
+var srcimg = data,
+    w = srcimg.width,
+    h = srcimg.height,
+    r = parseInt(radius),
+    div = 1.0/((2*r + 1)*(2*r + 1)),
+    srcdata = srcimg.data,
+    dstimg = _ctx.createImageData(w, h),
+    dstdata = dstimg.data,
+    sumr, sumg, sumb,
+    rc, gc, bc, r1, g1, b1, r2, g2, b2,
+    pv, pu, xystep, uvstep, delta1, delta2,
+    i, j;
+
+for(var y=0; y<h; y++) {
+    xystep = y*w;
+    for(var x=0; x<w; x++) {
+      i = (xystep + x) << 2;
+      sumr = 0, sumg = 0, sumb = 0;
+      rc = srcdata[i];
+      gc = srcdata[i + 1];
+      bc = srcdata[i + 2];
+      for(var v=-r; v<=r; v++) {
+        uvstep = w*v;
+        for(var u=-r; u<=r; u++) {
+          j = (uvstep + u) << 2;
+          if(srcdata[i + j]) {
+            r1 = srcdata[i + j];
+            g1 = srcdata[i + j + 1];
+            b1 = srcdata[i + j + 2];
+          } else {
+            r1 = srcdata[i];
+            g1 = srcdata[i + 1];
+            b1 = srcdata[i + 2];
+          }
+          if(srcdata[i - j]) {
+            r2 = srcdata[i - j];
+            g2 = srcdata[i - j + 1];
+            b2 = srcdata[i - j + 2];
+          } else {
+            r2 = srcdata[i];
+            g2 = srcdata[i + 1];
+            b2 = srcdata[i + 2];
+          }
+          delta1 = Math.sqrt((rc - r1)*(rc - r1) +
+                             (gc - g1)*(gc - g1) +
+                             (bc - b1)*(bc - b1));
+          delta2 = Math.sqrt((rc - r2)*(rc - r2) +
+                             (gc - g2)*(gc - g2) +
+                             (bc - b2)*(bc - b2));
+          if(delta1 < delta2) {
+            sumr += r1;
+            sumg += g1;
+            sumb += b1;
+          } else {
+            sumr += r2;
+            sumg += g2;
+            sumb += b2;
+          }
+        }
+      }
+      dstdata[i] = sumr*div;
+      dstdata[i + 1] = sumg*div;
+      dstdata[i + 2] = sumb*div;
+      dstdata[i + 3] = 255;
+    }
+}
+    //return dstimg;
+
+    var c = document.createElement('canvas');
+    c.width = img.width;
+    c.height = img.height;
+    c.getContext('2d').putImageData(dstimg, 0, 0);
+   
+    return c.toDataURL();
+}
