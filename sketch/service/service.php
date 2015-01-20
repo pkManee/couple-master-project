@@ -184,7 +184,7 @@ class MyService extends  REST {
 			file_put_contents('../' . $photo, $data);		
 			} else {
 				$photo = null;
-				$this::deleteOldFile($target_file);		
+				$this::deleteOldFile($target_dir);		
 		}
 
 		// $uploadOk = 1;

@@ -188,8 +188,11 @@
                 
                 <div class="form-group form-inline">
                   <div class="fileinput fileinput-new" data-provides="fileinput">
-                    <span class="btn btn-default btn-file"><span class="fileinput-new">อัพโหลดรูปคู่</span><span class="fileinput-exists">Change</span><input type="file" name="..." id="file-upload"></span>
-                    <span class="fileinput-filename"></span>
+                    <span class="btn btn-default btn-file">
+                    <span class="fileinput-new">อัพโหลดรูปคู่</span>
+                    <span class="fileinput-exists">Change</span>
+                    <input type="file" name="..." id="file-upload"></span>
+                    <span class="fileinput-filename" name="inputFilename"><?php echo $member->photo ?></span>
                     
                   </div>
                   <button type="button" class="btn btn-warning" id="btn-delete-image">ลบรูป</button>
