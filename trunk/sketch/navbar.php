@@ -87,20 +87,6 @@ btnSignin.onclick = function(){
                     if (result) window.location = "index.php";     
                   }
     }); 
-
-    // bootbox.dialog({
-    //             title: '',
-    //             message : '<div class="alert alert-success" role="alert">Singing out...</div>'
-    // });  
-    // setTimeout(function(){bootbox.hideAll()}, 1000);   
-
-    // btnSignin.value = btnSigninText;
-    // lbl.innerHTML = lblText;
-    // txtEmail.removeAttribute('disabled');
-    // txtEmail.value = '';
-    // txtPassword.removeAttribute('disabled');
-    // txtPassword.value = '';
-    //window.location = "index.php";
   }  
 }
 
@@ -112,12 +98,7 @@ function doLogin(data){
     });
     return;
   }
-  
-  // bootbox.dialog({
-  //               title: '',
-  //               message : '<div class="alert alert-success" role="alert"><strong>Singing in...</strong></div>'
-  // });  
-  // setTimeout(function(){bootbox.hideAll()}, 1000);    
+
   var obj = data[0];      
   lbl.innerHTML = obj.member_name;
 
@@ -125,13 +106,15 @@ function doLogin(data){
       "selector": ".alert-success"
   });
   Toast.show("ยินดีต้อนรับ คุณ <strong>" + obj.member_name + "</strong>");
-
-  var att1 = document.createAttribute('disabled');
-  txtEmail.setAttributeNode(att1);
-  var att2 = document.createAttribute('disabled');
-  txtPassword.setAttributeNode(att2);
+ 
+  txtEmail.disabled = true;
+  txtPassword.disabled =true;
   btnSignin.innerHTML = btnSignoutText;
   dropdown.style.display = 'block';
+
+  if (txtEmail.value = 'pk.manee@gmail.com') {
+    adminMenu.style.display = 'block';
+  }
 
   $.post("member_session.php", {email: obj.email, member_name: obj.member_name});
 }
@@ -159,16 +142,19 @@ var Toast = (function() {
 
 function init(){
   if (lbl.innerHTML !== lblText){
-    var att1 = document.createAttribute('disabled');
-    txtEmail.setAttributeNode(att1);
-    var att2 = document.createAttribute('disabled');
-    txtPassword.setAttributeNode(att2);
+    txtEmail.disabled = true;
+    txtPassword.disabled =true;
     btnSignin.innerHTML = btnSignoutText;
     dropdown.style.display = 'block';
+
+    if (txtEmail.value = 'pk.manee@gmail.com') {
+      adminMenu.style.display = 'block';
+    }
   }
   else{
      dropdown.style.display = 'none';
-  }  
+     adminMenu.style.display =  'none';
+  }
 }
 init();
 

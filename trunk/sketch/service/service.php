@@ -169,8 +169,9 @@ class MyService extends  REST {
 		//begin upload file
 		$data = $this->_request["fileToUpload"];
 		$target_dir = "uploads/";
+		$oldUpload = $this->_request["oldUpload"];
 
-		if (!empty($data) && $data != 'undefined') {
+		if (!empty($data) && ($data != 'undefined')) {
 			$this::deleteOldFile($target_dir);
 
 			list($type, $data) = explode(';', $data);
@@ -182,9 +183,13 @@ class MyService extends  REST {
 			//$target_file = $target_dir . basename($_FILES[$this->_request["fileToUpload"]]["name"]);			
 			$photo = $target_dir . $this->_request['email'] . '.' . $mimetype;			
 			file_put_contents('../' . $photo, $data);		
+		} else {
+			if (!empty($oldUpload)) {
+				$photo = $oldUpload;
 			} else {
 				$photo = null;
-				$this::deleteOldFile($target_dir);		
+				$this::deleteOldFile($target_dir);
+			}
 		}
 
 		// $uploadOk = 1;

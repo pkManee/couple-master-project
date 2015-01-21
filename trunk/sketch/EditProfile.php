@@ -183,7 +183,7 @@
                   
                
                 <?php 
-                  echo "<img class=\"img-thumbnail\" id=\"img-show\" style=\"max-width: 6000px;max-height: 450px;\" src=\"" . $member->photo . "\" alt=\"...\">";
+                  echo "<img class=\"img-thumbnail\" id=\"img-show\" style=\"max-width: 6000px;max-height: 450px;\" src=\"" . $member->photo . "\" alt=\"...\" value=\"" .$member->photo. "\">";
                 ?>
                 
                 <div class="form-group form-inline">
@@ -192,7 +192,7 @@
                     <span class="fileinput-new">อัพโหลดรูปคู่</span>
                     <span class="fileinput-exists">Change</span>
                     <input type="file" name="..." id="file-upload"></span>
-                    <span class="fileinput-filename" name="inputFilename"><?php echo $member->photo ?></span>
+                    <span class="fileinput-filename" ></span>
                     
                   </div>
                   <button type="button" class="btn btn-warning" id="btn-delete-image">ลบรูป</button>
@@ -225,8 +225,8 @@
     btnDeleteImage.onclick = function(){
       imageLoader.files = "";
       imgShow.src = "";
-      $('.fileinput').fileinput('clear');
-      //$('.fileinput-filename')[0].innerHTML = "อัพโหลดรูปคู่"
+      imgShow.setAttribute('value', '');
+      $('.fileinput').fileinput('clear');      
     }
 
     //document ready
@@ -340,13 +340,14 @@
     }
 
     function goSave($form){
-      var email = document.getElementById('txt-form-email');      
+      var email = document.getElementById('txt-form-email');
+      var oldUpload = imgShow.getAttribute('value');
 
       $.ajax({
           type: 'POST',
           dataType: 'json',
           url: './service/', 
-          data: $form.serialize() + "&email=" + email.value + "&method=updateMember" + "&fileToUpload=" + fileUpload
+          data: $form.serialize() + "&email=" + email.value + "&method=updateMember&fileToUpload=" + fileUpload +"&oldUpload=" + oldUpload
       })//ajax
       .done(function(data){
         if (data.result === "success"){
