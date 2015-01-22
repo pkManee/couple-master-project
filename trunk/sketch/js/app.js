@@ -574,10 +574,15 @@ btnBringToFront.onclick = function() {
 //brush size slider
 var lineWidthSlider = document.getElementById('brush-size-slider');
 lineWidthSlider.onchange = function(){   
-    setColor();
+    setColor();    
 }
 lineWidthSlider.onmouseover = function(){
     this.title = this.value;
+    this.previousElementSibling.innerHTML = ':' + this.value;
+}
+lineWidthSlider.onmousedown = function() {
+    this.title = this.value;
+    this.previousElementSibling.innerHTML = ':' + this.value;
 }
 lineWidthSlider.onmouseup = function(){
     this.title = this.value;
@@ -587,7 +592,7 @@ btnPencil.onclick = function(){
     canvas.isDrawingMode = true;
     isFilterMode = false;
     toggleFilter();
-    canvas.freeDrawingBrush = new fabric[btnPencil.getAttribute('title') + 'Brush'](canvas);
+    canvas.freeDrawingBrush = new fabric['PencilBrush'](canvas);
     setColor();
 }
 var btnBrush = document.getElementById('btn-brush');
@@ -595,7 +600,7 @@ btnBrush.onclick = function(){
     canvas.isDrawingMode = true;
     isFilterMode = false;
     toggleFilter();
-    canvas.freeDrawingBrush = new fabric[btnBrush.getAttribute('title') + 'Brush'](canvas);
+    canvas.freeDrawingBrush = new fabric['CircleBrush'](canvas);
     setColor();
 }
 //use fabricjs-painter
@@ -611,7 +616,7 @@ btnSpray.onclick = function(data){
 function setColor(){    
     var activeObject = canvas.getActiveObject();
     var theWidth = parseInt(lineWidthSlider.value, 10);
-    lineWidthSlider.previousSibling.innerHTML = theWidth;    
+    lineWidthSlider.previousElementSibling.innerHTML = ':' + theWidth;    
 
     if (canvas.freeDrawingBrush) {
         canvas.freeDrawingBrush.color = COLOR;        
@@ -765,6 +770,7 @@ function loadShirt(type_1, type_2){
             oImg.set({top: side_1.top + side_1.offsetTop + 3 ,left: side_1.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
             shirtCanvas.add(oImg);
 
+            //display dominant color
             var img = new Image();
             img.src = splitLineScreen[0];
             var mainColor = colorThief.getColor(img);
@@ -811,6 +817,7 @@ function loadShirt(type_1, type_2){
             oImg.set({top: side_2.top + side_2.offsetTop + 3 ,left: side_2.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
             shirtCanvas.add(oImg);
 
+            //display dominant color
             var img = new Image();
             img.src = splitLineScreen[1];
             var mainColor = colorThief.getColor(img);

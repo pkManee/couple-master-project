@@ -342,10 +342,17 @@ var cboColorStyle = document.getElementById('cbo-color-style');
 cboColorStyle.onchange = function() {
     var colorShirt = document.getElementById('color-thief-1').style.backgroundColor;
     var recommend;
+    var divColor = document.getElementById('display-color');
     switch (this.value) {               
        
         case 'analogous':
-            recommend = tinycolor.analogous(colorShirt, 2);
+            recommend = tinycolor.analogous(colorShirt);
+            var span = document.createElement('span');
+            span.className = 'span-color';
+            span.style.backgroundColor = recommend[5].toRgbString();
+            divColor.innerHTML = '';
+            divColor.appendChild(span);
+
             break;
         case 'triad':
         break;
