@@ -42,34 +42,34 @@
     <div role="tabpanel" class="tab-pane active" id="design-shelf">
       <div class="upper-shelf">
         <div id="brush-image-shelf">
-          <button id="btn-shirt" title="Shirt view" class="geo-button icon-shirt" type="button"></button>
-          <button id="btn-color-picker" title="Color PIcker" class="geo-button icon-color-picker"></button> 
-          <button id="btn-pencil" title="Pencil" class="geo-button icon-pencil"></button>      
-          <button id="btn-brush" title="Circle" class="geo-button icon-brush"></button>
-          <button id="btn-spray" title="Glass storm" class="geo-button icon-spray"></button>
+          <button id="btn-shirt" title="Shirt view" class="geo-button icon-shirt" type="button" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-color-picker" title="Color PIcker" class="geo-button icon-color-picker" data-toggle="tooltip" data-placement="bottom"></button> 
+          <button id="btn-pencil" title="Pencil" class="geo-button icon-pencil" data-toggle="tooltip" data-placement="bottom"></button>      
+          <button id="btn-brush" title="Circle" class="geo-button icon-brush" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-spray" title="Glass storm" class="geo-button icon-spray" data-toggle="tooltip" data-placement="bottom"></button>
         </div>
         <div class="upper-shelf">
-          <button id="btn-selector" title="Selector" class="geo-button icon-selector"></button>
-          <button id="btn-text" title="Text tool" class="geo-button icon-text"></button>
-          <button id="btn-rectangle" title="Rectangle [hit del button to delete]" class="geo-button icon-rect"></button>
-          <button id="btn-triangle" title="Triangle [hit del button to delete]" class="geo-button icon-tri"></button>
-          <button id="btn-round" title="Round [hit del button to delete]" class="geo-button icon-round"></button>
-          <button id="btn-star" title="Star [hit del button to delete]" class="geo-button icon-star"></button>
-          <button id="btn-heart" title="Heart [hit del button to delete]" class="geo-button icon-heart"></button>          
-          <button id="btn-erase" title="Erase All" class="geo-button icon-erase"></button>
-          <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;">
-            <button id="btn-open" class="geo-button icon-folder" title="Open file"></button>
-            <input type="file" id="upload-button" capture="camera" name="files[]" 
+          <button id="btn-selector" title="Selector" class="geo-button icon-selector" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-text" title="Text tool" class="geo-button icon-text" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-rectangle" title="Rectangle [hit del button to delete]" class="geo-button icon-rect" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-triangle" title="Triangle [hit del button to delete]" class="geo-button icon-tri" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-round" title="Round [hit del button to delete]" class="geo-button icon-round" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-star" title="Star [hit del button to delete]" class="geo-button icon-star" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-heart" title="Heart [hit del button to delete]" class="geo-button icon-heart" data-toggle="tooltip" data-placement="bottom"></button>          
+          <button id="btn-erase" title="Erase All" class="geo-button icon-erase" data-toggle="tooltip" data-placement="bottom"></button>
+          <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;" data-toggle="tooltip" data-placement="bottom">
+            <button id="btn-open" class="geo-button icon-folder"></button>
+            <input type="file" id="upload-button" capture="camera" name="files[]"
                     style="position: absolute; top: 0px; z-index: 1000; font-size: 1000px; text-align: right; width: inherit; height: inherit; cursor: pointer; right: 0px; opacity: 0;">
           </span>
         </div>
         <div class="upper-shelf">          
-          <button id="btn-filter" title="Layer filters" class="geo-button icon-filter"></button>
-          <button id="btn-clone" title="Create copy" class="geo-button icon-clone"></button>
-          <button id="btn-flip" title="Flip Horizontally" class="geo-button icon-flip"></button>
-          <button id="btn-crop" title="Crop" class="geo-button icon-crop"></button>
-          <button id="btn-snn" title="Convert to water painting" class="geo-button icon-paint"></button>
-          <button id="btn-bring-to-front" title="Bring to front" class="geo-button icon-up"></button>
+          <button id="btn-filter" title="Layer filters" class="geo-button icon-filter" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-clone" title="Create copy" class="geo-button icon-clone" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-flip" title="Flip Horizontally" class="geo-button icon-flip" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-crop" title="Crop" class="geo-button icon-crop" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-snn" title="Convert to water painting" class="geo-button icon-paint" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-bring-to-front" title="Bring to front" class="geo-button icon-up" data-toggle="tooltip" data-placement="bottom"></button>
         </div>
       </div>
     </div>
@@ -156,8 +156,9 @@
 	<div id="right-side" class="well" style="width:240px;">
     <div id="draw-tools" style="width:100%;">
       <div id="line-width" style="width:100%;">        
-        <label class="control-label" for="brush-size-slider">ขนาดเส้น</label>        
-        <input id="brush-size-slider" class="form-control" type="range" min="1" max="100" value="30">              
+        <label class="control-label" for="brush-size-slider">ขนาดเส้น</label><span style="padding-left:10px;"></span>       
+        <input id="brush-size-slider" class="form-control" type="range" min="1" max="100" value="30" 
+        data-toggle="tooltip" data-placement="bottom" >              
       </div>
       <div id="panel-filter" style="width:100%; display:none;"> 
         <div class="form-group">     
@@ -191,11 +192,12 @@
         <div class="form-group">         
           <div id="recommend-color" class="recommend-color"></div>
           <select class="form-control selectpicker" id="cbo-color-style">
-            <option value="">แนะนำสี</option>
-            <option value="analogous">Analogous</option>
-            <option value="triad">Triad</option>
-            <option value="complementary">Complementary</option>
+            <option value="">เลือกรูปการการแนะนำสี</option>
+            <option value="analogous">Analogous: สีใกล้เคียง</option>
+            <option value="triad">Triad: สีไตรสัมพันธ์ (สีสามเส้า)</option>
+            <option value="complementary">Complementary (สีคู่ตรงข้าม)</option>            
           </select>
+          <div id="display-color"></div>
         </div>       
         <div class="form-group">
           <label class="control-label" for="cbo-shirt-color-1">เสื้อด้านซ้าย</label>
@@ -204,7 +206,7 @@
         </div>
         
         <div class="form-group">
-          <label class="control-label" for="txt-height-1">ส่วนสูงของผู้ใส่</label>          
+          <label class="control-label" for="txt-height-1">ส่วนสูงของผู้ใส่ (ซม.)</label>          
           <input type="text" class="form-control" id="txt-height-1" name="txtHeight1"
             placeholder="ส่วนสูงของผู้ใส่ (ซม.)" value="<?php echo $member->height_1; ?>">
         </div>          
@@ -214,7 +216,7 @@
           <select class="form-control selectpicker" id="cbo-shirt-color-2" ></select>
         </div>
         <div class="form-group">
-          <label class="control-label" for="txt-height-2">ส่วนสูงของผู้ใส่</label>     
+          <label class="control-label" for="txt-height-2">ส่วนสูงของผู้ใส่ (ซม.)</label>     
           <input type="text" class="form-control" id="txt-height-2" name="txtHeight2" 
             placeholder="ส่วนสูงของผู้ใส่ (ซม.)" value="<?php echo $member->height_2; ?>">
         </div>
@@ -236,6 +238,7 @@
     <script type="text/javascript">
       //document ready
     $(document).ready(function() {      
+      $('[data-toggle="tooltip"]').tooltip();
 
       $('#member-profile-form')
         .bootstrapValidator( {
