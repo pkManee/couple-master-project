@@ -148,6 +148,7 @@ function getShirtType2() {
         });
     });//fail
 }
+var shirtColor1;
 function getShirtColor1() {
     $.ajax({
         type: "POST",
@@ -192,6 +193,7 @@ function getShirtColor2() {
     .done(function(data) {
         if (data) {
             var text = '';
+            shirtColor1 = data;
             data.forEach(function(item){
                 text += "<option data-content=\"<table style='width:100%; text-aligh:left;'><tr><td style='width: 50%;'>" +item.color+ "</td><td style='width: '50%'; text-aligh: right' bgcolor='" +item.color_hex+ "'></td></tr></table>\" ";
                 text +="value=\"" +item.color_hex+ "\" >" +item.color+ "</option>";
@@ -340,29 +342,91 @@ btnCal.onclick = function() {
 
 var cboColorStyle = document.getElementById('cbo-color-style');
 cboColorStyle.onchange = function() {
-    var colorShirt = document.getElementById('color-thief-1').style.backgroundColor;
+    var dominantColor = document.getElementById('color-thief-1').style.backgroundColor;
     var recommend;
-    var divColor = document.getElementById('display-color');
-    switch (this.value) {               
-       
+    var divColor = document.getElementById('recommend-color');
+
+    dominantColor = 'rgb(128, 191, 188)';
+    switch (this.value) {       
         case 'analogous':
-            recommend = tinycolor.analogous(colorShirt);
+            recommend = tinycolor.analogous(dominantColor);
             var span = document.createElement('span');
-            span.className = 'span-color';
-            span.style.backgroundColor = recommend[5].toRgbString();
+            span.className = 'span-color form-control';
+            span.style.background = recommend[1].toHexString();
+            divColor.innerHTML = '';
+            divColor.appendChild(span);
+            span = undefined;
+
+            span = document.createElement('span');
+            span.className = 'span-color form-control';
+            span.style.background = recommend[2].toHexString();
+            divColor.appendChild(span);
+
+            var temp = [recommend[0].toHexString(), recommend[1].toHexString()];
+            var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
+
+            recommend = undefined;
+            break;
+        case 'triad':
+            recommend = tinycolor.triad(dominantColor);
+            var span = document.createElement('span');
+            span.className = 'span-color form-control';
+            span.style.background = recommend[1].toHexString();
+            divColor.innerHTML = '';
+            divColor.appendChild(span);
+            span = undefined;
+
+            span = document.createElement('span');
+            span.className = 'span-color form-control';
+            span.style.background = recommend[2].toHexString();            
+            divColor.appendChild(span);
+
+            recommend = undefined;
+            break;
+         case 'complementary':
+            recommend = tinycolor.complement(dominantColor);
+            var span = document.createElement('span');
+            span.className = 'span-color form-control';
+            span.style.background = recommend.toHexString();
             divColor.innerHTML = '';
             divColor.appendChild(span);
 
+            recommend = undefined;
             break;
-        case 'triad':
-        break;
-         case 'complementary':            
+        default:
+            recommend = undefined;
+            divColor.innerHTML = '';
             break;
     }
+}
 
-    if (recommend) {
-        
-    }
+function findColor(recommendColor, colorInStore, dominantColor, side) {
+    
+    var rtn = new Array();
+    recommendColor.forEach(function(rec) {
+        colorInStore.forEach(function(current) { 
+            var distance = compareColor(rec, current.color_hex);
+            var colorInStore = { 
+                                dominantColor: tinycolor(dominantColor).toHexString, 
+                                recommendColor: rec,
+                                colorInStore: current.color_hex,
+                                distance: distance,
+                                side: side
+                            };
+            rtn.push(rtn);
+        })        
+    });
+
+    rtn.sort(compareArray)
+    return rtn;
+}
+
+function compareArray(a,b) {
+  if (a.distance < b.distance)
+     return -1;
+  if (a.distance > b.distance)
+    return 1;
+  return 0;
 }
 
 function compareColor(color1, color2) {
