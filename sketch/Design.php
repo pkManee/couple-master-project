@@ -57,7 +57,7 @@
           <button id="btn-star" title="Star [hit del button to delete]" class="geo-button icon-star" data-toggle="tooltip" data-placement="bottom"></button>
           <button id="btn-heart" title="Heart [hit del button to delete]" class="geo-button icon-heart" data-toggle="tooltip" data-placement="bottom"></button>          
           <button id="btn-erase" title="Erase All" class="geo-button icon-erase" data-toggle="tooltip" data-placement="bottom"></button>
-          <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;" data-toggle="tooltip" data-placement="bottom">
+          <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;">
             <button id="btn-open" class="geo-button icon-folder"></button>
             <input type="file" id="upload-button" capture="camera" name="files[]"
                     style="position: absolute; top: 0px; z-index: 1000; font-size: 1000px; text-align: right; width: inherit; height: inherit; cursor: pointer; right: 0px; opacity: 0;">
@@ -196,12 +196,11 @@
             <option value="analogous">Analogous: สีใกล้เคียง</option>
             <option value="triad">Triad: สีไตรสัมพันธ์ (สีสามเส้า)</option>
             <option value="complementary">Complementary (สีคู่ตรงข้าม)</option>            
-          </select>
-          <div id="display-color"></div>
+          </select>          
         </div>       
         <div class="form-group">
           <label class="control-label" for="cbo-shirt-color-1">เสื้อด้านซ้าย</label>
-          <div id="color-thief-1" class="span-color"></div>
+          <div id="color-thief-1" class="span-color form-control"></div>
           <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
         </div>
         
