@@ -348,7 +348,6 @@ cboColorStyle.onchange = function() {
     var recommend;
     var divColor = document.getElementById('recommend-color');
 
-    dominantColor = 'rgb(128, 191, 188)';
     switch (this.value) {       
         case 'analogous':
             recommend = tinycolor.analogous(dominantColor);
@@ -363,9 +362,15 @@ cboColorStyle.onchange = function() {
             span.className = 'span-color form-control';
             span.style.background = recommend[2].toHexString();
             divColor.appendChild(span);
+            span = undefined;
 
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
             var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
+
+            span = document.createElement('span');
+            span.className = 'span-color form-control';
+            span.style.background = recommend_1[0].colorInStore;
+            divColor.appendChild(span);
 
             recommend = undefined;
             break;
