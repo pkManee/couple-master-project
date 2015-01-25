@@ -159,6 +159,7 @@ function getShirtColor1() {
     .done(function(data) {
         if (data) {
             var text = '';
+            shirtColor1 = data;
             data.forEach(function(item){
                 text += "<option data-content=\"<table style='width:100%; text-aligh:left;'><tr><td style='width: 50%;'>" +item.color+ "</td><td style='width: '50%'; text-aligh: right' bgcolor='" +item.color_hex+ "'></td></tr></table>\" ";
                 text +="value=\"" +item.color_hex+ "\" >" +item.color+ "</option>";
@@ -183,6 +184,7 @@ function getShirtColor1() {
         });
     });//fail
 }
+var shirtColor2;
 function getShirtColor2() {
     $.ajax({
         type: "POST",
@@ -193,7 +195,7 @@ function getShirtColor2() {
     .done(function(data) {
         if (data) {
             var text = '';
-            shirtColor1 = data;
+            shirtColor2 = data;
             data.forEach(function(item){
                 text += "<option data-content=\"<table style='width:100%; text-aligh:left;'><tr><td style='width: 50%;'>" +item.color+ "</td><td style='width: '50%'; text-aligh: right' bgcolor='" +item.color_hex+ "'></td></tr></table>\" ";
                 text +="value=\"" +item.color_hex+ "\" >" +item.color+ "</option>";
@@ -362,7 +364,7 @@ cboColorStyle.onchange = function() {
             span.style.background = recommend[2].toHexString();
             divColor.appendChild(span);
 
-            var temp = [recommend[0].toHexString(), recommend[1].toHexString()];
+            var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
             var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
 
             recommend = undefined;
@@ -407,16 +409,16 @@ function findColor(recommendColor, colorInStore, dominantColor, side) {
         colorInStore.forEach(function(current) { 
             var distance = compareColor(rec, current.color_hex);
             var colorInStore = { 
-                                dominantColor: tinycolor(dominantColor).toHexString, 
+                                dominantColor: tinycolor(dominantColor).toHexString(), 
                                 recommendColor: rec,
                                 colorInStore: current.color_hex,
                                 distance: distance,
                                 side: side
                             };
-            rtn.push(rtn);
+            rtn.push(colorInStore);
         })        
     });
-
+    
     rtn.sort(compareArray)
     return rtn;
 }
