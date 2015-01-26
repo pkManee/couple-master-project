@@ -36,6 +36,7 @@
       <div class="form-group">        
         <label class="control-label" for="txt-email">อีเมล์</label>
         <input type="text" class="form-control" id="txt-form-email" placeholder="อีเมล์" name="txtEmail">
+        <span id="email-error"></span>
         <div class="help-block with-errors"></div>
       </div>
 
@@ -189,7 +190,7 @@
         $.ajax({
             type: 'POST',
             url: 'data/signup.data.php', 
-            data: $form.serialize()
+            data: $form.serialize() + '&method=signup'
         })
         .done(function(data){
           if (data.result === "success"){
@@ -213,6 +214,30 @@
         });//fail
       }//goSave
       
+      var spanEmai = document.getElementById('email-error');
+      var txtEmail = document.getElementById('txt-form-email');
+      txtEmail.onblur = function() {
+        if (!this.value) return;
+
+        $.ajax({
+          type: 'POST',
+          url: 'data/signup.data.php',
+          data: {method: 'checkEmail', email: this.value}
+        })//ajax
+        .done(function(data) {
+          if (data.email) {
+            spanEmai.innerHTML = 'Email นี้มีในระบบแล้ว ไม่สามารถสมัครสมาชิกโดยการใช้ Email นี้ได้ !!!';
+          } else {
+            spanEmai.innerHTML = 'ท่านสามารถใช้ Email นี้ในการสมัครสมาชิกได้';
+          }
+        })//done
+        .fail(function(data) {
+          bootbox.dialog({
+                      title: 'Fatal Error',
+                      message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
+          });
+        });//fail
+      }
 
     </script>
   </body>
