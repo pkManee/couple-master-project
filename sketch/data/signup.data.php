@@ -2,7 +2,29 @@
 require("../service/message_service.php");
 require("../service/db_connect.php");
 
-if(isset($_POST) && !empty($_POST)) {
+if(!isset($_POST["method"]) || empty($_POST["method"])) {
+
+  header("Content-Type: application/json");
+  echo json_encode(array("result"=>"fail"));
+  die();
+}
+
+$method = $_POST["method"];
+
+switch ($method) {
+  case 'signup':
+    signup();
+    break;
+  case 'checkEmail':
+    checkEmail();
+    break;
+  default:
+    header("Content-Type: application/json");
+    echo json_encode(array("result"=>"no_method"));
+    break;
+}
+
+function signup() {
 
   try {
       $dbh = dbConnect::getInstance()->dbh;
@@ -33,6 +55,29 @@ if(isset($_POST) && !empty($_POST)) {
     echo json_encode(array("result"=>"success"));
 
   }else{
+    header("Content-Type: application/json");
+    echo json_encode($stmt->errorInfo());
+  }
+}
+
+function checkEmail() {
+  try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      print "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+
+  $email = $_POST["email"];
+  $sql = "select email from member where email = :email ";
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindValue(":email", $email);
+
+  if ($stmt->execute()) {
+    $results = $stmt->fetch();
+    header("Content-Type: application/json");
+    echo json_encode($results);
+  } else {
     header("Content-Type: application/json");
     echo json_encode($stmt->errorInfo());
   }
