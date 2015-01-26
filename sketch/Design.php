@@ -199,8 +199,7 @@
           </select>          
         </div>       
         <div class="form-group">
-          <label class="control-label" for="cbo-shirt-color-1">เสื้อด้านซ้าย</label>
-          <div id="color-thief-1" class="span-color form-control"></div>
+          <label class="control-label" for="cbo-shirt-color-1">เสื้อด้านซ้าย</label>          
           <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
         </div>
         
@@ -210,8 +209,7 @@
             placeholder="ส่วนสูงของผู้ใส่ (ซม.)" value="<?php echo $member->height_1; ?>">
         </div>          
         <div class="form-group">
-          <label class="control-label" for="cbo-shirt-color-2">เสื้อด้านขวา</label>
-          <div id="color-thief-2" class="span-color"></div>
+          <label class="control-label" for="cbo-shirt-color-2">เสื้อด้านขวา</label>          
           <select class="form-control selectpicker" id="cbo-shirt-color-2" ></select>
         </div>
         <div class="form-group">

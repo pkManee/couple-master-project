@@ -90,8 +90,8 @@ body {
   color: #00f;
 }
 .span-color {
-  float: right;
-  width: 60px;
+  float: left;
+  width: 50px;
   height: 20px;
   margin-bottom: 5px;
 }
