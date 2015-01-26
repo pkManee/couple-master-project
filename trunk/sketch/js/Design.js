@@ -344,17 +344,33 @@ btnCal.onclick = function() {
 
 var cboColorStyle = document.getElementById('cbo-color-style');
 cboColorStyle.onchange = function() {
-    var dominantColor = document.getElementById('color-thief-1').style.backgroundColor;
+    //display dominant color
+    var img = new Image();
+    img.src = splitLineScreen[0];
+    var c = colorThief.getColor(img);
+    // var displayColor = document.getElementById('color-thief-1');
+    // if (mainColor) {                
+    //     displayColor.style.backgroundColor = 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+    // } else {
+    //     displayColor.style.backgroundColor = 'transparent';
+    // }
+
+    var dominantColor = 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';//document.getElementById('color-thief-1').style.backgroundColor;
     var recommend;
     var divColor = document.getElementById('recommend-color');
+    divColor.innerHTML = '';
+
+    var span = document.createElement('span');
+    span.className = 'span-color form-control';
+    span.style.background = dominantColor;
+    divColor.appendChild(span);
 
     switch (this.value) {       
         case 'analogous':
             recommend = tinycolor.analogous(dominantColor);
-            var span = document.createElement('span');
+            // var span = document.createElement('span');
             // span.className = 'span-color form-control';
-            // span.style.background = recommend[1].toHexString();
-            // divColor.innerHTML = '';
+            // span.style.background = recommend[1].toHexString();            
             // divColor.appendChild(span);
             // span = undefined;
 
@@ -366,76 +382,132 @@ cboColorStyle.onchange = function() {
 
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
             var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
-            var nearestColor = recommend_1[0].colorInStore;
-            span = document.createElement('span');
-            span.className = 'span-color form-control clickable';
-            span.style.background = nearestColor;
-            span.title = "เปลี่ยนเสื้อเป็นสีนี้";
-            span.setAttribute('data-toggle', 'tooltip');
-            span.onclick = function () { 
-                $(cboShirtColor1).selectpicker('val', nearestColor);
-                cboShirtColor1.onchange();
-            };
-            divColor.innerHTML = '';
-            divColor.appendChild(span);
-            $('[data-toggle="tooltip"]').tooltip();
+            var existingColor = undefined;
+
+            for (var i = 0; i < recommend_1.length; i++) { 
+                var nearestColor = recommend_1[i][0].colorInStore;
+                if (tinycolor(nearestColor).toHexString() === tinycolor(dominantColor).toHexString()) {
+                    continue;
+                }
+                if (!existingColor) { 
+                        existingColor = nearestColor;
+                    } else {
+                        if (existingColor === nearestColor) break;
+                    }
+                var span = document.createElement('span');
+                span.className = 'span-color form-control clickable';
+                span.style.background = nearestColor;
+                span.title = "เปลี่ยนสีเสื้อ";
+                span.setAttribute('data-toggle', 'tooltip');
+                span.addEventListener('click', selectColor1, false);               
+                
+                divColor.appendChild(span);
+            }
+            
+            $('.clickable').tooltip();
 
             recommend = undefined;
             break;
+
         case 'triad':
             recommend = tinycolor.triad(dominantColor);
             // var span = document.createElement('span');
             // span.className = 'span-color form-control';
-            // span.style.background = recommend[1].toHexString();
-            // divColor.innerHTML = '';
+            // span.style.background = recommend[1].toHexString();            
             // divColor.appendChild(span);
             // span = undefined;
 
             // span = document.createElement('span');
             // span.className = 'span-color form-control';
-            // span.style.background = recommend[2].toHexString();            
+            // span.style.background = recommend[2].toHexString();
             // divColor.appendChild(span);
-
+            // span = undefined;
+            
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
             var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
-            var nearestColor = recommend_1[0].colorInStore;
-            span = document.createElement('span');
-            span.className = 'span-color form-control clickable';
-            span.style.background = nearestColor;
-            span.title = "เปลี่ยนเสื้อเป็นสีนี้";
-            span.setAttribute('data-toggle', 'tooltip');
-            span.onclick = function () { 
-                $(cboShirtColor1).selectpicker('val', nearestColor);
-                cboShirtColor1.onchange();
-            };
-            divColor.innerHTML = '';
-            divColor.appendChild(span);
-            $('[data-toggle="tooltip"]').tooltip();
+            var existingColor = undefined;
+
+            for (var i = 0; i < recommend_1.length; i++) { 
+                var nearestColor = recommend_1[i][0].colorInStore;
+                if (tinycolor(nearestColor).toHexString() === tinycolor(dominantColor).toHexString()) {
+                    continue;
+                }
+                if (!existingColor) { 
+                        existingColor = nearestColor;
+                    } else {
+                        if (existingColor === nearestColor) break;
+                    }
+                var span = document.createElement('span');
+                span.className = 'span-color form-control clickable';
+                span.style.background = nearestColor;
+                span.title = "เปลี่ยนสีเสื้อ";
+                span.setAttribute('data-toggle', 'tooltip');
+                span.addEventListener('click', selectColor1, false);
+                
+                divColor.appendChild(span);
+            }
+
+            $('.clickable').tooltip();
 
             recommend = undefined;
             break;
+
          case 'complementary':
             recommend = tinycolor.complement(dominantColor);
-            var span = document.createElement('span');
-            span.className = 'span-color form-control';
-            span.style.background = recommend.toHexString();
-            divColor.innerHTML = '';
-            divColor.appendChild(span);
+
+            // var span = document.createElement('span');
+            // span.className = 'span-color form-control';
+            // span.style.background = recommend.toHexString();
+            // divColor.appendChild(span);
+            // span = undefined;
+
+            var temp = [recommend.toHexString()];
+            var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
+            var existingColor = undefined;
+
+            for (var i = 0; i < recommend_1.length; i++) { 
+                var nearestColor = recommend_1[i][0].colorInStore;
+                if (tinycolor(nearestColor).toHexString() === tinycolor(dominantColor).toHexString()) {
+                    continue;
+                }
+                if (!existingColor) { 
+                        existingColor = nearestColor;
+                } else {
+                    if (existingColor === nearestColor) break;
+                }
+                var span = document.createElement('span');
+                span.className = 'span-color form-control clickable';
+                span.style.background = nearestColor;
+                span.title = "เปลี่ยนสีเสื้อ";
+                span.setAttribute('data-toggle', 'tooltip');
+                span.addEventListener('click', selectColor1, false);
+                
+                divColor.appendChild(span);
+            }
+
+            $('.clickable').tooltip();
 
             recommend = undefined;
             break;
+
         default:
             recommend = undefined;
             divColor.innerHTML = '';
             break;
     }
 }
-
+function selectColor1() {
+    var colorHex = tinycolor(this.style.background).toHexString();
+    $(cboShirtColor1).selectpicker('val', colorHex);
+    cboShirtColor1.onchange();
+}
 function findColor(recommendColor, colorInStore, dominantColor, side) {
     
     var rtn = new Array();
     recommendColor.forEach(function(rec) {
-        colorInStore.forEach(function(current) { 
+        var reccomend = new Array();
+
+        colorInStore.forEach(function(current) {
             var distance = compareColor(rec, current.color_hex);
             var colorInStore = { 
                                 dominantColor: tinycolor(dominantColor).toHexString(), 
@@ -444,11 +516,13 @@ function findColor(recommendColor, colorInStore, dominantColor, side) {
                                 distance: distance,
                                 side: side
                             };
-            rtn.push(colorInStore);
-        })        
+            reccomend.push(colorInStore);
+        });
+        reccomend.sort(compareArray)
+        rtn.push(reccomend);   
     });
     
-    rtn.sort(compareArray)
+    //rtn.sort(compareArray)
     return rtn;
 }
 

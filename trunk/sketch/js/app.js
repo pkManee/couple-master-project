@@ -768,20 +768,9 @@ function loadShirt(type_1, type_2){
         
         fabric.Image.fromURL(splitLineScreen[0], function(oImg) {        
             oImg.set({top: side_1.top + side_1.offsetTop + 3 ,left: side_1.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
-            shirtCanvas.add(oImg);
-
-            //display dominant color
-            var img = new Image();
-            img.src = splitLineScreen[0];
-            var mainColor = colorThief.getColor(img);
-            var displayColor = document.getElementById('color-thief-1');
-            if (mainColor) {                
-                displayColor.style.backgroundColor = 'rgb(' + mainColor[0] + ',' + mainColor[1] + ',' + mainColor[2] + ')';
-            } else {
-                displayColor.style.backgroundColor = 'transparent';
-            }
+            shirtCanvas.add(oImg);            
             
-            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'left', goodTop: 0, goodLeft: 0, goodScaleX: 1, goodScaleY: 1, mainColor: mainColor});           
+            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'left', goodTop: 0, goodLeft: 0, goodScaleX: 1, goodScaleY: 1});           
             shirtCanvas.bringToFront(oImg);
             shirtCanvas.renderAll();
             finalLineScreen.push(oImg);
@@ -817,18 +806,7 @@ function loadShirt(type_1, type_2){
             oImg.set({top: side_2.top + side_2.offsetTop + 3 ,left: side_2.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
             shirtCanvas.add(oImg);
 
-            //display dominant color
-            var img = new Image();
-            img.src = splitLineScreen[1];
-            var mainColor = colorThief.getColor(img);
-            var displayColor = document.getElementById('color-thief-2');
-            if (mainColor) {                
-                displayColor.style.backgroundColor = 'rgb(' + mainColor[0] + ',' + mainColor[1] + ',' + mainColor[2] + ')';
-            } else {
-                displayColor.style.backgroundColor = 'transparent';
-            }
-
-            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'right', goodTop: 0, goodLeft: 0, goodScaleX: 1, goodScaleY: 1, mainColor: mainColor});
+            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'right', goodTop: 0, goodLeft: 0, goodScaleX: 1, goodScaleY: 1});
             shirtCanvas.bringToFront(oImg);
             shirtCanvas.renderAll();
             finalLineScreen.push(oImg);
