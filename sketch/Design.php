@@ -75,10 +75,10 @@
     </div>
     <div role="tabpanel" class="tab-pane" id="shirt-shelf">
       <div class="upper-shelf">
-        <button id="btn-design" title="Shirt view" class="geo-button icon-shirt" type="button"></button>        
+        <button id="btn-design" title="Shirt view" class="geo-button icon-shirt" type="button" data-toggle="tooltip" data-placement="bottom"></button>        
         <div class="container">
             <div class="upper-shelf" >
-              <select class="form-control selectpicker" id="cbo-gender-1" >
+              <select class="form-control selectpicker" id="cbo-gender-1">
                 <option value="M">ชาย</option>
                 <option value="F">หญิง</option>
               </select>
@@ -93,7 +93,7 @@
 
             <div class="upper-shelf" style="padding-left: 150px; position: absolute;" >
               <div class="upper-shelf" >
-                <select class="form-control selectpicker" id="cbo-gender-2" >
+                <select class="form-control selectpicker" id="cbo-gender-2" data-toggle="tooltip" >
                   <option value="M">ชาย</option>
                   <option value="F" selected>หญิง</option>
                 </select>

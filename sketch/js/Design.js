@@ -352,41 +352,65 @@ cboColorStyle.onchange = function() {
         case 'analogous':
             recommend = tinycolor.analogous(dominantColor);
             var span = document.createElement('span');
-            span.className = 'span-color form-control';
-            span.style.background = recommend[1].toHexString();
-            divColor.innerHTML = '';
-            divColor.appendChild(span);
-            span = undefined;
+            // span.className = 'span-color form-control';
+            // span.style.background = recommend[1].toHexString();
+            // divColor.innerHTML = '';
+            // divColor.appendChild(span);
+            // span = undefined;
 
-            span = document.createElement('span');
-            span.className = 'span-color form-control';
-            span.style.background = recommend[2].toHexString();
-            divColor.appendChild(span);
-            span = undefined;
+            // span = document.createElement('span');
+            // span.className = 'span-color form-control';
+            // span.style.background = recommend[2].toHexString();
+            // divColor.appendChild(span);
+            // span = undefined;
 
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
             var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
-
+            var nearestColor = recommend_1[0].colorInStore;
             span = document.createElement('span');
-            span.className = 'span-color form-control';
-            span.style.background = recommend_1[0].colorInStore;
+            span.className = 'span-color form-control clickable';
+            span.style.background = nearestColor;
+            span.title = "เปลี่ยนเสื้อเป็นสีนี้";
+            span.setAttribute('data-toggle', 'tooltip');
+            span.onclick = function () { 
+                $(cboShirtColor1).selectpicker('val', nearestColor);
+                cboShirtColor1.onchange();
+            };
+            divColor.innerHTML = '';
             divColor.appendChild(span);
+            $('[data-toggle="tooltip"]').tooltip();
 
             recommend = undefined;
             break;
         case 'triad':
             recommend = tinycolor.triad(dominantColor);
-            var span = document.createElement('span');
-            span.className = 'span-color form-control';
-            span.style.background = recommend[1].toHexString();
+            // var span = document.createElement('span');
+            // span.className = 'span-color form-control';
+            // span.style.background = recommend[1].toHexString();
+            // divColor.innerHTML = '';
+            // divColor.appendChild(span);
+            // span = undefined;
+
+            // span = document.createElement('span');
+            // span.className = 'span-color form-control';
+            // span.style.background = recommend[2].toHexString();            
+            // divColor.appendChild(span);
+
+            var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
+            var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
+            var nearestColor = recommend_1[0].colorInStore;
+            span = document.createElement('span');
+            span.className = 'span-color form-control clickable';
+            span.style.background = nearestColor;
+            span.title = "เปลี่ยนเสื้อเป็นสีนี้";
+            span.setAttribute('data-toggle', 'tooltip');
+            span.onclick = function () { 
+                $(cboShirtColor1).selectpicker('val', nearestColor);
+                cboShirtColor1.onchange();
+            };
             divColor.innerHTML = '';
             divColor.appendChild(span);
-            span = undefined;
-
-            span = document.createElement('span');
-            span.className = 'span-color form-control';
-            span.style.background = recommend[2].toHexString();            
-            divColor.appendChild(span);
+            $('[data-toggle="tooltip"]').tooltip();
 
             recommend = undefined;
             break;
