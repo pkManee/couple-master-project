@@ -348,6 +348,7 @@ cboColorStyle.onchange = function() {
     var img = new Image();
     img.src = splitLineScreen[0];
     var c = colorThief.getColor(img);
+    if (!c) return;
     // var displayColor = document.getElementById('color-thief-1');
     // if (mainColor) {                
     //     displayColor.style.backgroundColor = 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
@@ -543,6 +544,18 @@ function compareColor(color1, color2) {
 function distance(a, b) {
     return (a - b) * (a - b);
 }
+var cboShirtSize1 = document.getElementById('cbo-shirt-size-1');
+var cboShirtSize2 = document.getElementById('cbo-shirt-size-2');
+function goSave() {
+    
+    $.redirect("ViewCart.php",
+                {
+                    gender_1: cboGender1.value, 
+                    shirt_type_1: cboShirtType1.value,
+                    shirt_size_1: cboShirtSize1.value,
+                    screen1: splitLineScreen[0].toDataURL()
+                });
+}
 
 var Toast = (function() {
     "use strict";
@@ -564,3 +577,66 @@ var Toast = (function() {
 
     return that;
 }());
+
+;(function( $ ){
+
+    $.redirect = function( target, values, method ) {  
+
+      method = (method && method.toUpperCase() == 'GET') ? 'GET' : 'POST';
+        
+      if (!values)
+      {
+        var obj = $.parse_url(target);
+        target = obj.url;
+        values = obj.params;
+      }
+            
+      var form = $('<form>',{attr:{
+        method: method,
+        action: target
+      }});
+      
+      for(var i in values)
+      {
+        $('<input>',{
+          attr:{
+            type: 'hidden',
+            name: i,
+            value: values[i]
+          }
+        }).appendTo(form);
+
+      }
+      
+      $('body').append(form);
+          console.log(form);
+      form.submit();
+    };
+    
+    $.parse_url = function(url)
+    {
+      if (url.indexOf('?') == -1)
+        return { url: url, params: {} }
+        
+      var parts = url.split('?');
+      var url = parts[0];
+      var query_string = parts[1];
+      
+      var return_obj = {};
+      var elems = query_string.split('&');
+      
+      var obj = {};
+      
+      for(var i in elems)
+      {
+        var elem = elems[i];
+        var pair = elem.split('=');
+        obj[pair[0]] = pair[1];
+      }
+      
+      return_obj.url = url;
+      return_obj.params = obj;
+      
+      return return_obj;    
+    }   
+  })( jQuery );

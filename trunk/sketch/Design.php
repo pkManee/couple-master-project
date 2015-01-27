@@ -188,14 +188,14 @@
       </div>
     </div>
     <div id="panel-color" style="width: 200px;">
-      <form id="member-profile-form">
+      <form id="member-profile-form" action="ViewCart.php" method="POST">
         <div class="form-group">         
           <div id="recommend-color" class="recommend-color"></div>
           <select class="form-control selectpicker" id="cbo-color-style">
             <option value="">เลือกรูปการการแนะนำสี</option>
             <option value="analogous">Analogous: สีใกล้เคียง</option>
             <option value="triad">Triad: สีไตรสัมพันธ์ (สีสามเส้า)</option>
-            <option value="complementary">Complementary (สีคู่ตรงข้าม)</option>            
+            <option value="complementary">Complementary: สีคู่ตรงข้าม</option>            
           </select>          
         </div>       
         <div class="form-group">
@@ -218,72 +218,84 @@
             placeholder="ส่วนสูงของผู้ใส่ (ซม.)" value="<?php echo $member->height_2; ?>">
         </div>
         <div class="form-group">
-          <button type="button" class="btn btn-default" id="btn-calculation">คำนวณตำแหน่ง</button>
+          <button type="button" class="geo-button icon-calculate" id="btn-calculation" 
+                  title="คำนวณตำแหน่ง" data-toggle="tooltip" data-placement="bottom"></button>
+          <button type="submit" class="geo-button icon-cart" id="btn-cart"
+                  title="สั่งซื้อ" data-toggle="tooltip" data-placement="bottom"></button>
         </div>
       </form>
     </div>       
   </div>
   
-    <script src="./js/Event.js" type="text/javascript"></script> 
-    <script src="./js/Color.Picker.Classic.js" type="text/javascript"></script>
-    <script src="./js/Color.Space.js" type="text/javascript"></script>
-    <script src="./js/fabricjs-painter.js" type="text/javascript"></script>
-    <script src="./js/resolutionCal.js" type="text/javascript"></script>
-    <script src="./js/color-thief.js" type="text/javascript"></script>
-    <script src="./js/app.js" type="text/javascript"></script>
-    <script src="./js/Design.js" type="text/javascript"></script>
-    <script type="text/javascript">
-      //document ready
-    $(document).ready(function() {      
-      $('[data-toggle="tooltip"]').tooltip();
+  <script src="./js/Event.js" type="text/javascript"></script> 
+  <script src="./js/Color.Picker.Classic.js" type="text/javascript"></script>
+  <script src="./js/Color.Space.js" type="text/javascript"></script>
+  <script src="./js/fabricjs-painter.js" type="text/javascript"></script>
+  <script src="./js/resolutionCal.js" type="text/javascript"></script>
+  <script src="./js/color-thief.js" type="text/javascript"></script>
+  <script src="./js/app.js" type="text/javascript"></script>
+  <script src="./js/Design.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    //document ready
+  $(document).ready(function() {      
+    $('[data-toggle="tooltip"]').tooltip();
 
-      $('#member-profile-form')
-        .bootstrapValidator( {
-          feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-          },         
-          fields: {
-              txtHeight1: {
-                  validators: {
-                      numeric: {
-                      message: 'กรุณาระบุเป็นตัวเลข'
-                    },
-                    greaterThan: {
-                      value: 0,
-                      inclusive: false,
-                      message: 'กรุณาระบุตัวเลขที่มากกว่าศูนย์'
-                    }
-                }
-              },
-              txtHeight2: {
-                  validators: {
-                      numeric: {
-                      message: 'กรุณาระบุเป็นตัวเลข'
-                    },
-                    greaterThan: {
-                      value: 0,
-                      inclusive: false,
-                      message: 'กรุณาระบุตัวเลขที่มากกว่าศูนย์'
-                    }
-                }
+    $('#member-profile-form')
+      .bootstrapValidator( {
+        feedbackIcons: {
+              valid: 'glyphicon glyphicon-ok',
+              invalid: 'glyphicon glyphicon-remove',
+              validating: 'glyphicon glyphicon-refresh'
+        },         
+        fields: {
+            txtHeight1: {
+                validators: {
+                    numeric: {
+                    message: 'กรุณาระบุเป็นตัวเลข'
+                  },
+                  greaterThan: {
+                    value: 75,
+                    inclusive: false,
+                    message: 'กรุณาระบุตัวเลขที่มากกว่า 75 ซม.'
+                  },
+                  lessThan: {
+                    value: 220,
+                    inclusive: true,
+                    message: 'ส่วนสูงต้องไม่เกิน 220 ซม.'
+                  }
               }
-            }//fields
-        })//bootstrapValidator
-        .on('success.form.bv', function(e){
-           // Prevent form submission
-            e.preventDefault();
+            },
+            txtHeight2: {
+                validators: {
+                    numeric: {
+                    message: 'กรุณาระบุเป็นตัวเลข'
+                  },
+                  greaterThan: {
+                    value: 75,
+                    inclusive: false,
+                    message: 'กรุณาระบุตัวเลขที่มากกว่า 75 ซม.'
+                  },
+                  lessThan: {
+                    value: 220,
+                    inclusive: true,
+                    message: 'ส่วนสูงต้องไม่เกิน 220 ซม.'
+                  }
+              }
+            }
+          }//fields
+      })//bootstrapValidator
+      .on('success.form.bv', function(e){
+         // Prevent form submission
+          e.preventDefault();
 
-            // Get the form instance
-            var $form = $(e.target);
-            
-            //go process here
-            //goSave($form);
-        });//on success.form.bv
+          // Get the form instance
+          var $form = $(e.target);
+          
+          //go process here
+          goSave();
+      });//on success.form.bv
 
-    });//document.ready  
-    </script>
-
+  });//document.ready 
+  </script>
 	</body>
 </html>

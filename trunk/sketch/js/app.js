@@ -245,8 +245,8 @@ function handleImage(e){
             reader.onload = function(event){
                
                 fabric.Image.fromURL(event.target.result, function(oImg) {
-                    oImg.scaleX = 0.2//(canvas.width/2) /oImg.width;
-                    oImg.scaleY = 0.2//(canvas.height/2) /oImg.height;
+                    oImg.scaleX = (canvas.width/2) /oImg.width;
+                    oImg.scaleY = (canvas.width/2) /oImg.width;//(canvas.height/2) /oImg.height;
                     canvas.add(oImg);
                     canvas.renderAll();
                     oImg.selectable = true;

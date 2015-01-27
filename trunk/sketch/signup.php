@@ -36,7 +36,7 @@
       <div class="form-group">        
         <label class="control-label" for="txt-email">อีเมล์</label>
         <input type="text" class="form-control" id="txt-form-email" placeholder="อีเมล์" name="txtEmail">
-        <span id="email-error"></span>
+        <span id="email-error" class="help-block with-errors"></span>
         <div class="help-block with-errors"></div>
       </div>
 
@@ -126,13 +126,24 @@
               },
               fields: {
                   txtEmail: {
-                      message: 'อีเมล์ไม่ถูกต้อง',
+                      verbose: false,
                       validators: {
                           notEmpty: {
                               message: 'กรุณาระบุอีเมล์'
                           },
                           emailAddress: {
                               message: 'กรุณาระบุอีเมล์ให้ถูกต้อง'
+                          },
+                          remote: {
+                              url: 'data/signup.data.php',
+                              data: function(validator) {
+                                return {
+                                        method: 'checkEmail', 
+                                        email: validator.getFieldElements('txtEmail').val()
+                                      };
+                              },
+                              message: 'อีเมล์นี้มีอยู่ในระบบแล้ว กรุณาสมัครด้วยอีเมล์อื่น',
+                              type: 'POST'
                           }
                       }
                   },
@@ -214,30 +225,30 @@
         });//fail
       }//goSave
       
-      var spanEmai = document.getElementById('email-error');
-      var txtEmail = document.getElementById('txt-form-email');
-      txtEmail.onblur = function() {
-        if (!this.value) return;
+      // var spanEmai = document.getElementById('email-error');
+      // var txtEmail = document.getElementById('txt-form-email');
+      // txtEmail.onblur = function() {
+      //   if (!this.value) return;
 
-        $.ajax({
-          type: 'POST',
-          url: 'data/signup.data.php',
-          data: {method: 'checkEmail', email: this.value}
-        })//ajax
-        .done(function(data) {
-          if (data.email) {
-            spanEmai.innerHTML = 'Email นี้มีในระบบแล้ว ไม่สามารถสมัครสมาชิกโดยการใช้ Email นี้ได้ !!!';
-          } else {
-            spanEmai.innerHTML = 'ท่านสามารถใช้ Email นี้ในการสมัครสมาชิกได้';
-          }
-        })//done
-        .fail(function(data) {
-          bootbox.dialog({
-                      title: 'Fatal Error',
-                      message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
-          });
-        });//fail
-      }
+      //   $.ajax({
+      //     type: 'POST',
+      //     url: 'data/signup.data.php',
+      //     data: {method: 'checkEmail', email: this.value}
+      //   })//ajax
+      //   .done(function(data) {
+      //     if (data.email) {
+      //       spanEmai.innerHTML = 'อีเมล์นี้มีในระบบแล้ว ไม่สามารถสมัครสมาชิกโดยการใช้อีเมล์นี้ได้ !!!';
+      //     } else {
+      //       spanEmai.innerHTML = 'ท่านสามารถใช้อีเมล์นี้ในการสมัครสมาชิกได้';
+      //     }
+      //   })//done
+      //   .fail(function(data) {
+      //     bootbox.dialog({
+      //                 title: 'Fatal Error',
+      //                 message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
+      //     });
+      //   });//fail
+      // }
 
     </script>
   </body>
