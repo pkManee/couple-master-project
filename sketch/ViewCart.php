@@ -37,7 +37,7 @@
     $shirt_type_1 = $_POST["shirt_type_1"];
  
    	?>
-   	<img src="<?php echo $_POST['screen1']; ?>" style="width:512px; height:512px;">
+   	<img src="<?php echo $_POST['screen1']; ?>">
     </div>
     </form>   
   </body>
