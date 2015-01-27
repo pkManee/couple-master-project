@@ -74,12 +74,14 @@ function checkEmail() {
   $stmt->bindValue(":email", $email);
 
   if ($stmt->execute()) {
-    $results = $stmt->fetch();
-    header("Content-Type: application/json");
-    echo json_encode($results);
-  } else {
-    header("Content-Type: application/json");
-    echo json_encode($stmt->errorInfo());
+    $results = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!empty($results["email"])) {
+      header("Content-Type: application/json");
+      echo json_encode(array('valid' => false));
+    } else {
+      header("Content-Type: application/json");
+      echo json_encode(array('valid' => true));
+    }
   }
 }
 ?> 

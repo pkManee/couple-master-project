@@ -146,3 +146,13 @@
   width: 30px;
   height: 30px;
 }
+.icon-calculate:before {
+  content: "\e6a1";
+  width: 30px;
+  height: 30px;
+}
+.icon-cart:before {
+  content: "\e69e";
+  width: 30px;
+  height: 30px;
+}
