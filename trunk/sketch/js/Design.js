@@ -544,6 +544,7 @@ function compareColor(color1, color2) {
 function distance(a, b) {
     return (a - b) * (a - b);
 }
+
 var cboShirtSize1 = document.getElementById('cbo-shirt-size-1');
 var cboShirtSize2 = document.getElementById('cbo-shirt-size-2');
 function goSave() {
@@ -553,7 +554,7 @@ function goSave() {
                     gender_1: cboGender1.value, 
                     shirt_type_1: cboShirtType1.value,
                     shirt_size_1: cboShirtSize1.value,
-                    screen1: splitLineScreen[0].toDataURL()
+                    screen1: splitLineScreen[0]
                 });
 }
 
