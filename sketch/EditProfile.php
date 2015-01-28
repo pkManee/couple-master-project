@@ -34,21 +34,21 @@
       include("service/message_service.php");
       include("service/db_connect.php");
 
-      class Member
-      {
-        public $email;
-        public $member_name = "";
-        public $address;
-        public $province_id;
-        public $amphur_id;
-        public $district_id;
-        public $password;
-        public $postcode;
-        public $photo;
-        public $height_1 = 0;
-        public $height_2 = 0;
-      }
-
+      // class Member
+      // {
+      //   public $email;
+      //   public $member_name = "";
+      //   public $address;
+      //   public $province_id;
+      //   public $amphur_id;
+      //   public $district_id;
+      //   public $password;
+      //   public $postcode;
+      //   public $photo;
+      //   public $height_1 = 0;
+      //   public $height_2 = 0;
+      // }
+      include("data/Member.class.php");
       //select user profile
       if (isset($_SESSION["email"]) && !empty($_SESSION["email"])){           
           try {

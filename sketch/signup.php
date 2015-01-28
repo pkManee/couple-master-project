@@ -41,7 +41,7 @@
       </div>
 
       <div class="form-group">
-        <label class="control-label" for="txt-member-name">ชื่อ นามสกุล</label>
+        <label class="control-label" for="txt-member-name">ชื่อ-นามสกุล</label>
         <input type="text" class="form-control" id="txt-member-name" placeholder="ชื่อ นามสกุล" name="txtName" >
       </div>      
       <div class="form-group">

@@ -43,8 +43,8 @@ canvas.selection = false;
 //shirt canvas
 var s = document.createElement('canvas');
 s.id = 's';
-s.width = A4.pxWidth;
-s.height = A4.pxHeight;
+s.width = areaWidth;//A4.pxWidth;
+s.height = areaHeight; //A4.pxHeight;
 s.style.width = areaWidth;
 s.style.height = areaHeight;
 s.style.position = 'absolute';
@@ -739,7 +739,7 @@ function loadShirt(type_1, type_2){
     shirtArray = [];
     finalLineScreen = [];
 
-    var rectStroke = 'rgba(128, 128, 128, 0.2)';
+    var rectStroke = 'rgba(0, 0, 0, 0)'; //'rgba(128, 128, 128, 0.2)';
     //shirt 1
     //men
     if (type_1) {        
@@ -1018,6 +1018,22 @@ function init() {
                 obj.goodScaleX = obj.scaleX;
                 obj.goodScaleY = obj.scaleY;
             }
+        }
+    });
+    shirtCanvas.on('object:selected', function(e) {
+        var bound;
+        if (e.target.sideOfCanvas === 'left') {
+            bound = borderShirt1;
+        } else {
+            bound = borderShirt2;
+        }
+
+        bound.set('stroke', 'rgba(128, 128, 128, 0.3)');
+    });
+    shirtCanvas.on('selection:cleared', function() {
+        if (borderShirt1 && borderShirt2) {
+            borderShirt1.set('stroke', 'rgba(0, 0, 0, 0)');
+            borderShirt2.set('stroke', 'rgba(0, 0, 0, 0)');
         }
     });
 
