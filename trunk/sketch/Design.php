@@ -188,10 +188,9 @@
       </div>
     </div>
     <div id="panel-color" style="width: 200px;">
-      <form id="member-profile-form" action="ViewCart.php" method="POST">
         <div class="form-group">         
-          <div id="recommend-color" class="recommend-color"></div>
-          <select class="form-control selectpicker" id="cbo-color-style">
+          <div id="recommend-color-1" class="recommend-color"></div>
+          <select class="form-control selectpicker" id="cbo-color-style-1">
             <option value="">เลือกรูปการการแนะนำสี</option>
             <option value="analogous">Analogous: สีใกล้เคียง</option>
             <option value="triad">Triad: สีไตรสัมพันธ์ (สีสามเส้า)</option>
@@ -202,12 +201,21 @@
           <label class="control-label" for="cbo-shirt-color-1">เสื้อด้านซ้าย</label>          
           <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
         </div>
-        
         <div class="form-group">
           <label class="control-label" for="txt-height-1">ส่วนสูงของผู้ใส่ (ซม.)</label>          
           <input type="text" class="form-control" id="txt-height-1" name="txtHeight1"
             placeholder="ส่วนสูงของผู้ใส่ (ซม.)" value="<?php echo $member->height_1; ?>">
-        </div>          
+        </div>
+        <hr>
+        <div class="form-group">         
+          <div id="recommend-color-2" class="recommend-color"></div>
+          <select class="form-control selectpicker" id="cbo-color-style-2">
+            <option value="">เลือกรูปการการแนะนำสี</option>
+            <option value="analogous">Analogous: สีใกล้เคียง</option>
+            <option value="triad">Triad: สีไตรสัมพันธ์ (สีสามเส้า)</option>
+            <option value="complementary">Complementary: สีคู่ตรงข้าม</option>            
+          </select>          
+        </div>    
         <div class="form-group">
           <label class="control-label" for="cbo-shirt-color-2">เสื้อด้านขวา</label>          
           <select class="form-control selectpicker" id="cbo-shirt-color-2" ></select>
@@ -217,14 +225,14 @@
           <input type="text" class="form-control" id="txt-height-2" name="txtHeight2" 
             placeholder="ส่วนสูงของผู้ใส่ (ซม.)" value="<?php echo $member->height_2; ?>">
         </div>
+
         <div class="form-group">
           <button type="button" class="geo-button icon-calculate" id="btn-calculation" 
                   title="คำนวณตำแหน่ง" data-toggle="tooltip" data-placement="bottom"></button>
           <button type="submit" class="geo-button icon-cart" id="btn-cart"
                   title="สั่งซื้อ" data-toggle="tooltip" data-placement="bottom"></button>
-        </div>
-      </form>
-    </div>       
+        </div>     
+      </div>
   </div>
   
   <script src="./js/Event.js" type="text/javascript"></script> 
