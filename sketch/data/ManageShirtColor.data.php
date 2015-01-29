@@ -39,7 +39,7 @@ function checkColorHex() {
 
   $sql = "select color_hex from shirt_color where color_hex = :color_hex ";
   $stmt = $dbh->prepare($sql);
-  $stmt->bindValue(":color_hex", $_POST["color_hex"]);
+  $stmt->bindValue(":color_hex", $_POST["txtColorHex"]);
 
   if ($stmt->execute()) {
     $results = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -63,7 +63,7 @@ function checkColor() {
 
   $sql = "select color from shirt_color where color = :color ";
   $stmt = $dbh->prepare($sql);
-  $stmt->bindValue(":color", $_POST["color"]);
+  $stmt->bindValue(":color", $_POST["txtColor"]);
 
   if ($stmt->execute()) {
     $results = $stmt->fetch(PDO::FETCH_ASSOC);
