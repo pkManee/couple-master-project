@@ -188,6 +188,7 @@
       </div>
     </div>
     <div id="panel-color" style="width: 200px;">
+      <form id="member-profile-form" method="POST">
         <div class="form-group">         
           <div id="recommend-color-1" class="recommend-color"></div>
           <select class="form-control selectpicker" id="cbo-color-style-1">
@@ -231,8 +232,9 @@
                   title="คำนวณตำแหน่ง" data-toggle="tooltip" data-placement="bottom"></button>
           <button type="submit" class="geo-button icon-cart" id="btn-cart"
                   title="สั่งซื้อ" data-toggle="tooltip" data-placement="bottom"></button>
-        </div>     
-      </div>
+        </div>
+      </form>
+    </div>
   </div>
   
   <script src="./js/Event.js" type="text/javascript"></script> 

@@ -13,27 +13,57 @@ $method = $_POST["method"];
 
 switch ($method) {
   case 'insert':
-    insertShirts();
-    break;
+        insertShirts();
+        break;
   case 'delete':
-    deleteShirts();
-    break;
+        deleteShirts();
+        break;
   case 'getAllShirtsByGender':
-    getAllShirtsByGender();
-    break;
+        getAllShirtsByGender();
+        break;
   case 'getShirtColor':
-    getShirtColor();
-    break;
+        getShirtColor();
+        break;
   case 'getShirtSize':
-    getShirtSize();
-    break;
+        getShirtSize();
+        break;
   case 'getShirtTypeByGender' :
-    getShirtTypeByGender();
-    break;
+        getShirtTypeByGender();
+        break;
+  case 'getMaterialType' :
+        getMaterialType();
+        break;
   default:
     header("Content-Type: application/json");
     echo json_encode(array("result"=>"no_method"));
     break;
+}
+
+function getMaterialType() {
+  try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      echo "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+  $sql = "select material_type, shirt_price ";
+  $sql .= "from shirts where color = :color and shirt_type = :shirt_type ";
+  $sql .= "and size_code = :size_code and gender = :gender ";
+
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindValue(":color", $_POST["color"]);
+  $stmt->bindValue(":shirt_type", $_POST["shirt_type"]);
+  $stmt->bindValue(":size_code", $_POST["size_code"]);
+  $stmt->bindValue(":gender", $_POST["gender"]);
+  if ($stmt->execute()){    
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    header("Content-Type: application/json");
+    echo json_encode($results);
+
+  } else {
+    header("Content-Type: application/json");
+    echo json_encode($stmt->errorInfo());
+  }
 }
 
 function getShirtTypeByGender() {
