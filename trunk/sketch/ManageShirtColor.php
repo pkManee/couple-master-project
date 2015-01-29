@@ -112,11 +112,7 @@
                           },
                           remote: {
                             url: 'data/ManageShirtColor.data.php',
-                            data: function(validator) {
-                              return {
-                                      method: 'checkColor'
-                                    };
-                            },
+                            data: { method: 'checkColor' },
                             message: 'สีนี้มีในระบบแล้ว',
                             type: 'POST'
                           }
@@ -126,6 +122,12 @@
                       validators: {
                           notEmpty: {
                               message: 'กรุณาเลือกสี'
+                          },
+                          remote: {
+                            url: 'data/ManageShirtColor.data.php',
+                            data: { method: 'checkColorHex' },
+                            message: 'รหัสนี้มีในระบบแล้ว',
+                            type: 'POST'
                           }
                       }
                   }
