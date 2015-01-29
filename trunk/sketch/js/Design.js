@@ -5,11 +5,15 @@ var cboShirtColor1 = document.getElementById('cbo-shirt-color-1');
 var cboChange = false;
 cboShirtType1.onchange = function() { 
     cboChange = true;
-    getShirtColor1();    
+    getShirtColor1();
+    $(cboColorStyle_1).selectpicker('val', '');
+    cboColorStyle_1.onchange();
 }
 cboGender1.onchange = function() { 
     cboChange = true;
-    getShirtType1(); 
+    getShirtType1();
+    $(cboColorStyle_1).selectpicker('val', '');
+    cboColorStyle_1.onchange();
 }
 cboShirtColor1.onchange =  function() { setShirtColor(); }
 
@@ -20,10 +24,14 @@ var cboShirtColor2 = document.getElementById('cbo-shirt-color-2');
 cboShirtType2.onchange = function() {
     cboChange = false;
     getShirtColor2();
+    $(cboColorStyle_2).selectpicker('val', '');
+    cboShirtType2.onchange();
 }
 cboGender2.onchange = function() { 
     cboChange = false;
-    getShirtColor2(); 
+    getShirtColor2();
+    $(cboColorStyle_2).selectpicker('val', '');
+    cboShirtType2.onchange();
 }
 cboShirtColor2.onchange = function() { setShirtColor(); }
 
@@ -535,7 +543,7 @@ cboColorStyle_2.onchange = function() {
             // span = undefined;
 
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
-            var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
+            var recommend_1 = findColor(temp, shirtColor2, dominantColor, 'shirt1');
             var existingColor = undefined;
 
             for (var i = 0; i < recommend_1.length; i++) { 
@@ -578,7 +586,7 @@ cboColorStyle_2.onchange = function() {
             // span = undefined;
             
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
-            var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
+            var recommend_1 = findColor(temp, shirtColor2, dominantColor, 'shirt1');
             var existingColor = undefined;
 
             for (var i = 0; i < recommend_1.length; i++) { 
@@ -616,7 +624,7 @@ cboColorStyle_2.onchange = function() {
             // span = undefined;
 
             var temp = [recommend.toHexString()];
-            var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
+            var recommend_1 = findColor(temp, shirtColor2, dominantColor, 'shirt1');
             var existingColor = undefined;
 
             for (var i = 0; i < recommend_1.length; i++) { 

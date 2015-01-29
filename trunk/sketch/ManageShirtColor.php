@@ -105,9 +105,20 @@
               },
               fields: {
                   txtColor: {
+                      verbose: false,
                       validators: {
                           notEmpty: {
                               message: 'กรุณาระบุสี'
+                          },
+                          remote: {
+                            url: 'data/ManageShirtColor.data.php',
+                            data: function(validator) {
+                              return {
+                                      method: 'checkColor'
+                                    };
+                            },
+                            message: 'สีนี้มีในระบบแล้ว',
+                            type: 'POST'
                           }
                       }
                   },
@@ -138,7 +149,7 @@
     $.ajax({
         type: 'POST',
         url: 'data/ManageShirtColor.data.php', 
-        data: $form.serialize()
+        data: $form.serialize() + '&method=insert'
     })
     .done(function(data){
       if (data.result === "success"){
@@ -182,7 +193,7 @@
    	$.ajax({
           type: 'POST',
           url: 'data/ManageShirtColor.data.php', 
-          data: {isDelete: isDelete.value, txtColor: isDelete.value}
+          data: {isDelete: isDelete.value, method: 'delete'}
       })
       .done(function(data){
         if (data.result === "success"){
