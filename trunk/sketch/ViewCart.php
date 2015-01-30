@@ -8,9 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>View Cart</title>
     
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/bootstrap-theme.css" rel="stylesheet">
-    <link href="css/bootstrapValidator.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/bootstrapValidator.css">
+    <link rel="stylesheet" href="css/bootstrap-select.css">
 
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
@@ -53,7 +54,7 @@
 			$member = $stmt->fetch();	    
 		}else{
 			echo "error -> " .$stmt->errorInfo()[2];
-		}
+		}		
 
 		$color_1 = $_POST["shirt_color_1"];
 		echo "<input type='hidden' id='color_1' value='" .$color_1. "'>";
@@ -73,7 +74,39 @@
 		$gender_2 = $_POST["gender_2"];
 		echo "<input type='hidden' id='gender_2' value='" .$gender_2. "'>";
 	}
- 
+ 	
+	function getColor($color_hex) {
+		try {
+		  $dbh = dbConnect::getInstance()->dbh;
+		} catch (PDOException $e) {
+		  print "Error!: " . $e->getMessage() . "<br/>";
+		  die();
+		}
+		$sql = "select color_hex, color from shirt_color where color_hex = :color_hex ";
+		$stmt = $dbh->prepare($sql);
+		$stmt->bindValue(":color_hex", $color_hex);
+		if ($stmt->execute()) {
+			$results = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $results["color"];
+		}
+	}
+	function getShirtSize($size_code, $gender) {
+		try {
+		  $dbh = dbConnect::getInstance()->dbh;
+		} catch (PDOException $e) {
+		  print "Error!: " . $e->getMessage() . "<br/>";
+		  die();
+		}
+		$sql = "select chest_size, shirt_length from shirt_size ";
+		$sql .= "where size_code = :size_code and gender = :gender ";
+		$stmt->bindValue(":size_code", $size_code);
+		$stmt->bindValue(":gender", $gender);
+		if ($stmt->execute()) {
+			$results = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $results;
+		}
+	}
+   	
    	?>
 	   	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 		  <div class="panel panel-info">
@@ -110,60 +143,66 @@
 		      			<div class="col-sm-6">
 			      			<div class="panel panel-default">
 				      			<div class="panel-heading">เสื้อตัวที่ 1</div>
-				      				<div class="form-group">
-							      		<label class="control-label col-sm-3">เพศ</label>
-							      		<div class="col-sm-3">
-							      			<p class="form-control-static"><?php echo ($gender_1 == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
-							      		</div>
-							      	</div>
-				      				<div class="form-group">
-						      			<label class="control-label col-sm-3">ประเภท</label>
-							      		<div class="col-sm-3">
-							      			<p class="form-control-static"><?php echo $shirt_type_1; ?></p>
-							      		</div>
-							      	</div>
-							      	<div class="form-group">
-						      			<label class="control-label col-sm-3">สี</label>
-							      		<div class="col-sm-3">
-							      			<p class="form-control-static"><?php echo $color_1; ?></p>
-							      		</div>
-							      	</div>							      	
-							      	<div class="form-group">
-							      		<label class="control-label col-sm-3">ขนาด</label>
-							      		<div class="col-sm-3">
-							      			<p class="form-control-static"><?php echo $shirt_size_1; ?></p>
-							      		</div>
-							      	</div>
+			      				<div class="form-group">
+						      		<label class="control-label col-sm-3">เพศ</label>
+						      		<div class="col-sm-3">
+						      			<p class="form-control-static"><?php echo ($gender_1 == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
+						      		</div>
+						      	</div>
+			      				<div class="form-group">
+					      			<label class="control-label col-sm-3">ประเภท</label>
+						      		<div class="col-sm-3">
+						      			<p class="form-control-static"><?php echo $shirt_type_1; ?></p>
+						      		</div>
+						      	</div>
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3">สี</label>
+				      				<div class="col-sm-3">
+						      			<p class="form-control-static"><?php echo getColor($color_1); ?></p>								      			
+						      		</div>
+						      		<div class="col-sm-3">
+						      			<span class="form-control" style="background: <?php echo $color_1; ?>"></span>
+						      		</div>
+						      	</div>
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3">ชนิดผ้า - ขนาด</label>
+						      		<div class="col-sm-3">
+						      			<select class="selectpicker" id="cbo-material-1"></select>
+						      		</div>
+						      	</div>
 				      		</div>				      		
 				      	</div>
 
 				      	<div class="col-sm-6">
 			      			<div class="panel panel-default">
 				      			<div class="panel-heading">เสื้อตัวที่ 2</div>
-				      				<div class="form-group">
-							      		<label class="control-label col-sm-3">เพศ</label>
-							      		<div class="col-sm-3">
-							      			<p class="form-control-static"><?php echo ($gender_2 == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
-							      		</div>
-							      	</div>
-				      				<div class="form-group">
-						      			<label class="control-label col-sm-3">ประเภท</label>
-							      		<div class="col-sm-3">
-							      			<p class="form-control-static"><?php echo $shirt_type_2; ?></p>
-							      		</div>
-							      	</div>
-							      	<div class="form-group">
-						      			<label class="control-label col-sm-3">สี</label>
-							      		<div class="col-sm-3">
-							      			<p class="form-control-static"><?php echo $color_2; ?></p>
-							      		</div>
-							      	</div>							      	
-							      	<div class="form-group">
-							      		<label class="control-label col-sm-3">ขนาด</label>
-							      		<div class="col-sm-3">
-							      			<p class="form-control-static"><?php echo $shirt_size_2; ?></p>
-							      		</div>
-							      	</div>
+			      				<div class="form-group">
+						      		<label class="control-label col-sm-3">เพศ</label>
+						      		<div class="col-sm-3">
+						      			<p class="form-control-static"><?php echo ($gender_2 == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
+						      		</div>
+						      	</div>
+			      				<div class="form-group">
+					      			<label class="control-label col-sm-3">ประเภท</label>
+						      		<div class="col-sm-3">
+						      			<p class="form-control-static"><?php echo $shirt_type_2; ?></p>
+						      		</div>
+						      	</div>
+						      	<div class="form-group">
+					      			<label class="control-label col-sm-3">สี</label>							      								      			
+				      				<div class="col-sm-3">
+						      			<p class="form-control-static"><?php echo getColor($color_2); ?></p>								      			
+						      		</div>
+						      		<div class="col-sm-3">
+						      			<span class="form-control" style="background: <?php echo $color_2; ?>"></span>
+						      		</div>						      			
+						      	</div>
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3">ชนิดผ้า - ขนาด</label>
+						      		<div class="col-sm-3">
+						      			<select class="selectpicker" id="cbo-material-2"></select>
+						      		</div>
+						      	</div>
 				      		</div>				      		
 				      	</div>
 		      		</div>
@@ -204,9 +243,48 @@
 		    </div>
 		  </div>
 		</div>
-
     </div>
-    
+    <script type="text/javascript" src="js/bootstrap-select.js"></script>
+    <script type="text/javascript">
+	function getMaterialType(color, shirt_type, gender, cbo) {
+	    $.ajax({
+	        type: "POST",
+	        dataType: "json",
+	        url: "data/ManageShirts.data.php",
+	        data: {method: "getMaterialType", color_hex: color, shirt_type: shirt_type, gender: gender}       
+	    })
+	    .done(function(data) {
+	        if (data) {
+	            var text = '';
+	            data.forEach(function(item){
+	                text += "<option value=\""+ item.material_type + '|' + item.shirt_id +"\" >" + item.material_type + ' - ' + item.size_code + "</option>";    
+	            });
+
+	            $(cbo).html(text).selectpicker('refresh');		                              
+	        } else {
+	            Toast.init({
+	                "selector": ".alert-danger"
+	            });
+	            Toast.show("<strong>Error on getMaterialType !!!<strong> " + data);
+	        }
+
+	    })//done
+	    .fail(function(data) { 
+	        bootbox.dialog({
+	                title: 'Fatal Error',
+	                message : '<div class="alert alert-danger" role="alert"><strong>Error in getMaterialType !!!</strong></div>'
+	        });
+	    });//fail
+	}
+
+	var cboMaterial_1 = document.getElementById('cbo-material-1');
+	var cboMaterial_2 = document.getElementById('cbo-material-2');
+
+	$(document).ready(function() {
+		getMaterialType($('#color_1').val(), $('#shirt_type_1').val(), $('#gender_1').val(), cboMaterial_1);
+		getMaterialType($('#color_2').val(), $('#shirt_type_2').val(), $('#gender_2').val(), cboMaterial_2);
+	});
+    </script>
   </body>
 </html>
 
