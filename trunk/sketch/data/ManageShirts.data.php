@@ -46,14 +46,13 @@ function getMaterialType() {
       echo "Error!: " . $e->getMessage() . "<br/>";
       die();
   }
-  $sql = "select material_type, shirt_price ";
-  $sql .= "from shirts where color = :color and shirt_type = :shirt_type ";
-  $sql .= "and size_code = :size_code and gender = :gender ";
+  $sql = "select shirt_id, material_type, shirt_price, size_code ";
+  $sql .= "from shirts where color_hex = :color_hex and shirt_type = :shirt_type ";
+  $sql .= "and gender = :gender ";
 
   $stmt = $dbh->prepare($sql);
-  $stmt->bindValue(":color", $_POST["color"]);
+  $stmt->bindValue(":color_hex", $_POST["color_hex"]);
   $stmt->bindValue(":shirt_type", $_POST["shirt_type"]);
-  $stmt->bindValue(":size_code", $_POST["size_code"]);
   $stmt->bindValue(":gender", $_POST["gender"]);
   if ($stmt->execute()){    
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -121,7 +120,8 @@ function getShirtColor() {
       die();
   }
 
-  $sql = "select distinct s.color, c.color_hex from shirts s inner join shirt_color c on s.color = c.color ";
+  $sql = "select distinct s.color_hex, c.color from ";
+  $sql .= "shirts s inner join shirt_color c on s.color_hex = c.color_hex ";
   $sql .= "where s.gender = :gender and s.shirt_type = :shirt_type";
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":gender", $_POST["gender"]);
@@ -170,21 +170,21 @@ function insertShirts(){
   }
 
   $sql = "insert into shirts ";
-  $sql .= "(shirt_name, color, shirt_type, material_type, size_code, shirt_price, gender) ";
+  $sql .= "(shirt_id, shirt_name, shirt_type, material_type, size_code, shirt_price, gender, color_hex) ";
   $sql .= "values";
-  $sql .= "(:shirt_name, :color, :shirt_type, :material_type, :size_code, :shirt_price, :gender) ";
-  $sql .= "on duplicate key update shirt_name = :shirt_name, color = :color, shirt_type = :shirt_type, material_type = :material_type ";
-  $sql .= ",size_code = :size_code, shirt_price = :shirt_price, gender = :gender ";
+  $sql .= "(:shirt_id, :shirt_name, :shirt_type, :material_type, :size_code, :shirt_price, :gender, :color_hex) ";
+  $sql .= "on duplicate key update shirt_name = :shirt_name, shirt_type = :shirt_type, material_type = :material_type ";
+  $sql .= ",size_code = :size_code, shirt_price = :shirt_price, gender = :gender, color_hex = :color_hex ";
 
   $stmt = $dbh->prepare($sql);
-
+  $stmt->bindValue(":shirt_id", (!empty($_POST["shirt_id"])) ? $_POST["shirt_id"] : NULL);
   $stmt->bindValue(":shirt_name", $_POST["txtShirtName"]);
-  $stmt->bindValue(":color", $_POST["cboShirtColor"]);
+  $stmt->bindValue(":color_hex", $_POST["cboShirtColor"]);
   $stmt->bindValue(":shirt_type", $_POST["cboShirtType"]);
   $stmt->bindValue(":material_type", $_POST["cboMaterialType"]);
   $stmt->bindValue(":size_code", $_POST["cboShirtSize"]);
   $stmt->bindValue(":shirt_price", $_POST["txtShirtPrice"]);
-  $stmt->bindValue(":gender", $_POST["rdoGender"]);
+  $stmt->bindValue(":gender", $_POST["rdoGender"]);  
 
   if ($stmt->execute()){        
     header("Content-Type: application/json");
