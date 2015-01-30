@@ -14,6 +14,7 @@ require("header.php");
     <link href="css/bootstrap-theme.css" rel="stylesheet">       
     <link href="css/bootstrapValidator.css" rel="stylesheet">
     <link href="css/iconfont.css" rel="stylesheet">
+
     <!--List -->
     <link href="css/jasny-bootstrap.css" rel="stylesheet">
 
@@ -55,7 +56,7 @@ try {
     die();
 }
 
-$sql = "select shirt_id, shirt_name, color, shirt_type, material_type, size_code, shirt_price, gender ";
+$sql = "select shirt_id, shirt_name, color, shirt_type, material_type, size_code, shirt_price, gender, color_hex ";
 $sql .= "from shirts where 1 = 1 ";
 
 if (!empty($_GET["txtSearch"])){
@@ -81,7 +82,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>แบบเสื้อ</th>    
         <th>ประเภทผ้า</th>
         <th>ขนาดเสื้อ</th>
-        <th>ราคาเสื้อ</th>
+        <th style="text-align: right">ราคาเสื้อ</th>
       </tr>
     </thead>
     <tbody data-link="row" class="rowlink">
@@ -91,7 +92,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $shirt_id = $row["shirt_id"];
         $shirt_name = $row["shirt_name"];
         $gender = $row["gender"] == "M" ? "ชาย" : "หญิง";
-        $color = $row["color"];
+        $color_hex= $row["color_hex"];
         $shirt_type = $row["shirt_type"];
         $material_type = $row["material_type"];
         $size_code = $row["size_code"];
@@ -102,11 +103,11 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo "<th scope=\"row\">" .$i. "</th>";
         echo "<td><a href=\"ManageShirts.php?shirtid=" .$shirt_id. "\">" .$shirt_name. "</a></td>";
         echo "<td>" .$gender. "</td>";
-        echo "<td>" .$color. "</td>";
+        echo "<td><span class=\"form-control\" style=\"background: " .$color_hex. "; height: 20px; width: 50px;\"></span></td>";
         echo "<td>" .$shirt_type. "</td>";
         echo "<td>" .$material_type. "</td>";
         echo "<td>" .$size_code. "</td>";
-        echo "<td>" .$shirt_price. "</td>";
+        echo "<td style=\"text-align: right\">" .number_format($shirt_price, 2). "</td>";
 
         echo "</tr>";
 

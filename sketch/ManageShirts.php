@@ -9,7 +9,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Material Type</title>
+    <title>Manage Shirts</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-theme.css" rel="stylesheet">       
@@ -47,6 +47,7 @@
         public $size_code = "";
         public $shirt_price = 0;
         public $gender = "M";
+        public $color_hex = "";
       }
 
       try {
@@ -58,7 +59,7 @@
 
       //select shirts
       if (isset($_GET["shirtid"]) && !empty($_GET["shirtid"])){
-          $sql = "select shirt_id, shirt_name, color, shirt_type, material_type, size_code, shirt_price, gender ";
+          $sql = "select shirt_id, shirt_name, color, shirt_type, material_type, size_code, shirt_price, gender, color_hex ";
           $sql .= "from shirts ";
           $sql .= "where shirt_id = :shirt_id ";
           $stmt = $dbh->prepare($sql);
@@ -131,12 +132,12 @@
         <select class="form-control selectpicker" id="cbo-shirt-color" name="cboShirtColor">
           <?php
             foreach($result_color as $row) {
-              if ($shirts->color == $row["color"]){
+              if ($shirts->color_hex == $row["color_hex"]){
                 $html ="<option data-content=\"<table style='width:100%'><tr><td style='width: 50%;'>" .$row["color"]. "</td><td style='width: '50%'; text-aligh: right' bgcolor='" .$row["color_hex"]. "'></td></tr></table>\" ";
-                $html .="value=\"" .$row["color"]. "\" selected>" .$row["color"]. "</option>";
+                $html .="value=\"" .$row["color_hex"]. "\" selected>" .$row["color"]. "</option>";
               }else{
                 $html ="<option data-content=\"<table style='width:100%'><tr><td style='width: 50%;'>" .$row["color"]. "</td><td style='width: '50%'; text-aligh: right' bgcolor='" .$row["color_hex"]. "'></td></tr></table>\" ";
-                $html .="value=\"" .$row["color"]. "\" >" .$row["color"]. "</option>";
+                $html .="value=\"" .$row["color_hex"]. "\" >" .$row["color"]. "</option>";
               }
               echo $html;              
             }
@@ -221,7 +222,9 @@
     </div>
     </form>    
     <script type="text/javascript">
-    
+    var btnDelete = document.getElementById('btn-delete');
+    var isDelete = document.getElementById('hidden-shirtid');
+
      $(document).ready(function() {
       $('.selectpicker').selectpicker();
 
@@ -276,7 +279,7 @@
     $.ajax({
         type: 'POST',
         url: 'data/ManageShirts.data.php', 
-        data: $form.serialize() + "&method=insert"
+        data: $form.serialize() + "&method=insert&shirt_id=" + isDelete.value
     })
     .done(function(data){
       if (data.result === "success"){
@@ -299,9 +302,7 @@
       });
     });
   }
-
-  var btnDelete = document.getElementById('btn-delete');
-  var isDelete = document.getElementById('hidden-shirtid');
+  
   btnDelete.onclick = function(){     	
   	event.preventDefault();
     if (!isDelete.value) return false;
