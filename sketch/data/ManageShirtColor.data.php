@@ -1,6 +1,6 @@
 <?php
-require("../service/message_service.php");
-require("../service/db_connect.php");
+require_once("../service/message_service.php");
+require_once("../service/db_connect.php");
 
 if(!isset($_POST["method"]) || empty($_POST["method"])) {
 
@@ -24,10 +24,28 @@ switch ($method) {
   case 'checkColorHex':
         checkColorHex();
         break;
+  case 'getColor':
+        getColor();
+        break;
   default:
     header("Content-Type: application/json");
     echo json_encode(array("result"=>"no_method"));
     break;
+}
+function getColor() {
+  try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      print "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+  $sql = "select color_hex, color from shirt_color where color_hex = :color_hex ";
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindValue(":color_hex", $_POST["color_hex"]);
+  if ($stmt->execute()) {
+    $results = $stmt->fetch(PDO::FETCH_ASSOC);
+    echo $results["color"];
+  }
 }
 function checkColorHex() {
   try {
