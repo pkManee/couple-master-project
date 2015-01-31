@@ -76,15 +76,17 @@ btnSignin.onclick = function(){
         doLogin(data);
       }
     });
-  } else {
-    //sign out
-    $.post("member_session.php", {email: '', member_name: ''});
+  } else {   
 
     bootbox.confirm({
                   title: '', 
                   message: '<div class="alert alert-info" role="alert">ท่านต้องการ <strong>ล็อกเอาท์</strong> หรือไม่?</div>',
-                  callback: function(result) {
-                    if (result) window.location = "index.php";     
+                  callback: function(result) {                   
+                    if (result) {
+                       //sign out
+                      $.post("member_session.php", {email: '', member_name: ''});
+                      window.location = "index.php";
+                    }
                   }
     }); 
   }  

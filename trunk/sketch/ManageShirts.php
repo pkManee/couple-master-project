@@ -379,8 +379,8 @@
         bootbox.dialog({
                     title: 'Fatal Error',
                     message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
-        });//fail
-      });//ajax
+        });//boobox
+      });//fail
     }
     </script>
   </body>
