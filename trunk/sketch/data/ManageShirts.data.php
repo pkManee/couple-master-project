@@ -46,9 +46,11 @@ function getMaterialType() {
       echo "Error!: " . $e->getMessage() . "<br/>";
       die();
   }
-  $sql = "select shirt_id, material_type, shirt_price, size_code ";
-  $sql .= "from shirts where color_hex = :color_hex and shirt_type = :shirt_type ";
-  $sql .= "and gender = :gender ";
+  $sql = "select s.shirt_id, s.material_type, s.shirt_price, s.size_code, ";
+  $sql .= "sh.chest_size, sh.shirt_length ";
+  $sql .= "from shirts s inner join shirt_size sh on s.size_code = sh.size_code and s.gender = sh.gender ";
+  $sql .=" where s.color_hex = :color_hex and s.shirt_type = :shirt_type ";
+  $sql .= "and s.gender = :gender ";
 
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":color_hex", $_POST["color_hex"]);

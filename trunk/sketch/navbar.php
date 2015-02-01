@@ -29,7 +29,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ข้อมูลสมาชิก<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="EditProfile.php">ข้อมูลแอคเคาน์ และผู้สวมใส่</a></li>
+            <li><a href="EditProfile.php">จัดการข้อมูลสมาชิก</a></li>
             <li class="divider"></li>
             <li><a href="#">เกี่ยวกับ</a></li>
           </ul>
@@ -149,7 +149,7 @@ function init(){
     btnSignin.innerHTML = btnSignoutText;
     dropdown.style.display = 'block';
 
-    if (txtEmail.value = 'pk.manee@gmail.com') {
+    if (txtEmail.value === 'pk.manee@gmail.com') {
       adminMenu.style.display = 'block';
     }
   }

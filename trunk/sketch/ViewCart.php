@@ -160,7 +160,7 @@
 				      				<div class="col-sm-3">
 						      			<p class="form-control-static"><?php echo getColor($color_1); ?></p>								      			
 						      		</div>
-						      		<div class="col-sm-3">
+						      		<div class="col-sm-2">
 						      			<span class="form-control" style="background: <?php echo $color_1; ?>"></span>
 						      		</div>
 						      	</div>
@@ -168,6 +168,12 @@
 						      		<label class="control-label col-sm-3">ชนิดผ้า - ขนาด</label>
 						      		<div class="col-sm-3">
 						      			<select class="selectpicker" id="cbo-material-1"></select>
+						      		</div>
+						      	</div>
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3">ราคา (บาท)</label>
+						      		<div class="col-sm-3">
+						      			<p class="form-control-static" id="price-1"></p>
 						      		</div>
 						      	</div>
 				      		</div>				      		
@@ -193,14 +199,21 @@
 				      				<div class="col-sm-3">
 						      			<p class="form-control-static"><?php echo getColor($color_2); ?></p>								      			
 						      		</div>
-						      		<div class="col-sm-3">
+						      		<div class="col-sm-2">
 						      			<span class="form-control" style="background: <?php echo $color_2; ?>"></span>
 						      		</div>						      			
 						      	</div>
 						      	<div class="form-group">
-						      		<label class="control-label col-sm-3">ชนิดผ้า - ขนาด</label>
+						      		<label class="control-label col-sm-3">ชนิดผ้า - ขนาด</label>						      								      		
 						      		<div class="col-sm-3">
-						      			<select class="selectpicker" id="cbo-material-2"></select>
+						      			<select class="selectpicker" id="cbo-material-2"></select>						      			
+						      		</div>
+						      	</div>
+
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3">ราคา (บาท)</label>
+						      		<div class="col-sm-3">
+						      			<p class="form-control-static" id="price-2"></p>
 						      		</div>
 						      	</div>
 				      		</div>				      		
@@ -246,7 +259,9 @@
     </div>
     <script type="text/javascript" src="js/bootstrap-select.js"></script>
     <script type="text/javascript">
-	function getMaterialType(color, shirt_type, gender, cbo) {
+    var txtPrice1 = document.getElementById('price-1');
+    var txtPrice2 = document.getElementById('price-2');
+	function getMaterialType(color, shirt_type, gender, cbo, txtPrice) {
 	    $.ajax({
 	        type: "POST",
 	        dataType: "json",
@@ -256,8 +271,9 @@
 	    .done(function(data) {
 	        if (data) {
 	            var text = '';
-	            data.forEach(function(item){
-	                text += "<option value=\""+ item.material_type + '|' + item.shirt_id +"\" >" + item.material_type + ' - ' + item.size_code + "</option>";    
+	            data.forEach(function(item) {
+	            	if (txtPrice.innerHTML === '') txtPrice.innerHTML = item.shirt_price;
+	                text += '<option value="' + item.shirt_id + '|' + item.material_type + '|' + item.shirt_price + '">' + item.material_type + ' - ' + item.size_code + ' (' + item.chest_size + 'x' + item.shirt_length + ') ซม.</option>';	            
 	            });
 
 	            $(cbo).html(text).selectpicker('refresh');		                              
@@ -278,11 +294,18 @@
 	}
 
 	var cboMaterial_1 = document.getElementById('cbo-material-1');
+	cboMaterial_1.onchange =  function() {
+		txtPrice1.innerHTML = this.value.split('|')[2];
+	}
+
 	var cboMaterial_2 = document.getElementById('cbo-material-2');
+	cboMaterial_2.onchange = function() {
+		txtPrice2.innerHTML = this.value.split('|')[2];
+	}
 
 	$(document).ready(function() {
-		getMaterialType($('#color_1').val(), $('#shirt_type_1').val(), $('#gender_1').val(), cboMaterial_1);
-		getMaterialType($('#color_2').val(), $('#shirt_type_2').val(), $('#gender_2').val(), cboMaterial_2);
+		getMaterialType($('#color_1').val(), $('#shirt_type_1').val(), $('#gender_1').val(), cboMaterial_1, txtPrice1);
+		getMaterialType($('#color_2').val(), $('#shirt_type_2').val(), $('#gender_2').val(), cboMaterial_2, txtPrice2);
 	});
     </script>
   </body>
