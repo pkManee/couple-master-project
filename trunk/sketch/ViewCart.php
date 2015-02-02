@@ -171,9 +171,21 @@
 						      		</div>
 						      	</div>
 						      	<div class="form-group">
-						      		<label class="control-label col-sm-3">ราคา (บาท)</label>
+						      		<label class="control-label col-sm-3">ราคาเสื้อเปล่า</label>
 						      		<div class="col-sm-3">
 						      			<p class="form-control-static" id="price-1"></p>
+						      		</div>
+						      		
+						      		<div class="input-group col-sm-2">
+							      		<input type="spin" class="form-control" id="num-shirt-1" value="1">
+							      		<span class="input-group-label" >ตัว</span>
+							      	</div>
+								    
+						      	</div>
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3" for="screen-price-1">ราคาลายสกรีน</label>
+						      		<div class="col-sm-3">
+						      			<p class="form-control-static" id="screen-price-1"></p>
 						      		</div>
 						      	</div>
 				      		</div>				      		
@@ -211,7 +223,7 @@
 						      	</div>
 
 						      	<div class="form-group">
-						      		<label class="control-label col-sm-3">ราคา (บาท)</label>
+						      		<label class="control-label col-sm-3">ราคาเสื้อเปล่า</label>
 						      		<div class="col-sm-3">
 						      			<p class="form-control-static" id="price-2"></p>
 						      		</div>
@@ -273,7 +285,7 @@
 	            var text = '';
 	            data.forEach(function(item) {
 	            	if (txtPrice.innerHTML === '') txtPrice.innerHTML = item.shirt_price;
-	                text += '<option value="' + item.shirt_id + '|' + item.material_type + '|' + item.shirt_price + '">' + item.material_type + ' - ' + item.size_code + ' (' + item.chest_size + 'x' + item.shirt_length + ') ซม.</option>';	            
+	                text += '<option value="' + item.shirt_id + '|' + item.material_type + '|' + item.shirt_price + '">' + item.material_type + ' - ' + item.size_code + ' (' + item.chest_size + 'x' + item.shirt_length + ' ซม.)</option>';	            
 	            });
 
 	            $(cbo).html(text).selectpicker('refresh');		                              
@@ -289,7 +301,7 @@
 	        bootbox.dialog({
 	                title: 'Fatal Error',
 	                message : '<div class="alert alert-danger" role="alert"><strong>Error in getMaterialType !!!</strong></div>'
-	        });
+	        });//bootbox
 	    });//fail
 	}
 

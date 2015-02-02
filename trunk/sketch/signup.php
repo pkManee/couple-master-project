@@ -109,7 +109,7 @@
           <input type="password" class="form-control" id="txt-confirm-password" placeholder="ยืนยันรหัสผ่าน" name="txtConfirm">
         </div>
       </div>
-      <button type="submit" class="btn btn-primary" id="btn-signup-submit" >Sign up</button>
+      <button type="submit" class="btn btn-primary" id="btn-signup-submit" >สมัครสมาชิก</button>
     </div>
     </div>
     </form>     
