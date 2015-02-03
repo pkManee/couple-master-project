@@ -256,8 +256,14 @@
 				      	</div>
 		      		</div>
 
-
-					<button type="submit" class="btn btn-success">ยืนยันการสั่งซื้อ</button>
+		      		<div class="col-sm-6">
+			      		<div class="form-group">
+			      			<label class="control-label col-sm-3">รวมทั้งสิ้น (บาท)</label>
+			      			<p class="form-control-static" id="total-price">0</p>
+			      			<div class="row"></div>
+							<button type="submit" class="btn btn-success">ยืนยันการสั่งซื้อ</button>
+						</div>
+					</div>
 				</div>
 				</form>
 		    </div>		   
@@ -355,10 +361,12 @@
 	var txtTotal2 = document.getElementById('total-2');
 	var txtScreenPrice1 = document.getElementById('screen-price-1');
 	var txtScreenPrice2 = document.getElementById('screen-price-2');
+	var txtTotalPrice = document.getElementById('total-price');
 
 	function calTotal() {
 		txtTotal1.innerHTML = ((txtPrice1.innerHTML + txtScreenPrice1.innerHTML) * txtQty1.value).formatMoney(2);
 		txtTotal2.innerHTML = ((txtPrice2.innerHTML + txtScreenPrice2.innerHTML) * txtQty2.value).formatMoney(2);
+		txtTotalPrice.innerHTML = Number(parseFloat(txtTotal1.innerHTML) + parseFloat(txtTotal2.innerHTML)).formatMoney(2);
 	}
 
 	$(document).ready(function() {
