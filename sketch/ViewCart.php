@@ -195,7 +195,7 @@
 						      			<p class="form-control-static" id="total-1">0</p>
 						      		</div>
 						      	</div>
-				      		</div>				      		
+				      		</div>
 				      	</div>
 
 				      	<div class="col-sm-6">
