@@ -190,7 +190,7 @@
 						      		</div>
 						      	</div>
 						      	<div class="form-group">
-						      		<label class="control-label col-sm-3" for="total-1">รวมทั้งสิ้น</label>
+						      		<label class="control-label col-sm-3" for="total-1">รวม</label>
 						      		<div class="col-sm-3">
 						      			<p class="form-control-static" id="total-1">0</p>
 						      		</div>
@@ -247,7 +247,7 @@
 						      		</div>
 						      	</div>
 						      	<div class="form-group">
-						      		<label class="control-label col-sm-3" for="total-2">รวมทั้งสิ้น</label>
+						      		<label class="control-label col-sm-3" for="total-2">รวม</label>
 						      		<div class="col-sm-3">
 						      			<p class="form-control-static" id="total-2">0</p>
 						      		</div>
@@ -272,8 +272,8 @@
 		    </div>
 		    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 		      <div class="panel-body">			  	
-			        <img src="<?php echo $_POST['screen1']; ?>" class="img-rounded">
-		   			<img src="<?php echo $_POST['screen2']; ?>" class="img-rounded">		   		
+			        <img src="<?php echo $_POST['screen1']; ?>" class="img-rounded" id="img-screen-1">
+		   			<img src="<?php echo $_POST['screen2']; ?>" class="img-rounded" id="img-screen-2">		   		
 		      </div>
 		    </div>
 		  </div>
@@ -295,6 +295,7 @@
     </div>
     <script type="text/javascript" src="js/bootstrap-select.js"></script>
     <script type="text/javascript" src="js/jquery.bootstrap-touchspin.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript">
     var txtPrice1 = document.getElementById('price-1');
     var txtPrice2 = document.getElementById('price-2');
@@ -356,8 +357,8 @@
 	var txtScreenPrice2 = document.getElementById('screen-price-2');
 
 	function calTotal() {
-		txtTotal1.innerHTML = (txtPrice1.innerHTML + txtScreenPrice1.innerHTML) * txtQty1.value;
-		txtTotal2.innerHTML = (txtPrice2.innerHTML + txtScreenPrice2.innerHTML) * txtQty2.value;
+		txtTotal1.innerHTML = ((txtPrice1.innerHTML + txtScreenPrice1.innerHTML) * txtQty1.value).formatMoney(2);
+		txtTotal2.innerHTML = ((txtPrice2.innerHTML + txtScreenPrice2.innerHTML) * txtQty2.value).formatMoney(2);
 	}
 
 	$(document).ready(function() {
@@ -383,7 +384,42 @@
 
 		getMaterialType($('#color_1').val(), $('#shirt_type_1').val(), $('#gender_1').val(), cboMaterial_1, txtPrice1);
 		getMaterialType($('#color_2').val(), $('#shirt_type_2').val(), $('#gender_2').val(), cboMaterial_2, txtPrice2);
+
+		setTimeout(function() { 
+			calTotal();
+		}, 500);
+
+		calculateColorPixel();
 	});
+
+	function calculateColorPixel() {		
+		var img = document.getElementById("img-screen-1");
+		var c = document.createElement("canvas");
+		c.width = img.width;
+		c.height = img.height;
+		var ctx = c.getContext("2d");
+		ctx.drawImage(img ,0 ,0);
+		var imgData = ctx.getImageData(0 , 0, img.width, img.height);
+		var res = img.width * img.height;
+		console.log('resolution = ' + res);
+		
+		var alphaCount = 0;
+		var colorCount = 0;
+		for (var i=0;i<imgData.data.length;i+=4)
+		  {
+			  imgData.data[i];
+			  imgData.data[i+1];
+			  imgData.data[i+2];
+			  if (imgData.data[i+3] === 0) {
+			  	alphaCount += 1;
+			  } else {
+			  	colorCount += 1;
+			  }
+		  }
+
+		console.log('alpha count = ' + alphaCount + ' % = ' + 100 * alphaCount / res );
+		console.log('color count = ' + colorCount);
+	}
     </script>
   </body>
 </html>
