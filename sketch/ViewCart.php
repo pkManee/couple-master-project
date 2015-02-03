@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/bootstrap-theme.css">
     <link rel="stylesheet" href="css/bootstrapValidator.css">
     <link rel="stylesheet" href="css/bootstrap-select.css">
+    <link rel="stylesheet" href="css/jquery.bootstrap-touchspin.css">
 
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
@@ -175,17 +176,23 @@
 						      		<div class="col-sm-3">
 						      			<p class="form-control-static" id="price-1"></p>
 						      		</div>
-						      		
-						      		<div class="input-group col-sm-2">
-							      		<input type="spin" class="form-control" id="num-shirt-1" value="1">
-							      		<span class="input-group-label" >ตัว</span>
-							      	</div>
-								    
 						      	</div>
 						      	<div class="form-group">
 						      		<label class="control-label col-sm-3" for="screen-price-1">ราคาลายสกรีน</label>
 						      		<div class="col-sm-3">
-						      			<p class="form-control-static" id="screen-price-1"></p>
+						      			<p class="form-control-static" id="screen-price-1">0</p>
+						      		</div>
+						      	</div>
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3" for="qty-1">จำนวน</label>
+						      		<div class="col-sm-6">
+						      			<input type="text" id="qty-1" name="qty1" value="1">
+						      		</div>
+						      	</div>
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3" for="total-1">รวมทั้งสิ้น</label>
+						      		<div class="col-sm-3">
+						      			<p class="form-control-static" id="total-1">0</p>
 						      		</div>
 						      	</div>
 				      		</div>				      		
@@ -221,11 +228,28 @@
 						      			<select class="selectpicker" id="cbo-material-2"></select>						      			
 						      		</div>
 						      	</div>
-
 						      	<div class="form-group">
 						      		<label class="control-label col-sm-3">ราคาเสื้อเปล่า</label>
 						      		<div class="col-sm-3">
 						      			<p class="form-control-static" id="price-2"></p>
+						      		</div>
+						      	</div>
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3" for="screen-price-2">ราคาลายสกรีน</label>
+						      		<div class="col-sm-3">
+						      			<p class="form-control-static" id="screen-price-2">0</p>
+						      		</div>
+						      	</div>
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3" for="qty-2">จำนวน</label>
+						      		<div class="col-sm-6">
+						      			<input type="text" id="qty-2" name="qty2" value="1">
+						      		</div>
+						      	</div>
+						      	<div class="form-group">
+						      		<label class="control-label col-sm-3" for="total-2">รวมทั้งสิ้น</label>
+						      		<div class="col-sm-3">
+						      			<p class="form-control-static" id="total-2">0</p>
 						      		</div>
 						      	</div>
 				      		</div>				      		
@@ -270,6 +294,7 @@
 		</div>
     </div>
     <script type="text/javascript" src="js/bootstrap-select.js"></script>
+    <script type="text/javascript" src="js/jquery.bootstrap-touchspin.js"></script>
     <script type="text/javascript">
     var txtPrice1 = document.getElementById('price-1');
     var txtPrice2 = document.getElementById('price-2');
@@ -315,7 +340,47 @@
 		txtPrice2.innerHTML = this.value.split('|')[2];
 	}
 
+
+	var txtQty1 = document.getElementById('qty-1');
+	var txtQty2 = document.getElementById('qty-2');
+	txtQty1.onchange = function () {
+		calTotal()
+	}
+	txtQty2.onchange = function() {
+		calTotal();
+	}
+
+	var txtTotal1 = document.getElementById('total-1');
+	var txtTotal2 = document.getElementById('total-2');
+	var txtScreenPrice1 = document.getElementById('screen-price-1');
+	var txtScreenPrice2 = document.getElementById('screen-price-2');
+
+	function calTotal() {
+		txtTotal1.innerHTML = (txtPrice1.innerHTML + txtScreenPrice1.innerHTML) * txtQty1.value;
+		txtTotal2.innerHTML = (txtPrice2.innerHTML + txtScreenPrice2.innerHTML) * txtQty2.value;
+	}
+
 	$(document).ready(function() {
+
+		$('#qty-1').TouchSpin({
+                min: 1,
+                max: 100,
+                step: 1,
+                decimals: 0,
+                boostat: 5,
+                maxboostedstep: 10,
+                postfix: 'ตัว'
+        });
+        $('#qty-2').TouchSpin({
+                min: 1,
+                max: 100,
+                step: 1,
+                decimals: 0,
+                boostat: 5,
+                maxboostedstep: 10,
+                postfix: 'ตัว'
+        });
+
 		getMaterialType($('#color_1').val(), $('#shirt_type_1').val(), $('#gender_1').val(), cboMaterial_1, txtPrice1);
 		getMaterialType($('#color_2').val(), $('#shirt_type_2').val(), $('#gender_2').val(), cboMaterial_2, txtPrice2);
 	});
