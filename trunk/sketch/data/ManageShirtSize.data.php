@@ -63,7 +63,7 @@ function insertShirtSize(){
 
   $sql = "insert into shirt_size (size_code, chest_size, shirt_length, gender) values ";
   $sql .= "(:size_code, :chest_size, :shirt_length, :gender) ";
-  $sql .= "on duplicate key update  chest_size = :chest_size, shirt_length = :shirt_length, gender = :gender ";
+  $sql .= "on duplicate key update  chest_size = :chest_size, shirt_length = :shirt_length ";
 
   $stmt = $dbh->prepare($sql);
 
@@ -82,16 +82,30 @@ function insertShirtSize(){
 }
 
 function deleteShirtSize() {
-  $sql = "delete from shirt_size where size_code = :size_code ";
+   try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      echo "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+
+  $sql = "delete from shirt_size where size_code = :size_code and gender = :gender ";
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":size_code", $_POST["size_code"]);
+  $stmt->bindValue(":gender", $_POST["gender"]);
 
   header("Content-Type: application/json");
   if ($stmt->execute()){    
     echo json_encode(array("result"=>"success"));
 
   }else{    
-    echo json_encode($stmt->errorInfo());
+    //echo json_encode($stmt->errorInfo());
+    $errorCode = $stmt->errorCode();
+    if ($errorCode == '23000') {
+      echo json_encode(array('result'=>'ไม่สามารถลบได้ เนื่องจากได้มีการใช้ข้อมูลนี้ไปแล้ว !!!'));
+    } else {
+      echo json_encode($stmt->errorInfo());
+    }
   }
 }
 

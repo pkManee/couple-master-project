@@ -712,18 +712,30 @@ var cboShirtSize2 = document.getElementById('cbo-shirt-size-2');
 function goSave() {
     
     var dataURL = shirtCanvas.toDataURL();
+    var screen1 = finalLineScreen[0].toDataURL(); //splitLineScreen[0];
+    var current_width_1 = finalLineScreen[0].currentWidth;
+    var current_height_1 = finalLineScreen[0].currentHeight;
+    var screen2 = finalLineScreen[1].toDataURL(); //splitLineScreen[1];
+    var current_width_2 = finalLineScreen[1].currentWidth;
+    var current_height_2 = finalLineScreen[1].currentHeight;
+    var size2 = {width: finalLineScreen[1].currentWidth, height: finalLineScreen[1].currentHeight};
     $.redirect("ViewCart.php",
                 {
                     gender_1: cboGender1.value, 
                     shirt_type_1: cboShirtType1.value,
                     shirt_size_1: cboShirtSize1.value,
                     shirt_color_1: cboShirtColor1.value,
-                    screen1: splitLineScreen[0],
+                    screen1: screen1,
+                    width_1: current_width_1,
+                    height_1: current_height_1,
                     gender_2: cboGender2.value,
                     shirt_type_2: cboShirtType2.value,
                     shirt_size_2: cboShirtSize2.value,
                     shirt_color_2: cboShirtColor2.value,
-                    screen2: splitLineScreen[1],
+                    screen2: screen2,
+                    width_2: current_width_2,
+                    height_2: current_height_2,
+                    size2: size2,
                     product: dataURL
                 });
 }

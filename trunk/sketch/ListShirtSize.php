@@ -61,11 +61,11 @@ try {
 $sql = "select size_code, chest_size, shirt_length, gender from shirt_size where 1 = 1 ";
 
 if (!empty($_GET["txtShirtsize"])){
-  $sql .= "and size_code like :shirtsize order by size_code asc ";
+  $sql .= "and size_code like :shirtsize order by gender, shirt_length asc ";
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":shirtsize", "%" .$_GET["txtShirtsize"]. "%");
 }else{
-  $sql .= "order by size_code asc ";
+  $sql .= "order by gender, shirt_length asc ";
   $stmt = $dbh->prepare($sql);
 }
 

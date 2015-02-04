@@ -94,12 +94,12 @@
        
         echo "<div class=\"btn-group\" data-toggle=\"buttons\">";
         echo    "<label class=\"btn btn-primary " .$active. " \">";
-        echo      "<input type=\"radio\" name=\"rdoGender\" value=\"M\" " .$checked. ">สำหรับชาย";
+        echo      "<input type=\"radio\" name=\"rdoGender\" id=\"rdo-gender\" value=\"M\" " .$checked. ">สำหรับชาย";
         echo    "</label>";
         $active = $sizecode->gender=="F"?"active":"";
         $checked = $sizecode->gender=="F"?"checked":"";
         echo    "<label class=\"btn btn-primary ".$active." \">";
-        echo      "<input type=\"radio\" name=\"rdoGender\" value=\"F\" " .$checked. " >สำหรับหญิง";
+        echo      "<input type=\"radio\" name=\"rdoGender\" id=\"rdo-gender\" value=\"F\" " .$checked. " >สำหรับหญิง";
         echo    "</label>";
         echo "</div>";
       ?>
@@ -221,11 +221,11 @@
    }
 
    function goDelete(){ 
-
+    var rdoGender = document.getElementById('rdo-gender');
    	$.ajax({
           type: 'POST',
           url: 'data/manageshirtsize.data.php', 
-          data: {method: 'delete', size_code: isDelete.value}
+          data: {method: 'delete', size_code: isDelete.value, gender: rdoGender.value}
       })
       .done(function(data){
         if (data.result === "success"){
@@ -238,7 +238,7 @@
           Toast.init({
             "selector": ".alert-danger"
           });
-          Toast.show("<strong>Error on deleting!!!<strong> " + data);
+          Toast.show("<strong>Error on deleting!!!<strong> " + data.result);
         }
       })
       .fail(function() {

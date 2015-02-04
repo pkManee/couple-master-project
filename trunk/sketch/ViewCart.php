@@ -57,23 +57,27 @@
 			echo "error -> " .$stmt->errorInfo()[2];
 		}		
 
-		$color_1 = $_POST["shirt_color_1"];
-		echo "<input type='hidden' id='color_1' value='" .$color_1. "'>";
-		$shirt_type_1 = $_POST["shirt_type_1"];
-		echo "<input type='hidden' id='shirt_type_1' value='" .$shirt_type_1. "'>";
-		$shirt_size_1 = $_POST["shirt_size_1"];
-		echo "<input type='hidden' id='shirt_size_1' value='" .$shirt_size_1. "'>";
-		$gender_1 = $_POST["gender_1"];
-		echo "<input type='hidden' id='gender_1' value='" .$gender_1. "'>";
+		$color_1 = $_POST['shirt_color_1'];
+		echo '<input type="hidden" id="color_1" value="' .$color_1. '">';
+		$shirt_type_1 = $_POST['shirt_type_1'];
+		echo '<input type="hidden" id="shirt_type_1" value="' .$shirt_type_1. '">';
+		$shirt_size_1 = $_POST['shirt_size_1'];
+		echo '<input type="hidden" id="shirt_size_1" value="' .$shirt_size_1. '">';
+		$gender_1 = $_POST['gender_1'];
+		echo '<input type="hidden" id="gender_1" value="' .$gender_1. '">';
+		echo '<input type="hidden" id="width-1" value="' .$_POST['width_1']. '">';
+		echo '<input type="hidden" id="height-1" value="' .$_POST['height_1']. '">';
 
-		$color_2 = $_POST["shirt_color_2"];
-		echo "<input type='hidden' id='color_2' value='" .$color_2. "'>";
-		$shirt_type_2 = $_POST["shirt_type_2"];
-		echo "<input type='hidden' id='shirt_type_2' value='" .$shirt_type_2. "'>";
-		$shirt_size_2 = $_POST["shirt_size_2"];
-		echo "<input type='hidden' id='shirt_size_2' value='" .$shirt_size_2. "'>";
-		$gender_2 = $_POST["gender_2"];
-		echo "<input type='hidden' id='gender_2' value='" .$gender_2. "'>";
+		$color_2 = $_POST['shirt_color_2'];
+		echo '<input type="hidden" id="color_2" value="' .$color_2. '">';
+		$shirt_type_2 = $_POST['shirt_type_2'];
+		echo '<input type="hidden" id="shirt_type_2" value="' .$shirt_type_2. '">';
+		$shirt_size_2 = $_POST['shirt_size_2'];
+		echo '<input type="hidden" id="shirt_size_2" value="' .$shirt_size_2. '">';
+		$gender_2 = $_POST['gender_2'];
+		echo '<input type="hidden" id="gender_2" value="' .$gender_2. '">';
+		echo '<input type="hidden" id="width-2" value="' .$_POST['width_2']. '">';
+		echo '<input type="hidden" id="height-2" value="' .$_POST['height_2']. '">';
 	}
  	
 	function getColor($color_hex) {
@@ -366,7 +370,9 @@
 	function calTotal() {
 		txtTotal1.innerHTML = ((txtPrice1.innerHTML + txtScreenPrice1.innerHTML) * txtQty1.value).formatMoney(2);
 		txtTotal2.innerHTML = ((txtPrice2.innerHTML + txtScreenPrice2.innerHTML) * txtQty2.value).formatMoney(2);
-		txtTotalPrice.innerHTML = Number(parseFloat(txtTotal1.innerHTML) + parseFloat(txtTotal2.innerHTML)).formatMoney(2);
+		var total1 = txtTotal1.innerHTML.replace(',', '');
+		var total2 = txtTotal2.innerHTML.replace(',', '');
+		txtTotalPrice.innerHTML = Number(parseFloat(total1) + parseFloat(total2)).formatMoney(2);
 	}
 
 	$(document).ready(function() {
