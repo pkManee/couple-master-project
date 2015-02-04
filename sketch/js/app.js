@@ -880,7 +880,7 @@ function adjustPosition(obj) {
         obj.set({scaleX: obj.goodScaleX, scaleY: obj.goodScaleY, left: obj.goodLeft, top: obj.goodTop});
         return false;
                          
-    } else{
+    } else {
         obj.goodTop = obj.top;
         obj.goodLeft = obj.left;
         obj.goodScaleX = obj.scaleX;
@@ -1012,7 +1012,7 @@ function init() {
             if(!obj.isContainedWithinObject(bounds)){ 
                 obj.set({scaleX: obj.goodScaleX, scaleY: obj.goodScaleY, left: obj.goodLeft, top: obj.goodTop});
                                  
-            } else{
+            } else {
                 obj.goodTop = obj.top;
                 obj.goodLeft = obj.left;
                 obj.goodScaleX = obj.scaleX;

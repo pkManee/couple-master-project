@@ -19,3 +19,4 @@ this.calPortal =  function(shortLength){
 
 //A4 = 21 x 29.7
 //A3 = 29.7 x 42
+//max area sie = 32x32 cm

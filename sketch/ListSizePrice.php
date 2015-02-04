@@ -60,7 +60,7 @@ $sql = "select size_price_id, size_area, price, description ";
 $sql .= "from size_price where 1 = 1 ";
 
 if (!empty($_GET["txtSearch"])) {
-  $sql .= "and description like :description order by shirt_name asc ";
+  $sql .= "and description like :description order by size_area asc ";
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":description", "%" .$_GET["txtSearch"]. "%");
 } else {
