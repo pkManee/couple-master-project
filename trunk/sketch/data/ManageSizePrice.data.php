@@ -18,10 +18,42 @@ switch ($method) {
   case 'delete':
         deleteSizePrice();
         break;
+  case 'getPrice':
+        getPrice();
+        break;
   default:
     header("Content-Type: application/json");
     echo json_encode(array("result"=>"no_method"));
     break;
+}
+
+function getPrice() {
+   try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      echo "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+  $sql = "select price from size_price where size_area <= :area order by size_area desc limit 1 ";
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindValue(":area", $_POST['area']);
+
+  header("Content-Type: application/json");
+  if ($stmt->execute()){
+    $results = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($result.length > 0) {
+      echo json_encode(array("result"=>$results['price']));
+    } else {
+
+    }
+
+    
+  }else{
+    
+    echo json_encode($stmt->errorInfo());
+  }
+
 }
 
 function insertSizePrice() {

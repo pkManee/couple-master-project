@@ -88,7 +88,7 @@
               </select>
             </div>
             <div class="upper-shelf" >
-              <select class="form-control " id="cbo-shirt-size-1" ></select>
+              <select class="form-control invisible" id="cbo-shirt-size-1" ></select>
             </div> 
 
             <div class="upper-shelf" style="padding-left: 150px; position: absolute;" >
@@ -103,7 +103,7 @@
                 </select>
               </div>
               <div class="upper-shelf" >
-                <select class="form-control " id="cbo-shirt-size-2" ></select>
+                <select class="form-control invisible" id="cbo-shirt-size-2" ></select>
               </div>
             </div>
         </div>

@@ -718,7 +718,6 @@ function goSave() {
     var screen2 = finalLineScreen[1].toDataURL(); //splitLineScreen[1];
     var current_width_2 = finalLineScreen[1].currentWidth;
     var current_height_2 = finalLineScreen[1].currentHeight;
-    var size2 = {width: finalLineScreen[1].currentWidth, height: finalLineScreen[1].currentHeight};
     $.redirect("ViewCart.php",
                 {
                     gender_1: cboGender1.value, 
@@ -735,8 +734,9 @@ function goSave() {
                     screen2: screen2,
                     width_2: current_width_2,
                     height_2: current_height_2,
-                    size2: size2,
-                    product: dataURL
+                    product: dataURL,
+                    rect_width: side_1.width,
+                    rect_height: side_1.height
                 });
 }
 

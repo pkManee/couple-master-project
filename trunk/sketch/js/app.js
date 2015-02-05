@@ -877,7 +877,7 @@ function adjustPosition(obj) {
     // if(!obj.isContainedWithinObject(bounds)){ 
 
     if (!obj.isContainedWithinRect(TL, BR)) {
-        obj.set({scaleX: obj.goodScaleX, scaleY: obj.goodScaleY, left: obj.goodLeft, top: obj.goodTop});
+        obj.set({ scaleX: obj.goodScaleX, scaleY: obj.goodScaleY, left: obj.goodLeft, top: obj.goodTop });
         return false;
                          
     } else {
@@ -1020,6 +1020,7 @@ function init() {
             }
         }
     });
+
     shirtCanvas.on('object:selected', function(e) {
         var bound;
         if (e.target.sideOfCanvas === 'left') {
