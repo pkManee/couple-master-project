@@ -45,6 +45,18 @@
 		  die();
 		}
 
+		if (!isset($GLOBALS['print_format']) || empty($GLOBALS['print_format'])) {
+			$sql = "select * from printer ";
+			$stmt = $dbh->prepare($sql);
+			if ($stmt->execute()) {
+				$results = $stmt->fetch(PDO::FETCH_ASSOC);
+				$GLOBALS['print_format'] = $results['print_format'] . '|' . $results['width'] . '|' . $results['height'];
+			} else {
+				print "Error!: " . $stmt->errorInfo() . "<br/>";
+				die();
+			}
+		}
+
 		$sql = "select email, member_name, address, province_id, amphur_id, district_id, password, postcode ";
 		$sql .= ",photo, height_1, height_2 ";
 		$sql .= "from member where email = :email ";
@@ -78,6 +90,14 @@
 		echo '<input type="hidden" id="gender_2" value="' .$gender_2. '">';
 		echo '<input type="hidden" id="width-2" value="' .$_POST['width_2']. '">';
 		echo '<input type="hidden" id="height-2" value="' .$_POST['height_2']. '">';
+
+		$rect_width = $_POST['rect_width'];
+		echo '<input type="hidden" id="rect-width" value="' .$rect_width. '">';
+		$rect_height = $_POST['rect_height'];
+		echo '<input type="hidden" id="rect-height" value="' .$rect_height. '">';
+
+		echo '<input type="hidden" id="print-format" value="' .$print_format. '">';
+
 	}
  	
 	function getColor($color_hex) {
@@ -321,7 +341,7 @@
 	            var text = '';
 	            data.forEach(function(item) {
 	            	if (txtPrice.innerHTML === '') txtPrice.innerHTML = item.shirt_price;
-	                text += '<option value="' + item.shirt_id + '|' + item.material_type + '|' + item.shirt_price + '">' + item.material_type + ' - ' + item.size_code + ' (' + item.chest_size + 'x' + item.shirt_length + ' ซม.)</option>';	            
+	                text += '<option value="' + item.shirt_id + '|' + item.material_type + '|' + item.shirt_price + '|' + item.chest_size + '|' + item.shirt_length + '">' + item.material_type + ' - ' + item.size_code + ' (' + item.chest_size + 'x' + item.shirt_length + ' ซม.)</option>';	            
 	            });
 
 	            $(cbo).html(text).selectpicker('refresh');		                              
@@ -366,6 +386,9 @@
 	var txtScreenPrice1 = document.getElementById('screen-price-1');
 	var txtScreenPrice2 = document.getElementById('screen-price-2');
 	var txtTotalPrice = document.getElementById('total-price');
+	var screenWidth1 = document.getElementById('width-1').value;
+	var screenHeight1 = document.getElementById('height-1').value;
+	var printSize = document.getElementById('print-format').value;
 
 	function calTotal() {
 		txtTotal1.innerHTML = ((txtPrice1.innerHTML + txtScreenPrice1.innerHTML) * txtQty1.value).formatMoney(2);
@@ -373,6 +396,16 @@
 		var total1 = txtTotal1.innerHTML.replace(',', '');
 		var total2 = txtTotal2.innerHTML.replace(',', '');
 		txtTotalPrice.innerHTML = Number(parseFloat(total1) + parseFloat(total2)).formatMoney(2);
+
+		var colorPixel = calculateColorPixel();
+		var area;
+		if (printSize.split('|')[0] === 'A4') {
+			area = A4.cmWidth * A4.cmHeight;
+		} else if (printSize.split('|')[0] === 'A3') {
+			area = A3.cmWidth * A3.cmHeight;
+		}
+
+		var actualPixel = area * (colorPixel / 100);
 	}
 
 	$(document).ready(function() {
@@ -402,8 +435,6 @@
 		setTimeout(function() { 
 			calTotal();
 		}, 500);
-
-		calculateColorPixel();
 	});
 
 	function calculateColorPixel() {		
@@ -431,8 +462,10 @@
 			  }
 		  }
 
-		console.log('alpha count = ' + alphaCount + ' % = ' + 100 * alphaCount / res );
-		console.log('color count = ' + colorCount);
+		var rtn = 100 * colorCount / res;
+		console.log('alpha count = ' + alphaCount + ' % = ' + 100 * alphaCount / res);
+		console.log('color count = ' + colorCount + ' % = ' + rtn);
+		return rtn
 	}
     </script>
   </body>

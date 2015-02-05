@@ -79,7 +79,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>#</th>
         <th>ขนาดเสื้อ</th>
         <th></th>
-        <th>ความยาวรอบอบ (ซม.)</th>       
+        <th>ความยาวรอบอก (ซม.)</th>       
         <th>ความยาวเสื้อ (ซม.)</th>
       </tr>
     </thead>
