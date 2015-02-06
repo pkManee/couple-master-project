@@ -712,12 +712,12 @@ var cboShirtSize2 = document.getElementById('cbo-shirt-size-2');
 function goSave() {
     
     var dataURL = shirtCanvas.toDataURL();
-    var screen1 = finalLineScreen[0].toDataURL(); //splitLineScreen[0];
-    var current_width_1 = finalLineScreen[0].currentWidth;
-    var current_height_1 = finalLineScreen[0].currentHeight;
-    var screen2 = finalLineScreen[1].toDataURL(); //splitLineScreen[1];
-    var current_width_2 = finalLineScreen[1].currentWidth;
-    var current_height_2 = finalLineScreen[1].currentHeight;
+    var screen1 = splitLineScreen[0]; //finalLineScreen[0].toDataURL(); 
+    var current_width_1 = 0;//finalLineScreen[0].currentWidth;
+    var current_height_1 = 0;//finalLineScreen[0].currentHeight;
+    var screen2 = splitLineScreen[1]; //finalLineScreen[1].toDataURL(); 
+    var current_width_2 = 0; //finalLineScreen[1].currentWidth;
+    var current_height_2 = 0; //finalLineScreen[1].currentHeight;
     $.redirect("ViewCart.php",
                 {
                     gender_1: cboGender1.value, 
