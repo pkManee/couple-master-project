@@ -97,6 +97,7 @@
 		echo '<input type="hidden" id="rect-height" value="' .$rect_height. '">';
 
 		echo '<input type="hidden" id="print-format" value="' .$print_format. '">';
+		echo '<input type="hidden" id="member-email" value="' .$_SESSION['email']. '">';
 
 	}
  	
@@ -143,7 +144,7 @@
 		      </h4>
 		    </div>
 		    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-		    	<form class="form-horizontal">
+		    	<form class="form-horizontal" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
 		    	<div class="panel-body">
 					<div class="form-group">
 			        	<label class="col-sm-2 control-label">ชื่อ-นามสกุล</label>
@@ -283,9 +284,14 @@
 		      		<div class="col-sm-6">
 			      		<div class="form-group">
 			      			<label class="control-label col-sm-3">รวมทั้งสิ้น (บาท)</label>
-			      			<p class="form-control-static" id="total-price">0</p>
-			      			<div class="row"></div>
-							<button type="submit" class="btn btn-success">ยืนยันการสั่งซื้อ</button>
+			      			<div >
+			      				<b><p class="form-control-static text-success" id="total-price">0</p></b>
+			      			</div>
+			      			<br>
+			      			<br>
+			      			<br>
+			      			<button type="button" class="btn btn-success" id="btn-confirm">ยืนยันการสั่งซื้อ</button>
+							
 						</div>
 					</div>
 				</div>
@@ -301,7 +307,7 @@
 		      </h4>
 		    </div>
 		    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-		      <div class="panel-body">			  	
+		      <div class="panel-body" style="text-align: center; !important">			  	
 			        <img src="<?php echo $_POST['screen1']; ?>" class="img-rounded" id="img-screen-1">
 		   			<img src="<?php echo $_POST['screen2']; ?>" class="img-rounded" id="img-screen-2">		   		
 		      </div>
@@ -327,6 +333,16 @@
     <script type="text/javascript" src="js/jquery.bootstrap-touchspin.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript">
+
+    var A3 = {
+            	cmWidth: 29.7, 
+            	cmHeight: 42
+       		}
+	var A4 = {
+            	cmWidth: 21, 
+            	cmHeight: 29.7
+        	}
+
     var txtPrice1 = document.getElementById('price-1');
     var txtPrice2 = document.getElementById('price-2');
 	function getMaterialType(color, shirt_type, gender, cbo, txtPrice) {
@@ -364,11 +380,13 @@
 	var cboMaterial_1 = document.getElementById('cbo-material-1');
 	cboMaterial_1.onchange =  function() {
 		txtPrice1.innerHTML = this.value.split('|')[2];
+		calTotal();
 	}
 
 	var cboMaterial_2 = document.getElementById('cbo-material-2');
 	cboMaterial_2.onchange = function() {
 		txtPrice2.innerHTML = this.value.split('|')[2];
+		calTotal();
 	}
 
 
@@ -391,21 +409,13 @@
 	var printSize = document.getElementById('print-format').value;
 
 	function calTotal() {
-		txtTotal1.innerHTML = ((txtPrice1.innerHTML + txtScreenPrice1.innerHTML) * txtQty1.value).formatMoney(2);
-		txtTotal2.innerHTML = ((txtPrice2.innerHTML + txtScreenPrice2.innerHTML) * txtQty2.value).formatMoney(2);
+		
+
+		txtTotal1.innerHTML = Number((parseFloat(txtPrice1.innerHTML) + parseFloat(txtScreenPrice1.innerHTML)) * parseInt(txtQty1.value)).formatMoney(2);
+		txtTotal2.innerHTML = Number((parseFloat(txtPrice2.innerHTML) + parseFloat(txtScreenPrice2.innerHTML)) * parseInt(txtQty2.value)).formatMoney(2);
 		var total1 = txtTotal1.innerHTML.replace(',', '');
 		var total2 = txtTotal2.innerHTML.replace(',', '');
 		txtTotalPrice.innerHTML = Number(parseFloat(total1) + parseFloat(total2)).formatMoney(2);
-
-		var colorPixel = calculateColorPixel();
-		var area;
-		if (printSize.split('|')[0] === 'A4') {
-			area = A4.cmWidth * A4.cmHeight;
-		} else if (printSize.split('|')[0] === 'A3') {
-			area = A3.cmWidth * A3.cmHeight;
-		}
-
-		var actualPixel = area * (colorPixel / 100);
 	}
 
 	$(document).ready(function() {
@@ -432,13 +442,31 @@
 		getMaterialType($('#color_1').val(), $('#shirt_type_1').val(), $('#gender_1').val(), cboMaterial_1, txtPrice1);
 		getMaterialType($('#color_2').val(), $('#shirt_type_2').val(), $('#gender_2').val(), cboMaterial_2, txtPrice2);
 
-		setTimeout(function() { 
-			calTotal();
-		}, 500);
+		setTimeout(function() {
+			calculateAreaPrice();
+			setTimeout(function() { 
+				calTotal();
+			}, 500);
+		}, 500);		
 	});
 
-	function calculateColorPixel() {		
-		var img = document.getElementById("img-screen-1");
+	function calculateAreaPrice() {
+		var area;
+		if (printSize.split('|')[0] === 'A4') {
+			area = A4.cmWidth * A4.cmHeight;
+		} else if (printSize.split('|')[0] === 'A3') {
+			area = A3.cmWidth * A3.cmHeight;
+		}
+		var colorPixel = calculateColorPixel(document.getElementById("img-screen-1"));
+		var actualPixel = Math.round(area * (colorPixel / 100),  0);
+		getPrice(txtScreenPrice1, actualPixel);
+
+		colorPixel = calculateColorPixel(document.getElementById("img-screen-2"));
+		actualPixel = Math.round(area * (colorPixel / 100),  0);
+		getPrice(txtScreenPrice2, actualPixel);
+	}
+
+	function calculateColorPixel(img) {		
 		var c = document.createElement("canvas");
 		c.width = img.width;
 		c.height = img.height;
@@ -450,22 +478,79 @@
 		
 		var alphaCount = 0;
 		var colorCount = 0;
-		for (var i=0;i<imgData.data.length;i+=4)
-		  {
-			  imgData.data[i];
-			  imgData.data[i+1];
-			  imgData.data[i+2];
-			  if (imgData.data[i+3] === 0) {
-			  	alphaCount += 1;
-			  } else {
-			  	colorCount += 1;
-			  }
-		  }
+		for (var i=0;i<imgData.data.length;i+=4) {
+			imgData.data[i];
+			imgData.data[i+1];
+			imgData.data[i+2];
+			if (imgData.data[i+3] === 0) {
+				alphaCount += 1;
+			} else {
+				colorCount += 1;
+			}
+		}
 
 		var rtn = 100 * colorCount / res;
 		console.log('alpha count = ' + alphaCount + ' % = ' + 100 * alphaCount / res);
 		console.log('color count = ' + colorCount + ' % = ' + rtn);
-		return rtn
+		return rtn;
+	}
+
+	function getPrice(txt, area) {
+		var rtn = 0;
+		$.ajax({
+	        type: "POST",
+	        dataType: "json",
+	        url: "data/ManageSizePrice.data.php",
+	        data: {method: "getPrice", area: area}       
+	    })
+	    .done(function(data) {
+	        if (data) {
+	            txt.innerHTML = data.price;                       
+	        } else {
+	            Toast.init({
+	                "selector": ".alert-danger"
+	            });
+	            Toast.show("<strong>Error on getMaterialType !!!<strong> " + data);
+	        }
+
+	    })//done
+	    .fail(function(data) { 
+	        bootbox.dialog({
+	                title: 'Fatal Error',
+	                message : '<div class="alert alert-danger" role="alert"><strong>Error in getPrice !!!</strong></div>'
+	        });//bootbox
+	    });//fail
+	}
+
+	var line_screen_1 = document.getElementById('img-screen-1');
+	var line_screen_2 = document.getElementById('img-screen-2');
+	var email = document.getElementById('member-email');
+
+	var btnConfirm = document.getElementById('btn-confirm');
+	btnConfirm.onclick = function() {
+		$.ajax({
+	        type: "POST",
+	        dataType: "json",
+	        url: "data/ViewCart.data.php",
+	        data: {method: "insert", email: email.value, line_screen_1: line_screen_1.src, line_screen_2: line_screen_2.src}       
+	    })
+	    .done(function(data) {
+	        if (data) {
+	            txt.innerHTML = data.price;                       
+	        } else {
+	            Toast.init({
+	                "selector": ".alert-danger"
+	            });
+	            Toast.show("<strong>Error on Confirm !!!<strong> " + data);
+	        }
+
+	    })//done
+	    .fail(function(data) { 
+	        bootbox.dialog({
+	                title: 'Fatal Error',
+	                message : '<div class="alert alert-danger" role="alert"><strong>Error in Confirm !!!</strong></div>'
+	        });//bootbox
+	    });//fail
 	}
     </script>
   </body>

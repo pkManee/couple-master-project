@@ -34,23 +34,17 @@ function getPrice() {
       echo "Error!: " . $e->getMessage() . "<br/>";
       die();
   }
-  $sql = "select price from size_price where size_area <= :area order by size_area desc limit 1 ";
+
+  $sql = 'SELECT  min(price) as price from size_price where size_area >= :area ';
+  
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":area", $_POST['area']);
 
   header("Content-Type: application/json");
   if ($stmt->execute()){
     $results = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($result.length > 0) {
-      echo json_encode(array("result"=>$results['price']));
-    } else {
-
-    }
-
-    
-  }else{
-    
+    echo json_encode($results);
+  } else {    
     echo json_encode($stmt->errorInfo());
   }
 
