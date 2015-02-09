@@ -767,10 +767,12 @@ function loadShirt(type_1, type_2){
         });
         
         fabric.Image.fromURL(splitLineScreen[0], function(oImg) {        
-            oImg.set({top: side_1.top + side_1.offsetTop + 3 ,left: side_1.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
+            //oImg.set({top: side_1.top + side_1.offsetTop + 3 ,left: side_1.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
+            oImg.set({top: side_1.top + side_1.offsetTop + 3 ,left: side_1.left + 3, width: 100, height: 141});
+
             shirtCanvas.add(oImg);            
             
-            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'left', goodTop: 0, goodLeft: 0, goodScaleX: 1, goodScaleY: 1});           
+            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'left', goodTop: oImg.top, goodLeft: oImg.left, goodScaleX: 1, goodScaleY: 1});           
             shirtCanvas.bringToFront(oImg);
             shirtCanvas.renderAll();
             finalLineScreen.push(oImg);
@@ -803,10 +805,11 @@ function loadShirt(type_1, type_2){
         });
         
         fabric.Image.fromURL(splitLineScreen[1], function(oImg) {        
-            oImg.set({top: side_2.top + side_2.offsetTop + 3 ,left: side_2.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
+            //oImg.set({top: side_2.top + side_2.offsetTop + 3 ,left: side_2.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
+            oImg.set({top: side_2.top + side_2.offsetTop + 3 ,left: side_2.left + 3, width: 100, height: 141});
             shirtCanvas.add(oImg);
 
-            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'right', goodTop: 0, goodLeft: 0, goodScaleX: 1, goodScaleY: 1});
+            oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'right', goodTop: oImg.top, goodLeft: oImg.left, goodScaleX: 1, goodScaleY: 1});
             shirtCanvas.bringToFront(oImg);
             shirtCanvas.renderAll();
             finalLineScreen.push(oImg);
@@ -988,8 +991,8 @@ function init() {
 
             obj.setCoords();
             if(!obj.isContainedWithinObject(bounds)){
-                obj.setTop(obj.goodTop - 1);
-                obj.setLeft(obj.goodLeft - 1);                
+                obj.setTop(obj.goodTop);
+                obj.setLeft(obj.goodLeft);                
             } else {
                 obj.goodTop = obj.top;
                 obj.goodLeft = obj.left;
@@ -1032,10 +1035,8 @@ function init() {
         bound.set('stroke', 'rgba(128, 128, 128, 0.3)');
     });
     shirtCanvas.on('selection:cleared', function() {
-        if (borderShirt1 && borderShirt2) {
-            borderShirt1.set('stroke', 'rgba(0, 0, 0, 0)');
-            borderShirt2.set('stroke', 'rgba(0, 0, 0, 0)');
-        }
+        if (borderShirt1) borderShirt1.set('stroke', 'rgba(0, 0, 0, 0)');
+        if (borderShirt2) borderShirt2.set('stroke', 'rgba(0, 0, 0, 0)');       
     });
 
     btnSelect.onclick();

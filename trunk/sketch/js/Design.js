@@ -711,13 +711,12 @@ var cboShirtSize1 = document.getElementById('cbo-shirt-size-1');
 var cboShirtSize2 = document.getElementById('cbo-shirt-size-2');
 function goSave() {
     
+    shirtCanvas.deactivateAll();
+    if (borderShirt1) borderShirt1.set('stroke', 'rgba(0, 0, 0, 0)');
+    if (borderShirt2) borderShirt2.set('stroke', 'rgba(0, 0, 0, 0)');   
     var dataURL = shirtCanvas.toDataURL();
-    var screen1 = splitLineScreen[0]; //finalLineScreen[0].toDataURL(); 
-    var current_width_1 = 0;//finalLineScreen[0].currentWidth;
-    var current_height_1 = 0;//finalLineScreen[0].currentHeight;
+    var screen1 = splitLineScreen[0]; //finalLineScreen[0].toDataURL();
     var screen2 = splitLineScreen[1]; //finalLineScreen[1].toDataURL(); 
-    var current_width_2 = 0; //finalLineScreen[1].currentWidth;
-    var current_height_2 = 0; //finalLineScreen[1].currentHeight;
     $.redirect("ViewCart.php",
                 {
                     gender_1: cboGender1.value, 
@@ -725,18 +724,16 @@ function goSave() {
                     shirt_size_1: cboShirtSize1.value,
                     shirt_color_1: cboShirtColor1.value,
                     screen1: screen1,
-                    width_1: current_width_1,
-                    height_1: current_height_1,
+                    scaleX_1: finalLineScreen[0].scaleX,
+                    scaleY_1: finalLineScreen[0].scaleY,
                     gender_2: cboGender2.value,
                     shirt_type_2: cboShirtType2.value,
                     shirt_size_2: cboShirtSize2.value,
                     shirt_color_2: cboShirtColor2.value,
                     screen2: screen2,
-                    width_2: current_width_2,
-                    height_2: current_height_2,
-                    product: dataURL,
-                    rect_width: side_1.width,
-                    rect_height: side_1.height
+                    scaleX_2: finalLineScreen[1].scaleX,
+                    scaleY_2: finalLineScreen[1].scaleY,
+                    product: dataURL
                 });
 }
 
