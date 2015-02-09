@@ -77,8 +77,9 @@
 		echo '<input type="hidden" id="shirt_size_1" value="' .$shirt_size_1. '">';
 		$gender_1 = $_POST['gender_1'];
 		echo '<input type="hidden" id="gender_1" value="' .$gender_1. '">';
-		echo '<input type="hidden" id="width-1" value="' .$_POST['width_1']. '">';
-		echo '<input type="hidden" id="height-1" value="' .$_POST['height_1']. '">';
+		echo '<input type="hidden" id="scale-x-1" value="' .$_POST['scaleX_1']. '">';
+		echo '<input type="hidden" id="scale-y-1" value="' .$_POST['scaleY_1']. '">';
+
 
 		$color_2 = $_POST['shirt_color_2'];
 		echo '<input type="hidden" id="color_2" value="' .$color_2. '">';
@@ -88,13 +89,8 @@
 		echo '<input type="hidden" id="shirt_size_2" value="' .$shirt_size_2. '">';
 		$gender_2 = $_POST['gender_2'];
 		echo '<input type="hidden" id="gender_2" value="' .$gender_2. '">';
-		echo '<input type="hidden" id="width-2" value="' .$_POST['width_2']. '">';
-		echo '<input type="hidden" id="height-2" value="' .$_POST['height_2']. '">';
-
-		$rect_width = $_POST['rect_width'];
-		echo '<input type="hidden" id="rect-width" value="' .$rect_width. '">';
-		$rect_height = $_POST['rect_height'];
-		echo '<input type="hidden" id="rect-height" value="' .$rect_height. '">';
+		echo '<input type="hidden" id="scale-x-2" value="' .$_POST['scaleX_2']. '">';
+		echo '<input type="hidden" id="scale-y-2" value="' .$_POST['scaleY_2']. '">';
 
 		echo '<input type="hidden" id="print-format" value="' .$print_format. '">';
 		echo '<input type="hidden" id="member-email" value="' .$_SESSION['email']. '">';
@@ -307,9 +303,22 @@
 		      </h4>
 		    </div>
 		    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-		      <div class="panel-body" style="text-align: center; !important">			  	
-			        <img src="<?php echo $_POST['screen1']; ?>" class="img-rounded" id="img-screen-1">
-		   			<img src="<?php echo $_POST['screen2']; ?>" class="img-rounded" id="img-screen-2">		   		
+		      <div class="panel-body">
+		      	<div style="text-align: center; !important">
+		      		<div style="display: inline-block;">
+				  		<img src="<?php echo $_POST['screen1']; ?>" id="img-screen-1">
+				  		<div style="text-align: left;">
+				  			<p id="screen-size-1">size 1</p>
+				  		</div>
+				  	</div>
+				  	<div style="display: inline-block;">
+			   			<img src="<?php echo $_POST['screen2']; ?>" id="img-screen-2">
+			   			<div style="text-align: left;">
+				  			<p id="screen-size-2">size 2</p>
+				  		</div>
+			   		</div>
+		   		</div>
+		   		   		
 		      </div>
 		    </div>
 		  </div>
@@ -403,14 +412,10 @@
 	var txtTotal2 = document.getElementById('total-2');
 	var txtScreenPrice1 = document.getElementById('screen-price-1');
 	var txtScreenPrice2 = document.getElementById('screen-price-2');
-	var txtTotalPrice = document.getElementById('total-price');
-	var screenWidth1 = document.getElementById('width-1').value;
-	var screenHeight1 = document.getElementById('height-1').value;
+	var txtTotalPrice = document.getElementById('total-price');	
 	var printSize = document.getElementById('print-format').value;
 
 	function calTotal() {
-		
-
 		txtTotal1.innerHTML = Number((parseFloat(txtPrice1.innerHTML) + parseFloat(txtScreenPrice1.innerHTML)) * parseInt(txtQty1.value)).formatMoney(2);
 		txtTotal2.innerHTML = Number((parseFloat(txtPrice2.innerHTML) + parseFloat(txtScreenPrice2.innerHTML)) * parseInt(txtQty2.value)).formatMoney(2);
 		var total1 = txtTotal1.innerHTML.replace(',', '');
@@ -447,8 +452,31 @@
 			setTimeout(function() { 
 				calTotal();
 			}, 500);
-		}, 500);		
+		}, 500);
+
+		displayCalculatedArea();
 	});
+
+	function displayCalculatedArea() {
+		var area1 = document.getElementById('screen-size-1');
+		var area2 = document.getElementById('screen-size-2');
+		var scaleX_1 = document.getElementById('scale-x-1');
+		var scaleY_1 = document.getElementById('scale-y-1');
+		var scaleX_2 = document.getElementById('scale-x-2');
+		var scaleY_2 = document.getElementById('scale-y-2');
+
+		var rect1, rect2;
+		if (printSize.split('|')[0] === 'A4') {
+			rect1 = {width: (A4.cmWidth * scaleX_1.value), height: (A4.cmHeight * scaleY_1.value)};
+			rect2 = {width: (A4.cmWidth * scaleX_2.value), height: (A4.cmHeight * scaleY_2.value)};
+
+		} else if (printSize.split('|')[0] === 'A3') {
+			rect1 = {width: (A3.cmWidth * scaleX_1.value), height: (A3.cmHeight * scaleY_1.value)};
+			rect2 = {width: (A3.cmWidth * scaleX_2.value), height: (A3.cmHeight * scaleY_2.value)};
+		}
+		area1.innerHTML = 'กว้าง x ยาว: ' + rect1.width + ' x ' + rect1.height;
+		area2.innerHTML = 'กว้าง x ยาว: ' + rect2.width + ' x ' + rect2.height;
+	}
 
 	function calculateAreaPrice() {
 		var area;
@@ -501,16 +529,16 @@
 	        type: "POST",
 	        dataType: "json",
 	        url: "data/ManageSizePrice.data.php",
-	        data: {method: "getPrice", area: area}       
+	        data: {method: "getPrice", area: area}
 	    })
 	    .done(function(data) {
-	        if (data) {
+	        if (data.price) {
 	            txt.innerHTML = data.price;                       
 	        } else {
 	            Toast.init({
 	                "selector": ".alert-danger"
 	            });
-	            Toast.show("<strong>Error on getMaterialType !!!<strong> " + data);
+	            Toast.show("<strong>Error on getPrice !!!<strong> " + data);
 	        }
 
 	    })//done
@@ -532,11 +560,21 @@
 	        type: "POST",
 	        dataType: "json",
 	        url: "data/ViewCart.data.php",
-	        data: {method: "insert", email: email.value, line_screen_1: line_screen_1.src, line_screen_2: line_screen_2.src}       
+	        data: { method: "insert", email: email.value, 
+	        		line_screen_1: 'screen1', 
+	        		line_screen_2: 'screen2', 
+	        		line_screen_price_1: parseFloat(txtScreenPrice1.innerHTML), line_screen_price_2: parseFloat(txtScreenPrice2.innerHTML), 
+	        		shirt_id_1: cboMaterial_1.value.split('|')[0], shirt_id_2: cboMaterial_2.value.split('|')[0], 
+	        		qty_1: txtQty1.value, qty_2: txtQty2.value
+	        	}       
 	    })
 	    .done(function(data) {
-	        if (data) {
-	            txt.innerHTML = data.price;                       
+	        if (data.result === 'success') {
+	            Toast.init({
+		            "selector": ".alert-success"
+		        });
+		        Toast.show("<strong>Save completed!!!</strong><br/>redirecting ...");
+		        //setTimeout(function(){ window.location = "ListShirtColor.php" }, 1000);                       
 	        } else {
 	            Toast.init({
 	                "selector": ".alert-danger"
