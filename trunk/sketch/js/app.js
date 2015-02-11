@@ -5,14 +5,19 @@ var A3 = {
             cmWidth: 29.7, 
             cmHeight: 42, 
             pxWidth: cmToPixel(29.7, 42, DPI).width, 
-            pxHeight: cmToPixel(29.7, 42, DPI).height
+            pxHeight: cmToPixel(29.7, 42, DPI).height,
+            scaleWidth: 190,
+            scaleHeight: 315            
         };
 var A4 = {
             cmWidth: 21, 
             cmHeight: 29.7, 
             pxWidth: cmToPixel(21, 29.7, DPI).width, 
-            pxHeight: cmToPixel(21, 29.7, DPI).height
+            pxHeight: cmToPixel(21, 29.7, DPI).height,
+            scaleWidth: 157,
+            scaleHeight: 222
         };
+var printSize = document.getElementById('print-format').value; 
 var svgNS = "http://www.w3.org/2000/svg";
 var isShirtMode = false;
 var isFilterMode = false;
@@ -665,8 +670,8 @@ var shirtArray = [];
 //shirt canvas
 var splitLineScreen = [];
 var finalLineScreen = [];
-var side_1 = {width: 190, height: 280, top: 160, left: 118, offsetTop: 0};
-var side_2 = {width: 190, height: 280, top: 160, left: 545, offsetTop: 0};
+var side_1 = {width: 190, height: 315, top: 150, left: 118, offsetTop: 0};
+var side_2 = {width: 190, height: 315, top: 150, left: 545, offsetTop: 0};
 var side_cal_1 = {
                     width: side_1.width, 
                     height: 0, 
@@ -768,7 +773,7 @@ function loadShirt(type_1, type_2){
         
         fabric.Image.fromURL(splitLineScreen[0], function(oImg) {        
             //oImg.set({top: side_1.top + side_1.offsetTop + 3 ,left: side_1.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
-            oImg.set({top: side_1.top + side_1.offsetTop + 3 ,left: side_1.left + 3, width: 100, height: 141});
+            oImg.set({top: side_1.top + side_1.offsetTop + 3 ,left: side_1.left + 3, width: 157, height: 222});
 
             shirtCanvas.add(oImg);            
             
@@ -806,7 +811,7 @@ function loadShirt(type_1, type_2){
         
         fabric.Image.fromURL(splitLineScreen[1], function(oImg) {        
             //oImg.set({top: side_2.top + side_2.offsetTop + 3 ,left: side_2.left + 3, scaleX: 100/oImg.width, scaleY: 141/oImg.height});
-            oImg.set({top: side_2.top + side_2.offsetTop + 3 ,left: side_2.left + 3, width: 100, height: 141});
+            oImg.set({top: side_2.top + side_2.offsetTop + 3 ,left: side_2.left + 3, width: 157, height: 222});
             shirtCanvas.add(oImg);
 
             oImg.set({selectable: true, hasRotatingPoint: false, lockUniScaling: true, sideOfCanvas: 'right', goodTop: oImg.top, goodLeft: oImg.left, goodScaleX: 1, goodScaleY: 1});
@@ -842,7 +847,7 @@ function scaleToFit() {
 }
 
 function scaling(obj) {
-    var side = undefined;
+    var side = undefined;    
 
     if (obj.sideOfCanvas === 'left') {
         side = side_cal_1;
@@ -851,12 +856,22 @@ function scaling(obj) {
     }
 
     var scaleFactor = 0.01;
-    while ((obj.currentWidth < side.width) && (obj.currentHeight < side.height)) {
+    var maxWidth, maxHeight;
+
+    if (printSize.split('|')[0] === 'A4') {
+        maxWidth = 157;
+        maxHeight = 222;
+    } else {
+        maxWidth = side.width;
+        maxHeight = side.height;
+    }
+
+    while ((obj.currentWidth < maxWidth) && (obj.currentHeight < maxHeight)) {
         obj.set({scaleX: obj.scaleX + scaleFactor, scaleY: obj.scaleY + scaleFactor, left: side.left + 3, top: side.top + 3});
         scaleFactor += 0.01;
         obj.setCoords();
     }
-    while ((obj.currentWidth > side.width) || (obj.currentHeight > side.height)) {
+    while ((obj.currentWidth > maxWidth) || (obj.currentHeight > maxHeight)) {
         scaleFactor -= 0.01;
         obj.set({scaleX: obj.scaleX + scaleFactor, scaleY: obj.scaleY + scaleFactor, left: side.left + 3, top: side.top + 3});
         obj.setCoords();
@@ -1003,6 +1018,16 @@ function init() {
     shirtCanvas.on("object:scaling", function(e){
         if (isShirtMode){
             var obj = e.target; //shirtCanvas.getActiveObject();
+            var maxWidth, maxHeight;
+
+            if (printSize.split('|')[0] === 'A4') {
+                maxWidth = A4.scaleWidth;
+                maxHeight = A4.scaleHeight;
+            } else {
+                maxWidth = A3.scaleWidth;
+                maxHeight = A3.scaleHeight;
+            }
+
             var bounds = undefined;           
 
             if (obj.sideOfCanvas === 'left') {
@@ -1018,8 +1043,17 @@ function init() {
             } else {
                 obj.goodTop = obj.top;
                 obj.goodLeft = obj.left;
-                obj.goodScaleX = obj.scaleX;
-                obj.goodScaleY = obj.scaleY;
+
+                 if ((obj.scaleX * obj.width) >= maxWidth) {
+                    obj.set({ scaleX: obj.goodScaleX });
+                } else {
+                    obj.goodScaleX = obj.scaleX;
+                }
+                if ((obj.scaleY * obj.height) >= maxHeight) {
+                    obj.set({ scaleY: obj.goodScaleY });
+                } else {
+                    obj.goodScaleY = obj.scaleY;
+                }
             }
         }
     });
@@ -1036,7 +1070,7 @@ function init() {
     });
     shirtCanvas.on('selection:cleared', function() {
         if (borderShirt1) borderShirt1.set('stroke', 'rgba(0, 0, 0, 0)');
-        if (borderShirt2) borderShirt2.set('stroke', 'rgba(0, 0, 0, 0)');       
+        if (borderShirt2) borderShirt2.set('stroke', 'rgba(0, 0, 0, 0)');
     });
 
     btnSelect.onclick();

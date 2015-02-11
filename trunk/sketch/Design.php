@@ -115,6 +115,27 @@
     include("service/message_service.php");
     include("service/db_connect.php");
 
+    try {
+        $dbh = dbConnect::getInstance()->dbh;
+    } catch (PDOException $e) {
+        print "Error!: " . $e->getMessage() . "<br/>";
+        die();
+    }
+
+    if (!isset($GLOBALS['print_format']) || empty($GLOBALS['print_format'])) {
+      $sql = "select * from printer ";
+      $stmt = $dbh->prepare($sql);
+      if ($stmt->execute()) {
+        $results = $stmt->fetch(PDO::FETCH_ASSOC);
+        $GLOBALS['print_format'] = $results['print_format'] . '|' . $results['width'] . '|' . $results['height'];
+      } else {
+        print "Error!: " . $stmt->errorInfo() . "<br/>";
+        die();
+      }
+    }
+
+    echo '<input type="hidden" id="print-format" value="' .$print_format. '">';
+
     class Member
     {
       public $email;
@@ -128,13 +149,6 @@
       public $photo;
       public $height_1 = 0;
       public $height_2 = 0;
-    }
-           
-    try {
-        $dbh = dbConnect::getInstance()->dbh;
-    } catch (PDOException $e) {
-        print "Error!: " . $e->getMessage() . "<br/>";
-        die();
     }
 
     $sql = "select email, member_name, address, province_id, amphur_id, district_id, password, postcode ";
