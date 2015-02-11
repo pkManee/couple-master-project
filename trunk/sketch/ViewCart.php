@@ -332,7 +332,7 @@
 		    </div>
 		    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 		      <div class="panel-body">
-		        <img src="<?php echo $_POST['product']; ?>" class="img-rounded center-block" style="width: 595px; height: 420px;">
+		        <img id="product-image" src="<?php echo $_POST['product']; ?>" class="img-rounded center-block" style="width: 595px; height: 420px;">
 		      </div>
 		    </div>
 		  </div>
@@ -487,8 +487,8 @@
 					height: Math.round((A3.cmHeight * scaleY_2.value), 0)
 				};
 		}
-		area1.innerHTML = 'กว้าง x ยาว: ' + rect1.width + ' x ' + rect1.height;
-		area2.innerHTML = 'กว้าง x ยาว: ' + rect2.width + ' x ' + rect2.height;
+		area1.innerHTML = 'กว้าง x ยาว (ซม.): ' + rect1.width + ' x ' + rect1.height;
+		area2.innerHTML = 'กว้าง x ยาว (ซม.): ' + rect2.width + ' x ' + rect2.height;
 		rtnArray.push(rect1);
 		rtnArray.push(rect2);
 
@@ -570,6 +570,7 @@
 	var line_screen_1 = document.getElementById('img-screen-1');
 	var line_screen_2 = document.getElementById('img-screen-2');
 	var email = document.getElementById('member-email');
+	var product_image = document.getElementById('product-image');
 
 	var btnConfirm = document.getElementById('btn-confirm');
 	btnConfirm.onclick = function() {
@@ -578,11 +579,12 @@
 	        dataType: "json",
 	        url: "data/ViewCart.data.php",
 	        data: { method: "insert", email: email.value, 
-	        		line_screen_1: 'screen1', 
-	        		line_screen_2: 'screen2', 
+	        		line_screen_1: line_screen_1.src, 
+	        		line_screen_2: line_screen_2.src, 
 	        		line_screen_price_1: parseFloat(txtScreenPrice1.innerHTML), line_screen_price_2: parseFloat(txtScreenPrice2.innerHTML), 
 	        		shirt_id_1: cboMaterial_1.value.split('|')[0], shirt_id_2: cboMaterial_2.value.split('|')[0], 
-	        		qty_1: txtQty1.value, qty_2: txtQty2.value
+	        		qty_1: txtQty1.value, qty_2: txtQty2.value,
+	        		product_image: product_image.src
 	        	}       
 	    })
 	    .done(function(data) {
