@@ -57,10 +57,10 @@ function insertOrder(){
   
   $sql = 'insert into shirt_order ';
   $sql .= '(email, line_screen_1, line_screen_2, line_screen_price_1, line_screen_price_2, shirt_id_1, ';
-  $sql .= 'shirt_id_2, qty_1, qty_2, order_status) ';
+  $sql .= 'shirt_id_2, qty_1, qty_2, order_status, order_date) ';
   $sql .= 'values';
   $sql .= '(:email, :line_screen_1, :line_screen_2, :line_screen_price_1, :line_screen_price_2, :shirt_id_1, ';
-  $sql .= ':shirt_id_2, :qty_1, :qty_2, :order_status)';
+  $sql .= ':shirt_id_2, :qty_1, :qty_2, :order_status, curdate())';
 
   $stmt = $dbh->prepare($sql);
 

@@ -55,7 +55,7 @@
 				print "Error!: " . $stmt->errorInfo() . "<br/>";
 				die();
 			}
-		}
+		}		
 
 		$sql = "select email, member_name, address, province_id, amphur_id, district_id, password, postcode ";
 		$sql .= ",photo, height_1, height_2 ";
@@ -447,14 +447,15 @@
 		getMaterialType($('#color_1').val(), $('#shirt_type_1').val(), $('#gender_1').val(), cboMaterial_1, txtPrice1);
 		getMaterialType($('#color_2').val(), $('#shirt_type_2').val(), $('#gender_2').val(), cboMaterial_2, txtPrice2);
 
+
+		var rectArray = displayCalculatedArea();
+
 		setTimeout(function() {
-			calculateAreaPrice();
+			calculateAreaPrice(rectArray);
 			setTimeout(function() { 
 				calTotal();
 			}, 500);
 		}, 500);
-
-		displayCalculatedArea();
 	});
 
 	function displayCalculatedArea() {
@@ -464,33 +465,49 @@
 		var scaleY_1 = document.getElementById('scale-y-1');
 		var scaleX_2 = document.getElementById('scale-x-2');
 		var scaleY_2 = document.getElementById('scale-y-2');
-
+		var rtnArray = new Array();
 		var rect1, rect2;
 		if (printSize.split('|')[0] === 'A4') {
-			rect1 = {width: (A4.cmWidth * scaleX_1.value), height: (A4.cmHeight * scaleY_1.value)};
-			rect2 = {width: (A4.cmWidth * scaleX_2.value), height: (A4.cmHeight * scaleY_2.value)};
+			rect1 = {
+					width: Math.round((A4.cmWidth * scaleX_1.value), 0), 
+					height: Math.round((A4.cmHeight * scaleY_1.value), 0)
+				};
+			rect2 = {
+					width: Math.round((A4.cmWidth * scaleX_2.value), 0), 
+					height: Math.round((A4.cmHeight * scaleY_2.value),0)
+				};
 
 		} else if (printSize.split('|')[0] === 'A3') {
-			rect1 = {width: (A3.cmWidth * scaleX_1.value), height: (A3.cmHeight * scaleY_1.value)};
-			rect2 = {width: (A3.cmWidth * scaleX_2.value), height: (A3.cmHeight * scaleY_2.value)};
+			rect1 = {
+					width: Math.round((A3.cmWidth * scaleX_1.value), 0), 
+					height: Math.round((A3.cmHeight * scaleY_1.value), 0)
+				};
+			rect2 = {
+					width: Math.round((A3.cmWidth * scaleX_2.value), 0), 
+					height: Math.round((A3.cmHeight * scaleY_2.value), 0)
+				};
 		}
 		area1.innerHTML = 'กว้าง x ยาว: ' + rect1.width + ' x ' + rect1.height;
 		area2.innerHTML = 'กว้าง x ยาว: ' + rect2.width + ' x ' + rect2.height;
+		rtnArray.push(rect1);
+		rtnArray.push(rect2);
+
+		return rtnArray;
 	}
 
-	function calculateAreaPrice() {
-		var area;
-		if (printSize.split('|')[0] === 'A4') {
-			area = A4.cmWidth * A4.cmHeight;
-		} else if (printSize.split('|')[0] === 'A3') {
-			area = A3.cmWidth * A3.cmHeight;
-		}
+	function calculateAreaPrice(rectArray) {
+		// var area;
+		// if (printSize.split('|')[0] === 'A4') {
+		// 	area = A4.cmWidth * A4.cmHeight;
+		// } else if (printSize.split('|')[0] === 'A3') {
+		// 	area = A3.cmWidth * A3.cmHeight;
+		// }
 		var colorPixel = calculateColorPixel(document.getElementById("img-screen-1"));
-		var actualPixel = Math.round(area * (colorPixel / 100),  0);
+		var actualPixel = Math.round((rectArray[0].width * rectArray[0].height) * (colorPixel / 100),  0);
 		getPrice(txtScreenPrice1, actualPixel);
 
 		colorPixel = calculateColorPixel(document.getElementById("img-screen-2"));
-		actualPixel = Math.round(area * (colorPixel / 100),  0);
+		actualPixel = Math.round((rectArray[1].width * rectArray[1].height) * (colorPixel / 100),  0);
 		getPrice(txtScreenPrice2, actualPixel);
 	}
 
