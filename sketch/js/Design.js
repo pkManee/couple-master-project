@@ -25,13 +25,13 @@ cboShirtType2.onchange = function() {
     cboChange = false;
     getShirtColor2();
     $(cboColorStyle_2).selectpicker('val', '');
-    cboShirtType2.onchange();
+    cboColorStyle_2.onchange();
 }
 cboGender2.onchange = function() { 
     cboChange = false;
     getShirtColor2();
     $(cboColorStyle_2).selectpicker('val', '');
-    cboShirtType2.onchange();
+    cboColorStyle_2.onchange();
 }
 cboShirtColor2.onchange = function() { setShirtColor(); }
 
@@ -343,11 +343,8 @@ btnCal.onclick = function() {
     loadShirt(getURI1(cboShirtType1.value), getURI2(cboShirtType2.value));
     setTimeout(function() { 
         scaleToFit(); 
-        Toast.init({"selector": ".alert-success"});
-        Toast.show("Calculation<br><strong>Adjust position completed ...</strong>");
-    }, 300);   
-
-    setTimeout(function() { setShirtColor(); }, 300);
+        setTimeout(function() { setShirtColor(); }, 300);
+    }, 300);
 }
 
 //================================================================================
