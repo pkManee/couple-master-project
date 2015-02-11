@@ -516,7 +516,7 @@ fabric.Canvas.prototype.toDataURLWithCropping = function (format, cropping, qual
 
     var data = (fabric.StaticCanvas.supports('toDataURLWithQuality'))
                ? tempCanvasEl.toDataURL('image/' + format, quality)
-               : tempCanvasEl.toDataURL('image/' + format);
+               : tempCanvasEl.toDataURL('image/' + format);   
 
     this.contextTop && this.clearContext(this.contextTop);
     this.renderAll();

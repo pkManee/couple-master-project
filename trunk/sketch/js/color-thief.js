@@ -140,6 +140,7 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
 
         return palette;
     } else {
+        image.removeCanvas();
         return null;
     }
 };
