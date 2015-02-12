@@ -57,26 +57,27 @@ function insertOrder(){
   
   $sql = 'insert into shirt_order ';
   $sql .= '(email, line_screen_price_1, line_screen_price_2, shirt_id_1, ';
-  $sql .= 'shirt_id_2, qty_1, qty_2, order_status, order_date) ';
+  $sql .= 'shirt_id_2, qty_1, qty_2, order_status, order_date, amt) ';
   $sql .= 'values';
   $sql .= '(:email, :line_screen_price_1, :line_screen_price_2, :shirt_id_1, ';
-  $sql .= ':shirt_id_2, :qty_1, :qty_2, :order_status, curdate())';
+  $sql .= ':shirt_id_2, :qty_1, :qty_2, :order_status, curdate(), :amt)';
 
   $stmt = $dbh->prepare($sql);
 
-  $stmt->bindValue(":email", $_POST["email"]);
-  $stmt->bindValue(":line_screen_price_1", $_POST["line_screen_price_1"]);
-  $stmt->bindValue(":line_screen_price_2", $_POST["line_screen_price_2"]);
-  $stmt->bindValue(":shirt_id_1", $_POST["shirt_id_1"]);
-  $stmt->bindValue(":shirt_id_2", $_POST["shirt_id_2"]);
-  $stmt->bindValue(":qty_1", $_POST["qty_1"]);
-  $stmt->bindValue(":qty_2", $_POST["qty_2"]);
-  $stmt->bindValue(":order_status", 'order');  
+  $stmt->bindValue(':email', $_POST['email']);
+  $stmt->bindValue(':line_screen_price_1', $_POST['line_screen_price_1']);
+  $stmt->bindValue(':line_screen_price_2', $_POST['line_screen_price_2']);
+  $stmt->bindValue(':shirt_id_1', $_POST['shirt_id_1']);
+  $stmt->bindValue(':shirt_id_2', $_POST['shirt_id_2']);
+  $stmt->bindValue(':qty_1', $_POST['qty_1']);
+  $stmt->bindValue(':qty_2', $_POST['qty_2']);
+  $stmt->bindValue(':order_status', 'order');
+  $stmt->bindValue(':amt', $_POST['amt']);
 
   if ($stmt->execute()){
 
     $orderId = $dbh->lastInsertId();
-    $target_dir = "uploads/";
+    $target_dir = 'uploads/';
     $dirToMake = '../' . $target_dir . $orderId;
     mkdir($dirToMake);
     $screen1 = $_POST['line_screen_1'];

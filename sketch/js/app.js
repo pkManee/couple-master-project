@@ -1071,7 +1071,7 @@ function init() {
     shirtCanvas.on('selection:cleared', function() {
         if (borderShirt1) borderShirt1.set('stroke', 'rgba(0, 0, 0, 0)');
         if (borderShirt2) borderShirt2.set('stroke', 'rgba(0, 0, 0, 0)');
-    });
+    });    
 
     btnSelect.onclick();
     toggleMode();
