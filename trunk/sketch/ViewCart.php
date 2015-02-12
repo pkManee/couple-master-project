@@ -132,167 +132,169 @@
    	?>
 	   	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 		  <div class="panel panel-info">
-		    <div class="panel-heading" role="tab" id="headingOne">
-		      <h4 class="panel-title">
-		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-		          รายการสั่งซื้อ
-		        </a>
-		      </h4>
-		    </div>
-		    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-		    	<form class="form-horizontal" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
-		    	<div class="panel-body">
-					<div class="form-group">
-			        	<label class="col-sm-2 control-label">ชื่อ-นามสกุล</label>
-			        	<div class="col-sm-10">
-			        		<p class="form-control-static"><?php echo $member->member_name; ?></p>
-			        	</div>		        	
-				    </div>
-				    <div class="form-group">
-				    	<label class="col-sm-2 control-label">อีเมล์</label>
-			        	<div class="col-sm-10">
-			        		<p class="form-control-static"><?php echo $member->email; ?></p>
-			        	</div>
-				    </div>
-				    <div class="form-group">
-				    	<label class="col-sm-2 control-label">ที่อยู่</label>
-				    	<div class="col-sm-6">
-				    		<textarea class="form-control" name="txtAddress" 
-				    			style="min-height: 100px;"><?php echo $member->address; ?></textarea>
-				    	</div>
-				    </div>
-		      		<div class="form-group">
-		      			<div class="col-sm-6">
-			      			<div class="panel panel-default">
-				      			<div class="panel-heading">เสื้อตัวที่ 1</div>
-			      				<div class="form-group">
-						      		<label class="control-label col-sm-3">เพศ</label>
-						      		<div class="col-sm-3">
-						      			<p class="form-control-static"><?php echo ($gender_1 == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
-						      		</div>
-						      	</div>
-			      				<div class="form-group">
-					      			<label class="control-label col-sm-3">ประเภท</label>
-						      		<div class="col-sm-3">
-						      			<p class="form-control-static"><?php echo $shirt_type_1; ?></p>
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3">สี</label>
-				      				<div class="col-sm-3">
-						      			<p class="form-control-static"><?php echo getColor($color_1); ?></p>								      			
-						      		</div>
-						      		<div class="col-sm-2">
-						      			<span class="form-control" style="background: <?php echo $color_1; ?>"></span>
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3">ชนิดผ้า - ขนาด</label>
-						      		<div class="col-sm-3">
-						      			<select class="selectpicker" id="cbo-material-1"></select>
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3">ราคาเสื้อเปล่า</label>
-						      		<div class="col-sm-3">
-						      			<p class="form-control-static" id="price-1"></p>
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3" for="screen-price-1">ราคาลายสกรีน</label>
-						      		<div class="col-sm-3">
-						      			<p class="form-control-static" id="screen-price-1">0</p>
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3" for="qty-1">จำนวน</label>
-						      		<div class="col-sm-6">
-						      			<input type="text" id="qty-1" name="qty1" value="1">
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3" for="total-1">รวม</label>
-						      		<div class="col-sm-3">
-						      			<p class="form-control-static" id="total-1">0</p>
-						      		</div>
-						      	</div>
-				      		</div>
-				      	</div>
-
-				      	<div class="col-sm-6">
-			      			<div class="panel panel-default">
-				      			<div class="panel-heading">เสื้อตัวที่ 2</div>
-			      				<div class="form-group">
-						      		<label class="control-label col-sm-3">เพศ</label>
-						      		<div class="col-sm-3">
-						      			<p class="form-control-static"><?php echo ($gender_2 == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
-						      		</div>
-						      	</div>
-			      				<div class="form-group">
-					      			<label class="control-label col-sm-3">ประเภท</label>
-						      		<div class="col-sm-3">
-						      			<p class="form-control-static"><?php echo $shirt_type_2; ?></p>
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-					      			<label class="control-label col-sm-3">สี</label>							      								      			
-				      				<div class="col-sm-3">
-						      			<p class="form-control-static"><?php echo getColor($color_2); ?></p>								      			
-						      		</div>
-						      		<div class="col-sm-2">
-						      			<span class="form-control" style="background: <?php echo $color_2; ?>"></span>
-						      		</div>						      			
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3">ชนิดผ้า - ขนาด</label>						      								      		
-						      		<div class="col-sm-3">
-						      			<select class="selectpicker" id="cbo-material-2"></select>						      			
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3">ราคาเสื้อเปล่า</label>
-						      		<div class="col-sm-3">
-						      			<p class="form-control-static" id="price-2"></p>
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3" for="screen-price-2">ราคาลายสกรีน</label>
-						      		<div class="col-sm-3">
-						      			<p class="form-control-static" id="screen-price-2">0</p>
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3" for="qty-2">จำนวน</label>
-						      		<div class="col-sm-6">
-						      			<input type="text" id="qty-2" name="qty2" value="1">
-						      		</div>
-						      	</div>
-						      	<div class="form-group">
-						      		<label class="control-label col-sm-3" for="total-2">รวม</label>
-						      		<div class="col-sm-3">
-						      			<p class="form-control-static" id="total-2">0</p>
-						      		</div>
-						      	</div>
-				      		</div>				      		
-				      	</div>
-		      		</div>
-
-		      		<div class="col-sm-6">
+			<div id="print-area">
+			    <div class="panel-heading" role="tab" id="headingOne">
+			      <h4 class="panel-title">
+			        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+			          รายการสั่งซื้อ
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+			    	<form class="form-horizontal" id="form-view-cart" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
+			    	<div class="panel-body">
+						<div class="form-group">
+				        	<label class="col-xs-3 control-label">ชื่อ-นามสกุล</label>
+				        	<div class="col-xs-9">
+				        		<p class="form-control-static"><?php echo $member->member_name; ?></p>
+				        	</div>		        	
+					    </div>
+					    <div class="form-group">
+					    	<label class="col-xs-3 control-label">อีเมล์</label>
+				        	<div class="col-xs-9">
+				        		<p class="form-control-static"><?php echo $member->email; ?></p>
+				        	</div>
+					    </div>
+					    <div class="form-group">
+					    	<label class="col-xs-3 control-label">ที่อยู่</label>
+					    	<div class="col-xs-6">
+					    		<textarea class="form-control" name="txtAddress" 
+					    			style="min-height: 100px;"><?php echo $member->address; ?></textarea>
+					    	</div>
+					    </div>
 			      		<div class="form-group">
-			      			<label class="control-label col-sm-3">รวมทั้งสิ้น (บาท)</label>
-			      			<div >
-			      				<b><p class="form-control-static text-success" id="total-price">0</p></b>
-			      			</div>
-			      			<br>
-			      			<br>
-			      			<br>
-			      			<button type="button" class="btn btn-success" id="btn-confirm">ยืนยันการสั่งซื้อ</button>
-							
+			      			<div class="col-xs-6">
+				      			<div class="panel panel-default">
+					      			<div class="panel-heading">เสื้อตัวที่ 1</div>
+				      				<div class="form-group">
+							      		<label class="control-label col-xs-3">เพศ</label>
+							      		<div class="col-xs-3">
+							      			<p class="form-control-static"><?php echo ($gender_1 == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
+							      		</div>
+							      	</div>
+				      				<div class="form-group">
+						      			<label class="control-label col-xs-3">ประเภท</label>
+							      		<div class="col-xs-3">
+							      			<p class="form-control-static"><?php echo $shirt_type_1; ?></p>
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3">สี</label>
+					      				<div class="col-xs-3">
+							      			<p class="form-control-static"><?php echo getColor($color_1); ?></p>								      			
+							      		</div>
+							      		<div class="col-xs-2">
+							      			<span class="form-control" style="background: <?php echo $color_1; ?>"></span>
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3">ชนิดผ้า - ขนาด</label>
+							      		<div class="col-xs-3">
+							      			<select class="selectpicker" id="cbo-material-1"></select>
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3">ราคาเสื้อเปล่า</label>
+							      		<div class="col-xs-3">
+							      			<p class="form-control-static" id="price-1"></p>
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3" for="screen-price-1">ราคาลายสกรีน</label>
+							      		<div class="col-xs-3">
+							      			<p class="form-control-static" id="screen-price-1">0</p>
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3" for="qty-1">จำนวน</label>
+							      		<div class="col-xs-6">
+							      			<input type="text" id="qty-1" name="qty1" value="1">
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3" for="total-1">รวม</label>
+							      		<div class="col-xs-3">
+							      			<p class="form-control-static" id="total-1">0</p>
+							      		</div>
+							      	</div>
+					      		</div>
+					      	</div>
+
+					      	<div class="col-xs-6">
+				      			<div class="panel panel-default">
+					      			<div class="panel-heading">เสื้อตัวที่ 2</div>
+				      				<div class="form-group">
+							      		<label class="control-label col-xs-3">เพศ</label>
+							      		<div class="col-xs-3">
+							      			<p class="form-control-static"><?php echo ($gender_2 == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
+							      		</div>
+							      	</div>
+				      				<div class="form-group">
+						      			<label class="control-label col-xs-3">ประเภท</label>
+							      		<div class="col-xs-3">
+							      			<p class="form-control-static"><?php echo $shirt_type_2; ?></p>
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+						      			<label class="control-label col-xs-3">สี</label>							      								      			
+					      				<div class="col-xs-3">
+							      			<p class="form-control-static"><?php echo getColor($color_2); ?></p>								      			
+							      		</div>
+							      		<div class="col-xs-2">
+							      			<span class="form-control" style="background: <?php echo $color_2; ?>"></span>
+							      		</div>						      			
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3">ชนิดผ้า - ขนาด</label>						      								      		
+							      		<div class="col-xs-3">
+							      			<select class="selectpicker" id="cbo-material-2"></select>						      			
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3">ราคาเสื้อเปล่า</label>
+							      		<div class="col-xs-3">
+							      			<p class="form-control-static" id="price-2"></p>
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3" for="screen-price-2">ราคาลายสกรีน</label>
+							      		<div class="col-xs-3">
+							      			<p class="form-control-static" id="screen-price-2">0</p>
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3" for="qty-2">จำนวน</label>
+							      		<div class="col-xs-6">
+							      			<input type="text" id="qty-2" name="qty2" value="1">
+							      		</div>
+							      	</div>
+							      	<div class="form-group">
+							      		<label class="control-label col-xs-3" for="total-2">รวม</label>
+							      		<div class="col-xs-3">
+							      			<p class="form-control-static" id="total-2">0</p>
+							      		</div>
+							      	</div>
+					      		</div>				      		
+					      	</div>
+			      		</div>
+
+			      		<div class="col-xs-6">
+				      		<div class="form-group">
+				      			<label class="control-label col-xs-3">รวมทั้งสิ้น (บาท)</label>
+				      			<div >
+				      				<b><p class="form-control-static text-success" id="total-price">0</p></b>
+				      			</div>				      			
+							</div>
 						</div>
 					</div>
-				</div>
-				</form>
-		    </div>		   
+					</form>
+			    </div>
+			</div>
+			<div class="container">
+				<div class="form-group">
+			    	<button type="button" class="btn btn-success" id="btn-confirm" data-loading-text="กำลังบันทึกข้อมูลการสั่งซื้อ...">ยืนยันการสั่งซื้อ</button>
+			    </div>
+		    </div>
 		  </div>
 		  <div class="panel panel-info">
 		    <div class="panel-heading" role="tab" id="headingTwo">
@@ -338,6 +340,7 @@
 		  </div>
 		</div>
     </div>
+    <iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute"></iframe>
     <script type="text/javascript" src="js/bootstrap-select.js"></script>
     <script type="text/javascript" src="js/jquery.bootstrap-touchspin.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
@@ -574,6 +577,8 @@
 
 	var btnConfirm = document.getElementById('btn-confirm');
 	btnConfirm.onclick = function() {
+		var $btn = $(this).button('loading');
+		var total = txtTotalPrice.innerHTML.replace(',', '');
 		$.ajax({
 	        type: "POST",
 	        dataType: "json",
@@ -584,16 +589,33 @@
 	        		line_screen_price_1: parseFloat(txtScreenPrice1.innerHTML), line_screen_price_2: parseFloat(txtScreenPrice2.innerHTML), 
 	        		shirt_id_1: cboMaterial_1.value.split('|')[0], shirt_id_2: cboMaterial_2.value.split('|')[0], 
 	        		qty_1: txtQty1.value, qty_2: txtQty2.value,
-	        		product_image: product_image.src
+	        		product_image: product_image.src,
+	        		amt: total
 	        	}       
 	    })
 	    .done(function(data) {
 	        if (data.result === 'success') {
-	            Toast.init({
-		            "selector": ".alert-success"
-		        });
-		        Toast.show("<strong>Save completed!!!</strong><br/>redirecting ...");
-		        //setTimeout(function(){ window.location = "ListShirtColor.php" }, 1000);                       
+	         //    Toast.init({
+		        //     "selector": ".alert-success"
+		        // });
+		        // Toast.show("<strong>Save completed!!!</strong><br/>redirecting ...");
+
+		        setTimeout(function(){ 
+		        	$btn.button('reset');
+		        	setTimeout(function() {
+		        		//window.location = 'index.php';
+
+		        		var content = document.getElementById("print-area");
+						var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+						var myStyle = '<link rel="stylesheet" href="css/bootstrap.css" /><link rel="stylesheet" href="css/bootstrap-theme.css">';
+						pri.document.open();
+						pri.document.write(myStyle + content.innerHTML);
+						pri.document.close();
+						pri.focus();
+						pri.print();
+		        	}, 300);
+		        }, 2000);
+		        
 	        } else {
 	            Toast.init({
 	                "selector": ".alert-danger"
