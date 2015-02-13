@@ -60,7 +60,8 @@ function insertOrder(){
   $sql .= 'shirt_id_2, qty_1, qty_2, order_status, order_date, amt) ';
   $sql .= 'values';
   $sql .= '(:email, :line_screen_price_1, :line_screen_price_2, :shirt_id_1, ';
-  $sql .= ':shirt_id_2, :qty_1, :qty_2, :order_status, curdate(), :amt)';
+  $sql .= ':shirt_id_2, :qty_1, :qty_2, :order_status, curdate(), :amt); ';
+  $sql .= 'update member set address = :address where email = :email; ';
 
   $stmt = $dbh->prepare($sql);
 
@@ -73,6 +74,7 @@ function insertOrder(){
   $stmt->bindValue(':qty_2', $_POST['qty_2']);
   $stmt->bindValue(':order_status', 'order');
   $stmt->bindValue(':amt', $_POST['amt']);
+  $stmt->bindValue(':address', $_POST['address']);
 
   if ($stmt->execute()){
 
@@ -88,7 +90,7 @@ function insertOrder(){
     saveFileToDir($dirToMake, $product, '03.png');
 
     header("Content-Type: application/json");
-    echo json_encode(array("result"=>"success"));
+    echo json_encode(array('order_id'=>$orderId));
 
   }else{
     header("Content-Type: application/json");
