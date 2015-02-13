@@ -131,8 +131,7 @@
    	
    	?>
 	   	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-		  <div class="panel panel-info">
-			<div id="print-area">
+		  <div class="panel panel-info">			
 			    <div class="panel-heading" role="tab" id="headingOne">
 			      <h4 class="panel-title">
 			        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -158,7 +157,7 @@
 					    <div class="form-group">
 					    	<label class="col-xs-3 control-label">ที่อยู่</label>
 					    	<div class="col-xs-6">
-					    		<textarea class="form-control" name="txtAddress" 
+					    		<textarea class="form-control" name="txtAddress" id="txt-address"
 					    			style="min-height: 100px;"><?php echo $member->address; ?></textarea>
 					    	</div>
 					    </div>
@@ -286,15 +285,13 @@
 				      			</div>				      			
 							</div>
 						</div>
+						<div class="row"></div>
+						<div class="col-xs-6">
+							<button type="button" class="btn btn-success" id="btn-confirm" data-loading-text="กำลังบันทึกข้อมูลการสั่งซื้อ...">ยืนยันการสั่งซื้อ</button>
+						</div>
 					</div>
 					</form>
 			    </div>
-			</div>
-			<div class="container">
-				<div class="form-group">
-			    	<button type="button" class="btn btn-success" id="btn-confirm" data-loading-text="กำลังบันทึกข้อมูลการสั่งซื้อ...">ยืนยันการสั่งซื้อ</button>
-			    </div>
-		    </div>
 		  </div>
 		  <div class="panel panel-info">
 		    <div class="panel-heading" role="tab" id="headingTwo">
@@ -340,7 +337,7 @@
 		  </div>
 		</div>
     </div>
-    <iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute"></iframe>
+   
     <script type="text/javascript" src="js/bootstrap-select.js"></script>
     <script type="text/javascript" src="js/jquery.bootstrap-touchspin.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
@@ -574,6 +571,7 @@
 	var line_screen_2 = document.getElementById('img-screen-2');
 	var email = document.getElementById('member-email');
 	var product_image = document.getElementById('product-image');
+	var txtAddress = document.getElementById('txt-address');
 
 	var btnConfirm = document.getElementById('btn-confirm');
 	btnConfirm.onclick = function() {
@@ -583,7 +581,8 @@
 	        type: "POST",
 	        dataType: "json",
 	        url: "data/ViewCart.data.php",
-	        data: { method: "insert", email: email.value, 
+	        data: { method: "insert", email: email.value,
+	        		address: txtAddress.value,
 	        		line_screen_1: line_screen_1.src, 
 	        		line_screen_2: line_screen_2.src, 
 	        		line_screen_price_1: parseFloat(txtScreenPrice1.innerHTML), line_screen_price_2: parseFloat(txtScreenPrice2.innerHTML), 
@@ -594,7 +593,7 @@
 	        	}       
 	    })
 	    .done(function(data) {
-	        if (data.result === 'success') {
+	        if (data.order_id) {
 	         //    Toast.init({
 		        //     "selector": ".alert-success"
 		        // });
@@ -603,16 +602,16 @@
 		        setTimeout(function(){ 
 		        	$btn.button('reset');
 		        	setTimeout(function() {
-		        		//window.location = 'index.php';
+		        		window.location = 'OrderResult.php?order_id=' + data.order_id;
 
-		        		var content = document.getElementById("print-area");
-						var pri = document.getElementById("ifmcontentstoprint").contentWindow;
-						var myStyle = '<link rel="stylesheet" href="css/bootstrap.css" /><link rel="stylesheet" href="css/bootstrap-theme.css">';
-						pri.document.open();
-						pri.document.write(myStyle + content.innerHTML);
-						pri.document.close();
-						pri.focus();
-						pri.print();
+		    //     		var content = document.getElementById("print-area");
+						// var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+						// var myStyle = '<link rel="stylesheet" href="css/bootstrap.css" /><link rel="stylesheet" href="css/bootstrap-theme.css">';
+						// pri.document.open();
+						// pri.document.write(myStyle + content.innerHTML);
+						// pri.document.close();
+						// pri.focus();
+						// pri.print();
 		        	}, 300);
 		        }, 2000);
 		        
