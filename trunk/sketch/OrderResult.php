@@ -13,6 +13,7 @@
 
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="js/bootbox.js"></script>
   </head>
   <body>  
     <div class="alert alert-success" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
@@ -29,6 +30,7 @@
     ?>
     
     <div class="container" >
+    <div id="print-area">
    	<?php
 	if (isset($_SESSION["email"]) && !empty($_SESSION["email"])) {           
 		try {
@@ -38,7 +40,7 @@
 		  die();
 		}
 		
-		$sql = 'select o.order_id, o.line_screen_price_1, o.line_screen_price_2, o.qty_1, o.qty_2, o.amt, ';
+		$sql = 'select o.order_id, o.line_screen_price_1, o.line_screen_price_2, o.qty_1, o.qty_2, o.amt, o.order_date, ';
 		$sql .= 's1.gender as gender_1, s1.shirt_type as shirt_type_1, s1.color_hex as color_hex_1, s1.shirt_price as shirt_price_1, ';
 		$sql .= 's2.gender as gender_2, s2.shirt_type as shirt_type_2, s2.color_hex as color_hex_2, s2.shirt_price as shirt_price_2, ';
 		$sql .= 's1.material_type as material_type_1, s1.size_code as size_code_1, ';
@@ -66,9 +68,9 @@
    	?>
 
    		
-  	<div class="panel panel-info" id="print-area" >			
+  	<div class="panel panel-info" >			
 	    <div class="panel-heading">
-		    <h4 class="panel-title"><?php echo 'รายการสั่งซื้อ ' . '#' . $_GET['order_id'] ?></h4>
+		    <h4 class="panel-title"><?php echo 'รายการสั่งซื้อ ' . '<b>#' . $_GET['order_id'] . '</b> (' . $result['order_date'] .')' ?></h4>
 	    </div>
 	    		    	
     	<div class="panel-body">
@@ -87,7 +89,7 @@
 		    <div class="form-group">
 		    	<label class="col-xs-3 form-control-static">ที่อยู่</label>
 		    	<div class="col-xs-6">
-		    		<p class="form-control-static" name="txtAddress" id="txt-address"><?php echo $result['address']; ?></p>
+		    		<p class="form-control-static" name="txtAddress" id="txt-address"><?php echo nl2br($result['address']); ?></p>
 		    	</div>
 		    </div>
       		<div class="form-group">
@@ -143,9 +145,12 @@
 				      		</div>
 				      	</div>
 				      	<div class="row">
-				      		<label class="form-control-static col-xs-3" for="total-1">รวม</label>
+				      		<label class="form-control-static col-xs-3">รวม</label>
 				      		<div class="col-xs-3">
-				      			<p class="form-control-static" id="total-1">0</p>
+				      			<?php
+				      			$total_1 = ($result['shirt_price_1'] + $result['line_screen_price_1']) * $result['qty_1'];
+				      			?>
+				      			<p class="form-control-static"><?php echo number_format($total_1, 2); ?></p>
 				      		</div>
 				      	</div>
 				      	</div>
@@ -192,7 +197,7 @@
 					      	<div class="row">
 					      		<label class="form-control-static col-xs-3" for="screen-price-2">ราคาลายสกรีน</label>
 					      		<div class="col-xs-3">
-					      			<p class="form-control-static" id="screen-price-2"><?php echo $result['line_screen_price_2'] ?></p>
+					      			<p class="form-control-static" id="screen-price-2"><?php echo $result['line_screen_price_2']; ?></p>
 					      		</div>
 					      	</div>
 					      	<div class="row">
@@ -202,9 +207,12 @@
 					      		</div>
 					      	</div>
 					      	<div class="row">
-					      		<label class="form-control-static col-xs-3" for="total-2">รวม</label>
+					      		<label class="form-control-static col-xs-3">รวม</label>
 					      		<div class="col-xs-3">
-					      			<p class="form-control-static" id="total-2">0</p>
+					      			<?php
+					      			$total_2 = ($result['shirt_price_2'] + $result['line_screen_price_2']) * $result['qty_2'];
+					      			?>
+					      			<p class="form-control-static"><?php echo number_format($total_2, 2); ?></p>
 					      		</div>
 					      	</div>
 				      	</div>
@@ -224,11 +232,12 @@
 		</div>
 	   
   	</div>
-	
+	</div>
 	<div class="row"></div>
 		<div class="col-xs-6">
 			<button type="button" class="btn btn-success" id="btn-print">พิมพ์รายการสั่งซื้อ</button>
 		</div>
+
     </div> <!-- container -->
     <iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute"></iframe>    
     <script type="text/javascript">
@@ -236,13 +245,36 @@
     btnPrint.onclick = function() {
     	var content = document.getElementById('print-area');
 		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
-		var myStyle = '<link rel="stylesheet" href="css/bootstrap.css" /><link rel="stylesheet" href="css/bootstrap-theme.css">';
+		var myStyle = '<html><div style="font-size: 10px; "><link rel="stylesheet" href="css/bootstrap.css" /><link rel="stylesheet" href="css/bootstrap-theme.css">';
+		var body = myStyle + content.innerHTML + '</div></html>';
 		pri.document.open();
-		pri.document.write(myStyle + content.innerHTML);
+		pri.document.write(body);
 		pri.document.close();
 		pri.focus();
 		pri.print();
+		$.ajax({
+			type: "POST",
+	        dataType: "json",
+	        url: "SendMail.php",
+	        data: {email_body: body}
+	    })
+	    .done(function(data) {
+	    	if (data.result === 'success') {
+	    		window.location = 'index.php';
+	    	} else {
+	    		bootbox.dialog({
+		                title: 'การส่งอีเมล์ผิดพลาด',
+		                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ อีเมล์ของท่านอาจมีปัญหา!!!</strong></div>'
+		        });//bootbox
+	    	}
+	    })
+	    .fail(function(data) {
+	    	bootbox.dialog({
+	                title: 'Fatal Error',
+	                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ !!!</strong></div>'
+	        });//bootbox
+	    });
     }
     </script>
   </body>
-</html> 
+</html>
