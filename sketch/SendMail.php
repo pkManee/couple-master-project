@@ -1,5 +1,5 @@
 <?php
-require("../header.php");
+require("header.php");
 
 include "classes/class.phpmailer.php"; // include the class name
 $mail = new PHPMailer(); // create a new object

@@ -57,10 +57,12 @@ function insertOrder(){
   
   $sql = 'insert into shirt_order ';
   $sql .= '(email, line_screen_price_1, line_screen_price_2, shirt_id_1, ';
-  $sql .= 'shirt_id_2, qty_1, qty_2, order_status, order_date, amt) ';
+  $sql .= 'shirt_id_2, qty_1, qty_2, order_status, order_date, amt, ';
+  $sql .= 'screen_width_1, screen_height_1, screen_width_2, screen_height_2, color_area_1, color_area_2) ';
   $sql .= 'values';
   $sql .= '(:email, :line_screen_price_1, :line_screen_price_2, :shirt_id_1, ';
-  $sql .= ':shirt_id_2, :qty_1, :qty_2, :order_status, curdate(), :amt); ';
+  $sql .= ':shirt_id_2, :qty_1, :qty_2, :order_status, curdate(), :amt, ';
+  $sql .= ':screen_width_1, :screen_height_1, :screen_width_2, :screen_height_2, :color_area_1, :color_area_2); ';
   $sql .= 'update member set address = :address where email = :email; ';
 
   $stmt = $dbh->prepare($sql);
@@ -75,8 +77,14 @@ function insertOrder(){
   $stmt->bindValue(':order_status', 'order');
   $stmt->bindValue(':amt', $_POST['amt']);
   $stmt->bindValue(':address', $_POST['address']);
+  $stmt->bindValue(':screen_width_1', $_POST['screen_width_1']);
+  $stmt->bindValue(':screen_height_1', $_POST['screen_height_1']);
+  $stmt->bindValue(':screen_width_2', $_POST['screen_width_2']);
+  $stmt->bindValue(':screen_height_2', $_POST['screen_height_2']);
+  $stmt->bindValue(':color_area_1', $_POST['color_area_1']);
+  $stmt->bindValue(':color_area_2', $_POST['color_area_2']);
 
-  if ($stmt->execute()){
+  if ($stmt->execute()) {
 
     $orderId = $dbh->lastInsertId();
     $target_dir = 'uploads/';
