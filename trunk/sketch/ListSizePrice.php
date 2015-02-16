@@ -77,7 +77,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <tr>
         <th>#</th>
         <th>คำอธิบาย</th>
-        <th>ขนาด (ตร.ซม.)</th>
+        <th style="text-align: right">ขนาดไม่เกิน (ตร.ซม.)</th>
         <th style="text-align: right">ราคา</th>
       </tr>
     </thead>
@@ -95,7 +95,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo "<th scope=\"row\">" .$i. "</th>";
         
         echo "<td>" .$description. "</td>";
-        echo "<td><a href=\"ManageSizePrice.php?size_price_id=" .$size_price_id. "\">" .$size_area. "</a></td>";
+        echo "<td style='text-align: right;'><a href=\"ManageSizePrice.php?size_price_id=" .$size_price_id. "\">" . number_format($size_area, 2) . "</a></td>";
         echo "<td style='text-align: right;'>" .number_format($price, 2). "</td>";        
         
         echo "</tr>";
