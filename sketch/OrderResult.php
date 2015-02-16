@@ -70,6 +70,19 @@
     
     <div class="container" >
    	<div id="print-area" class="hidden">
+   		<div >
+	    	<label>ชื่อ-นามสกุล</label>        	
+	    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
+	    </div>
+	    <div>
+	    	<label>อีเมล์</label>        	
+	    	<p style="display: inline-block; margin-left: 20px;"><?php echo $_SESSION['email']; ?></p>
+	    </div>
+	    <div>
+	    	<label>ที่อยู่</label>	    	
+	    	<p style="display: inline-table; margin-left: 20px;"><?php echo nl2br($result['address']); ?></p>
+	    </div>
+	   
 		<div style="font: normal 12px/150% Arial, Helvetica, sans-serif;background: #fff;overflow: hidden;border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px">
 	        <table style="border-collapse: collapse;text-align: left;width: 100%">
 	            <thead>
@@ -328,7 +341,7 @@
 	
 	<div class="row"></div>
 		<div class="col-xs-6">
-			<button type="button" class="btn btn-success" id="btn-print">พิมพ์รายการสั่งซื้อ</button>
+			<button type="button" class="btn btn-success" id="btn-print" data-loading-text="กำลังดำเนินการ ...">พิมพ์รายการสั่งซื้อ</button>
 		</div>
 
     </div> <!-- container -->
@@ -336,9 +349,10 @@
     <script type="text/javascript">
     var btnPrint = document.getElementById('btn-print');
     btnPrint.onclick = function() {
+    	var $btn = $(this).button('loading');
     	var content = document.getElementById('print-area');
 		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
-		var myStyle = '<html><div style="font-size: 10px; "><link rel="stylesheet" href="css/bootstrap.css" /><link rel="stylesheet" href="css/bootstrap-theme.css">';
+		var myStyle = '<html><div style="font-size: 16px; ">';
 		var body = myStyle + content.innerHTML + '</div></html>';
 		pri.document.open();
 		pri.document.write(body);
@@ -353,12 +367,14 @@
 	    })
 	    .done(function(data) {
 	    	if (data.result === 'success') {
+	    		$btn.button('reset');
 	    		window.location = 'index.php';
 	    	} else {
 	    		bootbox.dialog({
 		                title: 'การส่งอีเมล์ผิดพลาด',
 		                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ อีเมล์ของท่านอาจมีปัญหา!!!</strong></div>'
 		        });//bootbox
+		        $btn.button('reset');
 	    	}
 	    })
 	    .fail(function(data) {
@@ -366,6 +382,7 @@
 	                title: 'Fatal Error',
 	                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ !!!</strong></div>'
 	        });//bootbox
+	        $btn.button('reset');
 	    });
     }
     </script>
