@@ -458,6 +458,7 @@
 		}, 500);
 	});
 
+	var rect1, rect2;
 	function displayCalculatedArea() {
 		var area1 = document.getElementById('screen-size-1');
 		var area2 = document.getElementById('screen-size-2');
@@ -466,7 +467,7 @@
 		var scaleX_2 = document.getElementById('scale-x-2');
 		var scaleY_2 = document.getElementById('scale-y-2');
 		var rtnArray = new Array();
-		var rect1, rect2;
+		
 		if (printSize.split('|')[0] === 'A4') {
 			rect1 = {
 					width: Math.round((A4.cmWidth * scaleX_1.value), 0), 
@@ -495,6 +496,7 @@
 		return rtnArray;
 	}
 
+	var actualPixel_1, actualPixel_2
 	function calculateAreaPrice(rectArray) {
 		// var area;
 		// if (printSize.split('|')[0] === 'A4') {
@@ -503,12 +505,12 @@
 		// 	area = A3.cmWidth * A3.cmHeight;
 		// }
 		var colorPixel = calculateColorPixel(document.getElementById("img-screen-1"));
-		var actualPixel = Math.round((rectArray[0].width * rectArray[0].height) * (colorPixel / 100),  0);
-		getPrice(txtScreenPrice1, actualPixel);
+		actualPixel_1 = Math.round((rectArray[0].width * rectArray[0].height) * (colorPixel / 100),  0);
+		getPrice(txtScreenPrice1, actualPixel_1);
 
 		colorPixel = calculateColorPixel(document.getElementById("img-screen-2"));
-		actualPixel = Math.round((rectArray[1].width * rectArray[1].height) * (colorPixel / 100),  0);
-		getPrice(txtScreenPrice2, actualPixel);
+		actualPixel_2 = Math.round((rectArray[1].width * rectArray[1].height) * (colorPixel / 100),  0);
+		getPrice(txtScreenPrice2, actualPixel_2);
 	}
 
 	function calculateColorPixel(img) {		
@@ -583,11 +585,20 @@
 	        url: "data/ViewCart.data.php",
 	        data: { method: "insert", email: email.value,
 	        		address: txtAddress.value,
-	        		line_screen_1: line_screen_1.src, 
+	        		line_screen_1: line_screen_1.src,
+	        		screen_width_1: rect1.width,
+	        		screen_height_1: rect1.height,
+	        		color_area_1: actualPixel_1,
 	        		line_screen_2: line_screen_2.src, 
-	        		line_screen_price_1: parseFloat(txtScreenPrice1.innerHTML), line_screen_price_2: parseFloat(txtScreenPrice2.innerHTML), 
-	        		shirt_id_1: cboMaterial_1.value.split('|')[0], shirt_id_2: cboMaterial_2.value.split('|')[0], 
-	        		qty_1: txtQty1.value, qty_2: txtQty2.value,
+	        		screen_width_2: rect2.width,
+	        		screen_height_2: rect2.height,
+	        		color_area_2: actualPixel_2,
+	        		line_screen_price_1: parseFloat(txtScreenPrice1.innerHTML), 
+	        		line_screen_price_2: parseFloat(txtScreenPrice2.innerHTML), 
+	        		shirt_id_1: cboMaterial_1.value.split('|')[0], 
+	        		shirt_id_2: cboMaterial_2.value.split('|')[0], 
+	        		qty_1: txtQty1.value, 
+	        		qty_2: txtQty2.value,
 	        		product_image: product_image.src,
 	        		amt: total
 	        	}       
