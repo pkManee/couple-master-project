@@ -174,6 +174,7 @@
         <input id="brush-size-slider" class="form-control" type="range" min="1" max="100" value="30" 
         data-toggle="tooltip" data-placement="bottom" >              
       </div>
+      <!-- panel-filter -->
       <div id="panel-filter" style="width:100%; display:none;"> 
         <div class="form-group">     
           <div class="btn-group" style="width:100%;">            
@@ -199,7 +200,16 @@
               <label class="control-label" for="grayscale" >Grayscale</label>
           </div>
         </div>
-      </div>
+      </div> <!-- panel-filter -->
+      <!-- panel font family -->
+      <div id="panel-font-family" style="width: 100%; ">
+        <div class="form-group">
+          <select id="font-picker" class="form-control" data-live-search="true" data-size="10">
+            
+          </select>
+        </div>
+      </div> <!-- panel filter -->
+
     </div>
     <div id="panel-color" style="width: 200px;">
       <form id="member-profile-form" method="POST">
@@ -251,14 +261,15 @@
     </div>
   </div>
   
-  <script src="./js/Event.js" type="text/javascript"></script> 
-  <script src="./js/Color.Picker.Classic.js" type="text/javascript"></script>
-  <script src="./js/Color.Space.js" type="text/javascript"></script>
-  <script src="./js/fabricjs-painter.js" type="text/javascript"></script>
-  <script src="./js/resolutionCal.js" type="text/javascript"></script>
-  <script src="./js/color-thief.js" type="text/javascript"></script>
-  <script src="./js/app.js" type="text/javascript"></script>
-  <script src="./js/Design.js" type="text/javascript"></script>
+  <script src="js/Event.js" type="text/javascript"></script> 
+  <script src="js/Color.Picker.Classic.js" type="text/javascript"></script>
+  <script src="js/Color.Space.js" type="text/javascript"></script>
+  <script src="js/fabricjs-painter.js" type="text/javascript"></script>
+  <script src="js/resolutionCal.js" type="text/javascript"></script>
+  <script src="js/color-thief.js" type="text/javascript"></script>
+  <script src="js/app.js" type="text/javascript"></script>
+  <script src="js/Design.js" type="text/javascript"></script>
+  <script src="js/detect-fonts.js" type="text/javascript"></script>
   <script type="text/javascript">
     //document ready
   $(document).ready(function() {      

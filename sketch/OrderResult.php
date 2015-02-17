@@ -173,7 +173,9 @@
 	        </table>
 	    </div>
     </div>
-   		
+    
+   	<p class="form-control-static bg-success">ท่านได้ยืนยันการสั่งซื้อเรียบร้อยแล้ว ท่านสามารถพิมพ์รายการสั่งซื้อได้โดยระบบจะพิมพ์รายการสั่งซื้อ พร้อมกับส่งอีเมล์รายการสั่งซื้อไปให้กับท่านทางอีเมล์ที่ได้ลงทะเบียนเอาไว้</p>
+   	<br/>
   	<div class="panel panel-info" >			
 	    <div class="panel-heading">
 		    <h4 class="panel-title"><?php echo 'รายการสั่งซื้อ ' . '<b>#' . $_GET['order_id'] . '</b> (' . $result['order_date'] .')' ?></h4>
@@ -342,6 +344,7 @@
 	<div class="row"></div>
 		<div class="col-xs-6">
 			<button type="button" class="btn btn-success" id="btn-print" data-loading-text="กำลังดำเนินการ ...">พิมพ์รายการสั่งซื้อ</button>
+			<button type="button" class="btn btn-success" id="btn-home" onclick="window.location='index.php'" data-loading-text="กำลังดำเนินการ ...">กลับสู่หน้าแรก</button>
 		</div>
 
     </div> <!-- container -->
@@ -350,6 +353,7 @@
     var btnPrint = document.getElementById('btn-print');
     btnPrint.onclick = function() {
     	var $btn = $(this).button('loading');
+    	var $btnHome = $('#btn-home').button('loading');
     	var content = document.getElementById('print-area');
 		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
 		var myStyle = '<html><div style="font-size: 16px; ">';
@@ -368,6 +372,7 @@
 	    .done(function(data) {
 	    	if (data.result === 'success') {
 	    		$btn.button('reset');
+	    		$btnHome.button('reset');
 	    		window.location = 'index.php';
 	    	} else {
 	    		bootbox.dialog({
@@ -375,6 +380,7 @@
 		                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ อีเมล์ของท่านอาจมีปัญหา!!!</strong></div>'
 		        });//bootbox
 		        $btn.button('reset');
+		        $btnHome.button('reset');
 	    	}
 	    })
 	    .fail(function(data) {
@@ -383,6 +389,7 @@
 	                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ !!!</strong></div>'
 	        });//bootbox
 	        $btn.button('reset');
+	        $btnHome.button('reset');
 	    });
     }
     </script>
