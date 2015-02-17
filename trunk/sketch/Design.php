@@ -202,7 +202,7 @@
         </div>
       </div> <!-- panel-filter -->
       <!-- panel font family -->
-      <div id="panel-font-family" style="width: 100%; ">
+      <div id="panel-font-family" style="width: 100%; " class="hidden">
         <div class="form-group">
           <select id="font-picker" class="form-control" data-live-search="true" data-size="10">
             
