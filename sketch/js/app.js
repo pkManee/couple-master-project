@@ -21,6 +21,7 @@ var printSize = document.getElementById('print-format').value;
 var svgNS = "http://www.w3.org/2000/svg";
 var isShirtMode = false;
 var isFilterMode = false;
+var isTextMode = false;
 var filters = ['blur', 'sharpen', 'emboss', 'grayscale'];
 var colorThief = new ColorThief();
 
@@ -981,6 +982,7 @@ function init() {
         if (isMouseDownForPaint) isMouseDownForPaint = false;        
     });
 
+    var panelFont = document.getElementById('panel-font-family');
     canvas.on('object:selected', function(e) { 
         if (isFilterMode) {            
             for (var i = 0; i < filters.length; i++) {
@@ -993,8 +995,15 @@ function init() {
                 }
             }
         }
+        if (e.target.type === 'i-text') {
+            isTextMode = true;
+            panelFont.className = '';
+        } else {
+            isTextMode = false;
+            panelFont.className = 'hidden';
+        }
     });
-    canvas.on('selection:cleared', function() {
+    canvas.on('selection:cleared', function(e, data) {
         if (isFilterMode) {           
             for (var i = 0; i < filters.length; i++) {
                 document.getElementById(filters[i]).disabled = true;
