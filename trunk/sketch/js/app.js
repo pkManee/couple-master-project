@@ -264,11 +264,21 @@ function handleImage(e){
     }
 }
 
+var cboFontPicker = document.getElementById('font-picker');
+cboFontPicker.onchange = function() {
+    var obj = canvas.getActiveObject();
+    if (!obj) return;
+    if (obj.type != 'i-text') return;
+
+    obj.set({ fontFamily: this.value});    
+    canvas.renderAll();
+}
+
 //insert text
 var btnText = document.getElementById('btn-text');
 btnText.onclick = function(){
     var text = new fabric.IText('Tap and Type', { 
-                              fontFamily: 'arial',
+                              fontFamily: cboFontPicker.value,
                               left: 100, 
                               top: 100 ,
                               fill: COLOR,
