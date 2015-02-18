@@ -1024,7 +1024,6 @@ function init() {
                 case 'StarLine' :
                     painter.drawStarLine(data);
                     break;
-
                 default : 
                     return;
             }
