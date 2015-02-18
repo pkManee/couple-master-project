@@ -13,10 +13,12 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-theme.css" rel="stylesheet">
     <link href="css/bootstrap-select.css" rel="stylesheet">
+    <link href="css/image-picker.css" rel="stylesheet" type="text/css" >
+
     <!--sketch-->
   	<link rel="stylesheet" type="text/css" href="css/sketch.css">  	
     <link rel="stylesheet" type="text/css" href="css/Color.Picker.Classic.css">
-    <link rel="stylesheet" type="text/css" href="css/iconfont.css">    
+    <link rel="stylesheet" type="text/css" href="css/iconfont.css">
 
   	<script src="js/jquery-2.1.1.min.js"></script>
     <!--bootstrap-->
@@ -24,6 +26,7 @@
     <script src="js/bootbox.js"></script>
     <script src="js/bootstrap-select.js"></script>
     <script src="js/bootstrapValidator.js"></script>
+    <script src="js/image-picker.js"></script>
     <!--sketch-->
     <script src="TinyColor/tinycolor.js"></script>
     <script src="HSBRect/HSBRect.js"></script>
@@ -64,11 +67,11 @@
           <div class="btn-group">
             <button type="button" class="geo-button icon-rect dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></button>
             <ul class="dropdown-menu" role="menu" style="min-width: 0px !important;">
-              <li><a id="btn-rectangle" href="#" title="Rectangle" class="geo-button icon-rect" data-toggle="tooltip" data-placement="bottom" style="width: 70px;"></a></li>
-              <li><a id="btn-triangle" href="#" title="Triangle" class="geo-button icon-tri" data-toggle="tooltip" data-placement="bottom" style="width: 70px;"></a></li>
-              <li><a id="btn-round" href="#" title="Round" class="geo-button icon-round" data-toggle="tooltip" data-placement="bottom" style="width: 70px;"></a></li>
-              <li><a id="btn-star" href="#" title="Star" class="geo-button icon-star" data-toggle="tooltip" data-placement="bottom" style="width: 70px;"></a></li>
-              <li><a id="btn-heart" href="#" title="Heart" class="geo-button icon-heart" data-toggle="tooltip" data-placement="bottom" style="width: 70px;"></a></li>
+              <li><a id="btn-rectangle" href="#" title="Rectangle" class="geo-button icon-rect" data-toggle="tooltip" data-placement="right" style="width: 70px;"></a></li>
+              <li><a id="btn-triangle" href="#" title="Triangle" class="geo-button icon-tri" data-toggle="tooltip" data-placement="right" style="width: 70px;"></a></li>
+              <li><a id="btn-round" href="#" title="Round" class="geo-button icon-round" data-toggle="tooltip" data-placement="right" style="width: 70px;"></a></li>
+              <li><a id="btn-star" href="#" title="Star" class="geo-button icon-star" data-toggle="tooltip" data-placement="right" style="width: 70px;"></a></li>
+              <li><a id="btn-heart" href="#" title="Heart" class="geo-button icon-heart" data-toggle="tooltip" data-placement="right" style="width: 70px;"></a></li>
             </ul>
           </div>
           <div class="hidden">
@@ -78,13 +81,18 @@
             <button title="Star [hit del button to delete]" class="geo-button icon-star" data-toggle="tooltip" data-placement="bottom"></button>
             <button title="Heart [hit del button to delete]" class="geo-button icon-heart" data-toggle="tooltip" data-placement="bottom"></button>
           </div>
-
           <button id="btn-erase" title="Erase All" class="geo-button icon-erase" data-toggle="tooltip" data-placement="bottom"></button>
+          <div class="btn-group">
+            <button type="button" class="geo-button icon-drawer dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#" id="btn-love">Love</a></li>              
+            </ul>
+          </div>
           <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;">
-            <button id="btn-open" class="geo-button icon-folder"></button>
+            <button id="btn-open" class="geo-button icon-upload"></button>
             <input type="file" id="upload-button" capture="camera" name="files[]"
                     style="position: absolute; top: 0px; z-index: 1000; font-size: 1000px; text-align: right; width: inherit; height: inherit; cursor: pointer; right: 0px; opacity: 0;">
-          </span>
+          </span>          
         </div>
         <div class="upper-shelf">          
           <button id="btn-filter" title="Layer filters" class="geo-button icon-filter" data-toggle="tooltip" data-placement="bottom"></button>
@@ -94,6 +102,9 @@
           <button id="btn-snn" title="Convert to water painting" class="geo-button icon-paint" data-toggle="tooltip" data-placement="bottom"></button>
           <button id="btn-bring-to-front" title="Bring to front" class="geo-button icon-up" data-toggle="tooltip" data-placement="bottom"></button>
           <button id="btn-send-to-back" title="Send to back" class="geo-button icon-down" data-toggle="tooltip" data-placement="bottom"></button>
+        </div>
+        <div class="upper-shelf">
+          <button id="btn-download" title="Download" class="geo-button icon-download" data-toggle="tooltip" data-placement="bottom"></button>
         </div>
       </div>
     </div>

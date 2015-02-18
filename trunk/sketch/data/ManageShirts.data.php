@@ -124,7 +124,8 @@ function getShirtColor() {
 
   $sql = "select distinct s.color_hex, c.color from ";
   $sql .= "shirts s inner join shirt_color c on s.color_hex = c.color_hex ";
-  $sql .= "where s.gender = :gender and s.shirt_type = :shirt_type";
+  $sql .= "where s.gender = :gender and s.shirt_type = :shirt_type ";
+  $sql .= "order by c.color asc ";
   $stmt = $dbh->prepare($sql);
   $stmt->bindValue(":gender", $_POST["gender"]);
   $stmt->bindValue(":shirt_type", $_POST["shirt_type"]);
