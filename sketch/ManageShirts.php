@@ -340,8 +340,8 @@
         bootbox.dialog({
                     title: 'Fatal Error',
                     message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
-        });//fail
-      });//ajax
+        });//bootbox
+      });//fail
    }
 
     var rdoMale = document.getElementById('radio-male');
