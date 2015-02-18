@@ -122,6 +122,9 @@ function font_init() {
     fonts.push("THSarabunNew");
     fonts.push("THSrisakdi");
     fonts.push("THDRdeco");
+    fonts.push("THDRjoyful");
+    fonts.push("THTSklinsee");
+    fonts.push("THkcnightmare");
 
     var table = document.getElementById('table');
     for (i = 0; i < fonts.length; i++) {
@@ -142,8 +145,12 @@ function font_init() {
 
     var text = '';
     var cboFontPicker = document.getElementById('font-picker');
-    for (var i = 0; i < goodFonts.length; i++) {        
-        text += '<option value="' + goodFonts[i] + '" style="font-family: ' + goodFonts[i] + ';">' + goodFonts[i] + '</option>'; 
+    for (var i = 0; i < goodFonts.length; i++) {
+        if (goodFonts[i] === 'THTSklinsee') {
+            text += '<option value="' + goodFonts[i] + '" style="font-family: ' + goodFonts[i] + '; font-size: 30px;">' + goodFonts[i] + '</option>'; 
+        } else {
+            text += '<option value="' + goodFonts[i] + '" style="font-family: ' + goodFonts[i] + ';">' + goodFonts[i] + '</option>'; 
+        }        
     };
     $(cboFontPicker).html(text).selectpicker('refresh');
 }
