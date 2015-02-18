@@ -144,7 +144,12 @@
   height: 30px;
 }
 .icon-up:before {
-  content: "\e29f";
+  content: "\e797";
+  width: 30px;
+  height: 30px;
+}
+.icon-down:before {
+  content: "\e79b";
   width: 30px;
   height: 30px;
 }

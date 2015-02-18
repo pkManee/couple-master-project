@@ -67,6 +67,7 @@ var OPACITY = '1';
 //init fabric painter
 var painter = fabricPainter;
 var isPainterOn = false;
+var painterMode = '';
 var isMouseDownForPaint = false;
 var isMouseDown = false;
 
@@ -586,6 +587,13 @@ btnBringToFront.onclick = function() {
 
     obj.bringToFront();
 }
+var btnSendToback = document.getElementById('btn-send-to-back');
+btnSendToback.onclick = function() {
+    var obj = canvas.getActiveObject();
+    if (!obj) return;
+
+    obj.sendToBack();
+}
 
 //brush size slider
 var lineWidthSlider = document.getElementById('brush-size-slider');
@@ -621,11 +629,41 @@ btnBrush.onclick = function(){
 }
 //use fabricjs-painter
 var btnSpray = document.getElementById('btn-spray');
-btnSpray.onclick = function(data){
+btnSpray.onclick = function(data) {
+    canvas.isDrawingMode = false;
+    isFilterMode = false;    
+    toggleFilter();
+    isPainterOn = true;
+    painterMode = 'GlassStorm';
+    setColor();
+}
+var btnDiamondCross = document.getElementById('btn-diamond-cross');
+btnDiamondCross.onclick = function(data) {
     canvas.isDrawingMode = false;
     isFilterMode = false;
     toggleFilter();
     isPainterOn = true;
+    painterMode = 'DiamondCross';
+    setColor();
+}
+
+var btnDnaBrush = document.getElementById('btn-dna-brush');
+btnDnaBrush.onclick = function(data) {
+    canvas.isDrawingMode = false;
+    isFilterMode = false;
+    toggleFilter();
+    isPainterOn = true;
+    painterMode = 'DNABrush';
+    setColor();
+}
+
+var btnStarLine = document.getElementById('btn-star-line');
+btnStarLine.onclick = function() {
+    canvas.isDrawingMode = false;
+    isFilterMode = false;
+    toggleFilter();
+    isPainterOn = true;
+    painterMode = 'StarLine';
     setColor();
 }
 
@@ -972,8 +1010,24 @@ function init() {
 
     canvas.on('mouse:move', function(data){
         if (isMouseDownForPaint){
-            painter.drawGlassStorm(data); 
-            return;
+
+            switch (painterMode) {
+                case 'GlassStorm' :
+                    painter.drawGlassStorm(data);
+                    break;
+                case 'DiamondCross' :
+                    painter.drawDiamondCross(data);
+                    break;
+                 case 'DNABrush' :
+                    painter.drawDnaBrush(data);
+                    break;
+                case 'StarLine' :
+                    painter.drawStarLine(data);
+                    break;
+
+                default : 
+                    return;
+            }
         }      
     });
 

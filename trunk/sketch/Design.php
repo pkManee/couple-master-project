@@ -46,16 +46,39 @@
           <button id="btn-color-picker" title="Color PIcker" class="geo-button icon-color-picker" data-toggle="tooltip" data-placement="bottom"></button> 
           <button id="btn-pencil" title="Pencil" class="geo-button icon-pencil" data-toggle="tooltip" data-placement="bottom"></button>      
           <button id="btn-brush" title="Circle" class="geo-button icon-brush" data-toggle="tooltip" data-placement="bottom"></button>
-          <button id="btn-spray" title="Glass storm" class="geo-button icon-spray" data-toggle="tooltip" data-placement="bottom"></button>
+          
+          <div class="btn-group">
+            <button type="button" class="geo-button icon-spray dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></button>
+            <ul class="dropdown-menu" role="menu" style="min-width: 0px !important;">
+              <li><a id="btn-spray" href="#">Glass Storm</a></li>
+              <li><a id="btn-diamond-cross" href="#">Diamond Cross</a></li>              
+              <li><a id="btn-dna-brush" href="#">DNA Brush</a></li>              
+              <li><a id="btn-star-line" href="#">Star Line</a></li>              
+            </ul>
+          </div>
         </div>
-        <div class="upper-shelf">
+        <div class="btn-group upper-shelf">
           <button id="btn-selector" title="Selector" class="geo-button icon-selector" data-toggle="tooltip" data-placement="bottom"></button>
           <button id="btn-text" title="Text tool" class="geo-button icon-text" data-toggle="tooltip" data-placement="bottom"></button>
-          <button id="btn-rectangle" title="Rectangle [hit del button to delete]" class="geo-button icon-rect" data-toggle="tooltip" data-placement="bottom"></button>
-          <button id="btn-triangle" title="Triangle [hit del button to delete]" class="geo-button icon-tri" data-toggle="tooltip" data-placement="bottom"></button>
-          <button id="btn-round" title="Round [hit del button to delete]" class="geo-button icon-round" data-toggle="tooltip" data-placement="bottom"></button>
-          <button id="btn-star" title="Star [hit del button to delete]" class="geo-button icon-star" data-toggle="tooltip" data-placement="bottom"></button>
-          <button id="btn-heart" title="Heart [hit del button to delete]" class="geo-button icon-heart" data-toggle="tooltip" data-placement="bottom"></button>          
+
+          <div class="btn-group">
+            <button type="button" class="geo-button icon-rect dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></button>
+            <ul class="dropdown-menu" role="menu" style="min-width: 0px !important;">
+              <li><a id="btn-rectangle" href="#" title="Rectangle" class="geo-button icon-rect" data-toggle="tooltip" data-placement="bottom" style="width: 70px;"></a></li>
+              <li><a id="btn-triangle" href="#" title="Triangle" class="geo-button icon-tri" data-toggle="tooltip" data-placement="bottom" style="width: 70px;"></a></li>
+              <li><a id="btn-round" href="#" title="Round" class="geo-button icon-round" data-toggle="tooltip" data-placement="bottom" style="width: 70px;"></a></li>
+              <li><a id="btn-star" href="#" title="Star" class="geo-button icon-star" data-toggle="tooltip" data-placement="bottom" style="width: 70px;"></a></li>
+              <li><a id="btn-heart" href="#" title="Heart" class="geo-button icon-heart" data-toggle="tooltip" data-placement="bottom" style="width: 70px;"></a></li>
+            </ul>
+          </div>
+          <div class="hidden">
+            <button title="Rectangle [hit del button to delete]" class="geo-button icon-rect" data-toggle="tooltip" data-placement="bottom"></button>
+            <button title="Triangle [hit del button to delete]" class="geo-button icon-tri" data-toggle="tooltip" data-placement="bottom"></button>
+            <button title="Round [hit del button to delete]" class="geo-button icon-round" data-toggle="tooltip" data-placement="bottom"></button>
+            <button title="Star [hit del button to delete]" class="geo-button icon-star" data-toggle="tooltip" data-placement="bottom"></button>
+            <button title="Heart [hit del button to delete]" class="geo-button icon-heart" data-toggle="tooltip" data-placement="bottom"></button>
+          </div>
+
           <button id="btn-erase" title="Erase All" class="geo-button icon-erase" data-toggle="tooltip" data-placement="bottom"></button>
           <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;">
             <button id="btn-open" class="geo-button icon-folder"></button>
@@ -70,6 +93,7 @@
           <button id="btn-crop" title="Crop" class="geo-button icon-crop" data-toggle="tooltip" data-placement="bottom"></button>
           <button id="btn-snn" title="Convert to water painting" class="geo-button icon-paint" data-toggle="tooltip" data-placement="bottom"></button>
           <button id="btn-bring-to-front" title="Bring to front" class="geo-button icon-up" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-send-to-back" title="Send to back" class="geo-button icon-down" data-toggle="tooltip" data-placement="bottom"></button>
         </div>
       </div>
     </div>
@@ -204,8 +228,8 @@
       <!-- panel font family -->
       <div id="panel-font-family" style="width: 100%; " class="hidden">
         <div class="form-group">
-          <select id="font-picker" class="form-control" data-live-search="true" data-size="10">
-            
+          <label class="control-label" for="font-picker">ฟอนต์</label>
+          <select id="font-picker" class="form-control" data-live-search="true" data-size="10">            
           </select>
         </div>
       </div> <!-- panel filter -->

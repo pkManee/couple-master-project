@@ -335,6 +335,8 @@ fabricPainter.drawStarLine = function(data) {
 	// draw a line in a radial
 	// pattern reminiscent of a star
 	for(var i = 0; i <= 5; i++) {
-		fabricPainter.addLine(data, Math.random()*360, canvas.height/2, null, null, null);
+		fabricPainter.addLine(data, Math.random()*360, canvas.height/4, null, null, null);
+		//original it devide by 2
+		// fabricPainter.addLine(data, Math.random()*360, canvas.height/2, null, null, null);
 	}
 };
