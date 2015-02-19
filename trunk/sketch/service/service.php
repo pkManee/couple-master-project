@@ -316,6 +316,31 @@ class MyService extends  REST {
 		}		
 	}
 
+	function getClipart() {
+		if($this->get_request_method() != "POST")
+		{
+			$this->response('',406);
+		}
+
+		try {
+		  $dbh = dbConnect::getInstance()->dbh;
+		} catch (PDOException $e) {
+		  $this->response("Error!: " . $e->getMessage() . "<br/>", 500);
+		  die();
+		}
+
+		$clipartType = $this->_request['clipartType'];
+		$dir = '../img/clipart/' . $clipartType . '/';
+
+       	$files = array();
+        foreach (new DirectoryIterator($dir) as $fileInfo) {
+            if($fileInfo->isDot() || !$fileInfo->isFile()) continue;
+            $files[] = $fileInfo->getFilename();
+        }
+
+        $this->response(json_encode($files), 200);
+	}
+
 }//class 
 
 // Initiiate Library

@@ -295,6 +295,11 @@
       </form>
     </div>
   </div>
+
+  <div id="div-image-picker" class="hidden">    
+      <select id="popup-image" style="width: 100px;">      
+      </select>
+  </div>
   
   <script src="js/Event.js" type="text/javascript"></script> 
   <script src="js/Color.Picker.Classic.js" type="text/javascript"></script>
