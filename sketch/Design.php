@@ -14,6 +14,7 @@
     <link href="css/bootstrap-theme.css" rel="stylesheet">
     <link href="css/bootstrap-select.css" rel="stylesheet">
     <link href="css/image-picker.css" rel="stylesheet" type="text/css" >
+    <link href="css/bootstrap-dialog.css" rel="stylesheet" type="text/css" >
 
     <!--sketch-->
   	<link rel="stylesheet" type="text/css" href="css/sketch.css">  	
@@ -27,6 +28,7 @@
     <script src="js/bootstrap-select.js"></script>
     <script src="js/bootstrapValidator.js"></script>
     <script src="js/image-picker.js"></script>
+    <script src="js/bootstrap-dialog.js"></script>
     <!--sketch-->
     <script src="TinyColor/tinycolor.js"></script>
     <script src="HSBRect/HSBRect.js"></script>
@@ -236,6 +238,7 @@
           </div>
         </div>
       </div> <!-- panel-filter -->
+
       <!-- panel font family -->
       <div id="panel-font-family" style="width: 100%; " class="hidden">
         <div class="form-group">
@@ -243,9 +246,20 @@
           <select id="font-picker" class="form-control" data-live-search="true" data-size="10">            
           </select>
         </div>
-      </div> <!-- panel filter -->
+      </div> <!-- panel font family -->
+      <div class="hidden" id="div-image-picker">        
+        <div class="center-block" style="overflow-y: auto; max-height: 500px; cursor: pointer; padding-top: 30px; padding-left: 30px; padding-right: 30px;">
+            
+            <select id="popup-image">      
+            </select>                   
+        </div>
+        <br>
+        <div class="row">
+          <button type="button" class="btn btn-success btn-xs center-block" id="btn-close-image-picker">ปิด</button>
+        </div>
+      </div>
 
-    </div>
+    </div> <!-- draw tool -->
     <div id="panel-color" style="width: 200px;">
       <form id="member-profile-form" method="POST">
         <div class="form-group">         
@@ -259,7 +273,7 @@
         </div>       
         <div class="form-group">
           <label class="control-label" for="cbo-shirt-color-1">เสื้อด้านซ้าย</label>          
-          <select class="form-control selectpicker" id="cbo-shirt-color-1" ></select>
+          <select class="form-control selectpicker" id="cbo-shirt-color-1"></select>
         </div>
         <div class="form-group">
           <label class="control-label" for="txt-height-1">ส่วนสูงของผู้ใส่ (ซม.)</label>          
@@ -295,12 +309,6 @@
       </form>
     </div>
   </div>
-
-  <div id="div-image-picker" class="hidden">    
-      <select id="popup-image" style="width: 100px;">      
-      </select>
-  </div>
-  
   <script src="js/Event.js" type="text/javascript"></script> 
   <script src="js/Color.Picker.Classic.js" type="text/javascript"></script>
   <script src="js/Color.Space.js" type="text/javascript"></script>
@@ -310,6 +318,7 @@
   <script src="js/app.js" type="text/javascript"></script>
   <script src="js/Design.js" type="text/javascript"></script>
   <script src="js/detect-fonts.js" type="text/javascript"></script>
+
   <script type="text/javascript">
     //document ready
   $(document).ready(function() {      
