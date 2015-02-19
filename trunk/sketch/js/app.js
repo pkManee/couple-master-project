@@ -108,11 +108,12 @@ function toggleMode(){
         panelColor.style.display = 'inline-block';
         //toggle tab page
         $('.nav-tabs > .active').next('li').find('a').trigger('click');
+        PICKER.toggle(false);
         //toggle picker
-        if (PICKER) { 
-            PICKER.toggle(false);
-            isShowPicker = false;
-        }
+        // if (PICKER) { 
+        //     PICKER.toggle(false);
+        //     isShowPicker = false;
+        // }
     }else{
     //to design mode
         canvas.wrapperEl.style.zIndex = 1;
@@ -121,11 +122,12 @@ function toggleMode(){
         panelColor.style.display = 'none';
         //toggle tab page
         $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+        
         //toggle picker
-        if (PICKER) {
-            PICKER.toggle(true);
-            isShowPicker = true;
-        }
+        // if (PICKER) {
+        //     PICKER.toggle(true);
+        //     isShowPicker = true;
+        // }
     }
 }
 //============================================================================================================
@@ -298,9 +300,10 @@ btnFilter.onclick = function() {
     isFilterMode = !isFilterMode;
     toggleFilter();
 }
-function toggleFilter() {
-    var divFilters = document.getElementById('panel-filter');
-    var divLineWidth = document.getElementById('line-width');
+
+var divFilters = document.getElementById('panel-filter');
+var divLineWidth = document.getElementById('line-width');
+function toggleFilter() {   
 
     if (isFilterMode) {
         divFilters.style.display = 'inline-block';
@@ -539,8 +542,10 @@ fabric.Canvas.prototype.toDataURLWithCropping = function (format, cropping, qual
 var isShowPicker = true;
 var btnPicker = document.getElementById('btn-color-picker');
 btnPicker.onclick = function() {
-    isShowPicker = !isShowPicker
-    if (PICKER) PICKER.toggle(isShowPicker);        
+    PICKER.toggle();
+
+    // isShowPicker = !isShowPicker
+    // if (PICKER) PICKER.toggle(isShowPicker);        
 }
 
 //button convert to paint
@@ -584,15 +589,15 @@ var btnBringToFront = document.getElementById('btn-bring-to-front');
 btnBringToFront.onclick = function() {
     var obj = canvas.getActiveObject();
     if (!obj) return;
-
-    obj.bringToFront();
+    canvas.bringForward(obj);
+    //obj.bringToFront();
 }
 var btnSendToback = document.getElementById('btn-send-to-back');
 btnSendToback.onclick = function() {
     var obj = canvas.getActiveObject();
     if (!obj) return;
-
-    obj.sendToBack();
+    canvas.sendBackwards(obj);
+    //obj.sendToBack();
 }
 
 //brush size slider
@@ -618,6 +623,7 @@ btnPencil.onclick = function(){
     toggleFilter();
     canvas.freeDrawingBrush = new fabric['PencilBrush'](canvas);
     setColor();
+    divLineWidth.className = '';
 }
 var btnBrush = document.getElementById('btn-brush');
 btnBrush.onclick = function(){
@@ -626,6 +632,7 @@ btnBrush.onclick = function(){
     toggleFilter();
     canvas.freeDrawingBrush = new fabric['CircleBrush'](canvas);
     setColor();
+    divLineWidth.className = '';
 }
 //use fabricjs-painter
 var btnSpray = document.getElementById('btn-spray');
@@ -636,6 +643,7 @@ btnSpray.onclick = function(data) {
     isPainterOn = true;
     painterMode = 'GlassStorm';
     setColor();
+    divLineWidth.className = '';
 }
 var btnDiamondCross = document.getElementById('btn-diamond-cross');
 btnDiamondCross.onclick = function(data) {
@@ -645,6 +653,7 @@ btnDiamondCross.onclick = function(data) {
     isPainterOn = true;
     painterMode = 'DiamondCross';
     setColor();
+    divLineWidth.className = '';
 }
 
 var btnDnaBrush = document.getElementById('btn-dna-brush');
@@ -655,6 +664,7 @@ btnDnaBrush.onclick = function(data) {
     isPainterOn = true;
     painterMode = 'DNABrush';
     setColor();
+    divLineWidth.className = '';
 }
 
 var btnStarLine = document.getElementById('btn-star-line');
@@ -665,6 +675,7 @@ btnStarLine.onclick = function() {
     isPainterOn = true;
     painterMode = 'StarLine';
     setColor();
+    divLineWidth.className = '';
 }
 
 function setColor(){    
@@ -980,6 +991,7 @@ function splitCanvas() {
     splitLineScreen.push(canvas.toDataURLWithCropping(format, cropping2, quality));
 }
 
+var divImagePicker = document.getElementById('div-image-picker');
 var btnLove = document.getElementById('btn-love');
 btnLove.onclick = function() {
     $.ajax({
@@ -994,14 +1006,45 @@ btnLove.onclick = function() {
 
             for (var i = 0; i < data.length; i ++) {
                 var filePath = 'img/clipart/Love/' + data[i];
-                text += '<option value="' + data[i] + '" data-img-src="' + filePath + '"></option>'; 
+                text += '<option value="' + filePath + '" data-img-src="' + filePath + '"></option>'; 
             }
 
             var popUpImage = document.getElementById('popup-image');
             $(popUpImage).html(text).imagepicker();
+            
+            BootstrapDialog.show({
+                title: 'Guess who that is',
+                message: divImagePicker.innerHTML,
+                buttons: [{
+                    label: 'Acky',
+                    action: function(dialogRef){
+                        dialogRef.close();
+                    }
+                }, {
+                    label: 'Robert',
+                    action: function(dialogRef){
+                        dialogRef.close();
+                    }
+                }]
+            });
 
-            var dialog = document.getElementById('div-image-picker');
-            showImageDialog(dialog.innerHTML);
+
+            // popUpImage.onchange = function() {
+            //     var selectedObject = $(popUpImage).data('picker').selected_values();                
+               
+            //     fabric.Image.fromURL(selectedObject, function(oImg) {
+            //         oImg.scaleX = (canvas.width/2) /oImg.width;
+            //         oImg.scaleY = (canvas.width/2) /oImg.width;//(canvas.height/2) /oImg.height;
+            //         canvas.add(oImg);
+            //         canvas.renderAll();
+            //         oImg.selectable = true;
+            //     });               
+            // }
+            
+            // divImagePicker.className = '';
+            // divLineWidth.className = 'hidden';
+            // divFilters.className = 'hidden';
+
                    
         } else {
             Toast.init({
@@ -1012,31 +1055,26 @@ btnLove.onclick = function() {
 
     })//done
     .fail(function(data) { 
-        bootbox.dialog({
+        BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_DANGER,
                 title: 'Fatal Error',
-                message : '<div class="alert alert-danger" role="alert"><strong>Error in Clipart !!!</strong></div>'
-        });// boobox
+                message: '<strong>Error in Clipart !!!</strong>',
+                buttons: [{
+                    label: 'Close'
+                }]
+            });  
+
+        // bootbox.dialog({
+        //         title: 'Fatal Error',
+        //         message : '<div class="alert alert-danger" role="alert"><strong>Error in Clipart !!!</strong></div>'
+        // });// boobox
     });//fail   
 }
 
-function showImageDialog(message) {    
-    bootbox.dialog({
-        title: "This is a form in a modal.",
-        message: message,
-        class: 'col-md-12',
-        buttons: {
-            success: {
-                label: "Save",
-                className: "btn-success",
-                callback: function() {
-                    
-                }
-            }
-        }
-    }).imagepicker();
+var btnCloseImagePicker = document.getElementById('btn-close-image-picker');
+btnCloseImagePicker.onclick = function() {
+    divImagePicker.className = 'hidden';
 }
-
-
 
 //=======================================================================================================================
 //=======================================================================================================================
@@ -1052,7 +1090,7 @@ function init() {
         color: "#FF0000",
         eyedropLayer: undefined,//canvas.lowerCanvasEl,
         eyedropMouseLayer: undefined, //canvas.upperCanvasEl,
-        display: true,
+        display: false,
         callback: function(rgba, state, type, self) {
             var w3 = Color.Space(rgba, "RGBA>W3");
             // sketch.style.strokeStyle = w3;            
