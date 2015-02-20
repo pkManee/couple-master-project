@@ -992,59 +992,33 @@ function splitCanvas() {
 }
 
 var divImagePicker = document.getElementById('div-image-picker');
+var popUpImage = document.getElementById('popup-image');
 var btnLove = document.getElementById('btn-love');
 btnLove.onclick = function() {
+    loadClipArt(this.innerHTML);
+}
+var btnValentine = document.getElementById('btn-valentine');
+btnValentine.onclick = function() {
+    loadClipArt(this.innerHTML);
+}
+function loadClipArt(clipartType) {
     $.ajax({
         type: "POST",
         dataType: "json",
         url: "./service/",
-        data: {method: "getClipart", clipartType: 'Love'}       
+        data: {method: "getClipart", clipartType: clipartType}       
     })
     .done(function(data) {
         if (data) {
             var text = '';            
 
             for (var i = 0; i < data.length; i ++) {
-                var filePath = 'img/clipart/Love/' + data[i];
+                var filePath = 'img/clipart/' + clipartType + '/' + data[i];
                 text += '<option value="' + filePath + '" data-img-src="' + filePath + '"></option>'; 
             }
 
-            var popUpImage = document.getElementById('popup-image');
             $(popUpImage).html(text).imagepicker();
-            
-            BootstrapDialog.show({
-                title: 'Guess who that is',
-                message: divImagePicker.innerHTML,
-                buttons: [{
-                    label: 'Acky',
-                    action: function(dialogRef){
-                        dialogRef.close();
-                    }
-                }, {
-                    label: 'Robert',
-                    action: function(dialogRef){
-                        dialogRef.close();
-                    }
-                }]
-            });
-
-
-            // popUpImage.onchange = function() {
-            //     var selectedObject = $(popUpImage).data('picker').selected_values();                
-               
-            //     fabric.Image.fromURL(selectedObject, function(oImg) {
-            //         oImg.scaleX = (canvas.width/2) /oImg.width;
-            //         oImg.scaleY = (canvas.width/2) /oImg.width;//(canvas.height/2) /oImg.height;
-            //         canvas.add(oImg);
-            //         canvas.renderAll();
-            //         oImg.selectable = true;
-            //     });               
-            // }
-            
-            // divImagePicker.className = '';
-            // divLineWidth.className = 'hidden';
-            // divFilters.className = 'hidden';
-
+            divImagePicker.className = '';
                    
         } else {
             Toast.init({
@@ -1062,13 +1036,27 @@ btnLove.onclick = function() {
                 buttons: [{
                     label: 'Close'
                 }]
-            });  
-
-        // bootbox.dialog({
-        //         title: 'Fatal Error',
-        //         message : '<div class="alert alert-danger" role="alert"><strong>Error in Clipart !!!</strong></div>'
-        // });// boobox
+            });         
     });//fail   
+
+}
+var btnSelectImagePicker = document.getElementById('btn-select-image');
+btnSelectImagePicker.onclick = function() {
+    var selectedObject = $(popUpImage).data('picker').selected_values();  
+    var group = [];
+
+    fabric.loadSVGFromURL(selectedObject[0], function(objects, options) { 
+        var item = fabric.util.groupSVGElements(objects, options);
+        canvas.add(item);
+        item.set({
+            selectable: true,
+            scaleX: (canvas.width/2) /item.width,
+            scaleY: (canvas.width/2) /item.width
+        });
+        canvas.calcOffset();
+        canvas.renderAll();
+    });        
+   
 }
 
 var btnCloseImagePicker = document.getElementById('btn-close-image-picker');

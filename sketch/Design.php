@@ -87,7 +87,8 @@
           <div class="btn-group">
             <button type="button" class="geo-button icon-drawer dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></button>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="#" id="btn-love">Love</a></li>              
+              <li><a href="#" id="btn-love">Love</a></li>
+              <li><a href="#" id="btn-valentine">Valentine</a></li>
             </ul>
           </div>
           <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;">
@@ -247,18 +248,6 @@
           </select>
         </div>
       </div> <!-- panel font family -->
-      <div class="hidden" id="div-image-picker">        
-        <div class="center-block" style="overflow-y: auto; max-height: 500px; cursor: pointer; padding-top: 30px; padding-left: 30px; padding-right: 30px;">
-            
-            <select id="popup-image">      
-            </select>                   
-        </div>
-        <br>
-        <div class="row">
-          <button type="button" class="btn btn-success btn-xs center-block" id="btn-close-image-picker">ปิด</button>
-        </div>
-      </div>
-
     </div> <!-- draw tool -->
     <div id="panel-color" style="width: 200px;">
       <form id="member-profile-form" method="POST">
@@ -307,6 +296,19 @@
                   title="สั่งซื้อ" data-toggle="tooltip" data-placement="bottom"></button>
         </div>
       </form>
+    </div>
+  </div>
+ <div class="hidden" id="div-image-picker">        
+    <div class="center-block" style="overflow-y: auto; max-height: 500px;">
+        
+        <select id="popup-image">      
+        </select>                   
+    </div>
+    <br>
+    <div class="row"></div>
+    <div>
+        <button type="button" class="btn btn-success btn-sm" id="btn-select-image">เลือก</button>
+        <button type="button" class="btn btn-success btn-sm" id="btn-close-image-picker">ปิด</button>          
     </div>
   </div>
   <script src="js/Event.js" type="text/javascript"></script> 
