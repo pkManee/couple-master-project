@@ -109,6 +109,7 @@ function toggleMode(){
         //toggle tab page
         $('.nav-tabs > .active').next('li').find('a').trigger('click');
         PICKER.toggle(false);
+        divImagePicker.className =  'hidden';
         //toggle picker
         // if (PICKER) { 
         //     PICKER.toggle(false);
@@ -698,6 +699,15 @@ function setColor(){
 var btnClear = document.getElementById('btn-erase');
 btnClear.onclick = function(){ canvas.clear(); }
 
+//download button
+var btnDownload = document.getElementById('btn-download');
+btnDownload.onclick = function() {    
+
+    canvas.deactivateAll();
+    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); 
+
+    $('<a>').attr({href: image, download: 'download.png'})[0].click();
+}
 //============================================================================================================
 //right side panel
 //============================================================================================================
