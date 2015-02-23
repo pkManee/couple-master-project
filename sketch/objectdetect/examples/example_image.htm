@@ -27,7 +27,7 @@
 	}
 		
 	$(window).load(function() {
-		$("#face").objectdetect("all", {classifier: objectdetect.frontalface}, function(faces) {
+		$("#face").objectdetect("all", {classifier: objectdetect.upperbody}, function(faces) {
 			for (var i = 0; i < faces.length; ++i) {
 				$(this).highlight(faces[i], "red");
 			
@@ -40,6 +40,6 @@
 
 <body>
 	<h1>Detect Faces</h1>
-	<img id="face" src="img/c6.jpg">
+	<img id="face" src="img/m1.jpg">
 </body>
 </html>
