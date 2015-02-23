@@ -16375,9 +16375,9 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
      * @return {Boolean} true if all paths are of the same color (`fill`)
      */
     isSameColor: function() {
-      var firstPathFill = (this.getObjects()[0].get('fill') || '').toLowerCase();
+      var firstPathFill = (this.getObjects()[0].get('fill').toString() || '').toLowerCase();
       return this.getObjects().every(function(path) {
-        return (path.get('fill') || '').toLowerCase() === firstPathFill;
+        return (path.get('fill').toString() || '').toLowerCase() === firstPathFill;
       });
     },
 

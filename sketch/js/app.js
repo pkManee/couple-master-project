@@ -210,29 +210,45 @@ function insertGeoSVG(svg){
     var group = [];
     var uri = undefined;  
     if (svg.outerHTML){
-        uri = 'data:image/svg+xml;base64,' + window.btoa(svg.outerHTML);        
+        //uri = 'data:image/svg+xml;base64,' + window.btoa(svg.outerHTML);
+        uri = svg.outerHTML;
     }else{
         uri = svg;       
     }
 
-    fabric.loadSVGFromURL(uri,function(objects,options) {
-        var loadedObjects = new fabric.Group(group);
-        loadedObjects.set({
-                left: 10,
-                top: 10,
-                width: loadedObjects.width,
-                height: loadedObjects.height,
+    // var _loadSVG = function(svg) {
+    fabric.loadSVGFromString(uri, function(objects, options) {
+        var obj = fabric.util.groupSVGElements(objects, options);
+        canvas.add(obj).centerObject(obj).renderAll();
+        obj.set({
+                left: 0,
+                top: 0,
+                scaleX: (canvas.width/2) /obj.width,
+                scaleY: (canvas.width/2) /obj.width,
                 selectable: true
-        });      
-        
-        canvas.add(loadedObjects);
+        });  
+        obj.setCoords();
         canvas.renderAll();
-        btnSelect.onclick();
+    });
+   
+    // fabric.loadSVGFromURL(uri, function(objects,options) {
+    //     var loadedObjects = new fabric.Group(group);
+    //     loadedObjects.set({
+    //             left: 10,
+    //             top: 10,
+    //             width: loadedObjects.width,
+    //             height: loadedObjects.height,
+    //             selectable: true
+    //     });      
+        
+    //     canvas.add(loadedObjects);
+    //     canvas.renderAll();
+    //     btnSelect.onclick();
 
-        },function(item, object) {              
-                object.set('id',item.getAttribute('id'));             
-                group.push(object);
-    });    
+    //     }, function(item, object) {              
+    //             object.set('id',item.getAttribute('id'));             
+    //             group.push(object);
+    // });    
 }
 //upload file
 var imageLoader = document.getElementById('upload-button');
@@ -246,7 +262,8 @@ function handleImage(e){
             reader.onload = function (event) {
                insertGeoSVG(event.target.result);
             }
-            reader.readAsDataURL(files[i]);
+            //reader.readAsDataURL(files[i]);
+            reader.readAsText(files[i]);
             btnSelect.onclick();
             this.value = '';
            
@@ -690,8 +707,18 @@ function setColor(){
         painter.brush_globals.prop('size', theWidth);       
         fabricPainter.brush_globals.prop('color', COLOR);
     }
-    if (activeObject !== null && activeObject !== undefined) {        
-        activeObject.set('fill', COLOR);
+    if (activeObject !== null && activeObject !== undefined) {
+        if (activeObject.isSameColor && activeObject.isSameColor() || !activeObject.paths) {
+          activeObject.setFill(COLOR);
+        }
+        else if (activeObject.paths) {
+          for (var i = 0; i < activeObject.paths.length; i++) {
+            activeObject.paths[i].setFill(COLOR);
+          }
+        } else {
+            activeObject.set('fill', COLOR);
+        }
+
         canvas.renderAll();        
     }
 }
@@ -1001,6 +1028,10 @@ function splitCanvas() {
     splitLineScreen.push(canvas.toDataURLWithCropping(format, cropping2, quality));
 }
 
+//==================================================================================
+//==================================================================================
+//clipart 
+//show and select image
 var divImagePicker = document.getElementById('div-image-picker');
 var popUpImage = document.getElementById('popup-image');
 var btnLove = document.getElementById('btn-love');
