@@ -200,6 +200,8 @@
     }else{
       echo "error -> " .$stmt->errorInfo()[2];
     }
+
+    echo '<input type="hidden" id="hidden-email" value="' .$member->email. '">';
     
   ?>
   <div id="canvas-area">
@@ -378,6 +380,7 @@
           var $form = $(e.target);
           
           //go process here
+          //code in Design.js
           goSave();
       });//on success.form.bv
 
