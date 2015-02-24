@@ -25,13 +25,73 @@
 			}
 		}).appendTo("body");
 	}
-		
+
+	function displayLineScreen(rect, fileName ,who) {
+		var img = new Image();
+		img.src = 'img/' + fileName;
+		var offsetTop;
+		var chestTop =  parseInt(1.66 * rect[2]);
+		img.style.left = parseInt($(who).offset().left + rect[0]) + 'px';
+		img.style.top = parseInt($(who).offset().top + rect[1]) + chestTop + 'px';
+		img.style.position = 'absolute';
+		//157 = 260
+		//140 = 260*140/157
+		img.onload = function() {
+			var factor = rect[2] / img.width;
+			img.style.width = parseInt(img.width * factor) + 'px';
+			//img.style.height = Math.abs(img.height * 0.36) + 'px';
+		}
+		$(img).appendTo('body');
+	}
+	
+	var faceTop_1 = 0,
+		faceTop_2 = 0,
+		faceLeft_1 = 0,
+		faceLeft_2 = 0;
+
 	$(window).load(function() {
-		$("#face").objectdetect("all", {classifier: objectdetect.upperbody}, function(faces) {
-			for (var i = 0; i < faces.length; ++i) {
-				$(this).highlight(faces[i], "red");
+		$("#face").objectdetect("all", {classifier: objectdetect.frontalface}, function(faces) {
+			if (faces.length != 2) return;
 			
+			$(this).highlight(faces[0], "red");
+			$(this).highlight(faces[1], "red");
+			displayLineScreen(faces[0], '01.png', $(this));
+			displayLineScreen(faces[1], '02.png', $(this));
+
+			faceTop_1 = faces[0][1];
+			faceTop_2 =  faces[1][1];
+			faceLeft_1 = faces[0][0];
+			faceLeft_2 = faces[1][0];
+			var diff = Math.abs(faceTop_1 - faceTop_2);
+
+			if (faceLeft_1 > faceLeft_2) {
+				//1 is on the right side
+				//more top means lower face = shorter one
+				var description;
+				if (faceTop_1 > faceTop_2) {
+					//2 is taller than 1
+					description = 'taller one on the left side';
+				} else {
+					// 1 is taller than 2
+					description = 'taller one on the right side';					
+				}
+
+				console.log('top left: ' + ($(this).offset().top + faceTop_2) + ', ' + 'top right: ' + ($(this).offset().top +faceTop_1) + ' ' + description + ' difference: ' + diff);
+			} else if (faceLeft_1 < faceLeft_2) {
+				// 1 is on the left side
+
+				var description;
+				if (faceTop_1 > faceTop_2) {
+					//2 is taller than 1
+					description = 'taller one on the right side';
+				} else {
+					// 1 is taller than 2
+					description = 'taller one on the left side';					
+				}
+
+				console.log('top left: ' + ($(this).offset().top + faceTop_2) + ', ' + 'top right: ' + ($(this).offset().top +faceTop_1) + ' ' + description  + ' difference: ' + diff);
 			}
+			
 		});
 	});
 	
@@ -40,6 +100,7 @@
 
 <body>
 	<h1>Detect Faces</h1>
-	<img id="face" src="img/m1.jpg">
+	<img id="face" src="img/c9.jpg">
+
 </body>
 </html>

@@ -275,6 +275,39 @@ class MyService extends  REST {
 		}
 	}//updateMember
 
+	function updateMemberHeight() {
+		if($this->get_request_method() != "POST")
+		{
+			$this->response('',406);
+		}
+
+		try {
+		  $dbh = dbConnect::getInstance()->dbh;
+		} catch (PDOException $e) {
+		  $this->response("Error!: " . $e->getMessage() . "<br/>", 500);
+		  die();
+		}
+
+		$email = $this->_request['email'];
+		$height_1 = $this->_request['height_1'];
+		$height_2 = $this->_request['height_2'];
+
+		$sql = "update member set height_1 = :height_1, height_2 = :height_2 ";
+		$sql .= "where email = :email ";
+
+		$stmt = $dbh->prepare($sql);
+		$stmt->bindValue(":height_1", $height_1);
+		$stmt->bindValue(":height_2", $height_2);
+		$stmt->bindValue(":email", $email);
+
+		if ($stmt->execute()) {
+			$this->response(json_encode(array("result"=>"success")), 200);
+		}else{		
+			$this->response(json_encode($stmt->errorInfo()), 500);
+		}
+
+	}
+
 	function getShirtInfo() {
 		if($this->get_request_method() != "POST")
 		{

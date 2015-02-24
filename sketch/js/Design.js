@@ -707,31 +707,56 @@ function distance(a, b) {
 var cboShirtSize1 = document.getElementById('cbo-shirt-size-1');
 var cboShirtSize2 = document.getElementById('cbo-shirt-size-2');
 function goSave() {
-    
-    shirtCanvas.deactivateAll();
-    if (borderShirt1) borderShirt1.set('stroke', 'rgba(0, 0, 0, 0)');
-    if (borderShirt2) borderShirt2.set('stroke', 'rgba(0, 0, 0, 0)');   
-    var dataURL = shirtCanvas.toDataURL();
-    var screen1 = splitLineScreen[0]; //finalLineScreen[0].toDataURL();
-    var screen2 = splitLineScreen[1]; //finalLineScreen[1].toDataURL(); 
-    $.redirect("ViewCart.php",
-                {
-                    gender_1: cboGender1.value, 
-                    shirt_type_1: cboShirtType1.value,
-                    shirt_size_1: cboShirtSize1.value,
-                    shirt_color_1: cboShirtColor1.value,
-                    screen1: screen1,
-                    scaleX_1: finalLineScreen[0].scaleX,
-                    scaleY_1: finalLineScreen[0].scaleY,
-                    gender_2: cboGender2.value,
-                    shirt_type_2: cboShirtType2.value,
-                    shirt_size_2: cboShirtSize2.value,
-                    shirt_color_2: cboShirtColor2.value,
-                    screen2: screen2,
-                    scaleX_2: finalLineScreen[1].scaleX,
-                    scaleY_2: finalLineScreen[1].scaleY,
-                    product: dataURL
-                });
+    //update member profile first
+    var height_1 = document.getElementById('txt-height-1');
+    var height_2 = document.getElementById('txt-height-2');
+    var email = document.getElementById('hidden-email');
+
+    $.ajax({
+        type: 'POST',
+        url: './service/', 
+        data: { method: 'updateMemberHeight', height_1: height_1.value, height_2: height_2.value, email: email.value }
+    })
+    .done(function(data){
+      if (data.result === "success") {
+             //capture image and redirect
+            shirtCanvas.deactivateAll();
+            if (borderShirt1) borderShirt1.set('stroke', 'rgba(0, 0, 0, 0)');
+            if (borderShirt2) borderShirt2.set('stroke', 'rgba(0, 0, 0, 0)');   
+            var dataURL = shirtCanvas.toDataURL();
+            var screen1 = splitLineScreen[0]; //finalLineScreen[0].toDataURL();
+            var screen2 = splitLineScreen[1]; //finalLineScreen[1].toDataURL(); 
+            $.redirect("ViewCart.php",
+                        {
+                            gender_1: cboGender1.value, 
+                            shirt_type_1: cboShirtType1.value,
+                            shirt_size_1: cboShirtSize1.value,
+                            shirt_color_1: cboShirtColor1.value,
+                            screen1: screen1,
+                            scaleX_1: finalLineScreen[0].scaleX,
+                            scaleY_1: finalLineScreen[0].scaleY,
+                            gender_2: cboGender2.value,
+                            shirt_type_2: cboShirtType2.value,
+                            shirt_size_2: cboShirtSize2.value,
+                            shirt_color_2: cboShirtColor2.value,
+                            screen2: screen2,
+                            scaleX_2: finalLineScreen[1].scaleX,
+                            scaleY_2: finalLineScreen[1].scaleY,
+                            product: dataURL
+                        });
+      } else {
+        bootbox.dialog({
+                title: 'Update Member Error',
+                message : '<div class="alert alert-danger" role="alert"><strong>Update member error !!!</strong></div>'
+        });
+      }
+    })//done
+    .fail(function() {
+        bootbox.dialog({
+                title: 'Fatal Error',
+                message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
+        });
+    });//fail
 }
 
 var Toast = (function() {

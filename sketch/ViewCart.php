@@ -45,6 +45,10 @@
 		  die();
 		}
 
+		if (!isset($_POST['shirt_color_1']) || empty($_POST['shirt_color_1'])) {
+			die();
+		}
+
 		if (!isset($GLOBALS['print_format']) || empty($GLOBALS['print_format'])) {
 			$sql = "select * from printer ";
 			$stmt = $dbh->prepare($sql);
@@ -321,6 +325,7 @@
 		      </div>
 		    </div>
 		  </div>
+		  <!-- panel example -->
 		  <div class="panel panel-info">
 		    <div class="panel-heading" role="tab" id="headingThree">
 		      <h4 class="panel-title">
@@ -335,6 +340,23 @@
 		      </div>
 		    </div>
 		  </div>
+		  <!-- panel example -->
+		  <!-- panel fitting room -->
+		  <div class="panel panel-info">
+		    <div class="panel-heading" role="tab" id="headingFour">
+		      <h4 class="panel-title">
+		        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+		          ภาพจำลองลายสกรีนขณะลองสวมใส่
+		        </a>
+		      </h4>
+		    </div>
+		    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+		      <div class="panel-body">
+		        <img src="<?php echo $member->photo; ?>" class="img-rounded center-block" style="height: 600px;">
+		      </div>
+		    </div>
+		  </div>
+		  <!-- panel fitting room -->
 		</div>
     </div>
    
@@ -604,25 +626,12 @@
 	        	}       
 	    })
 	    .done(function(data) {
-	        if (data.order_id) {
-	         //    Toast.init({
-		        //     "selector": ".alert-success"
-		        // });
-		        // Toast.show("<strong>Save completed!!!</strong><br/>redirecting ...");
+	        if (data.order_id) {	       
 
 		        setTimeout(function(){ 
 		        	$btn.button('reset');
 		        	setTimeout(function() {
-		        		window.location = 'OrderResult.php?order_id=' + data.order_id;
-
-		    //     		var content = document.getElementById("print-area");
-						// var pri = document.getElementById("ifmcontentstoprint").contentWindow;
-						// var myStyle = '<link rel="stylesheet" href="css/bootstrap.css" /><link rel="stylesheet" href="css/bootstrap-theme.css">';
-						// pri.document.open();
-						// pri.document.write(myStyle + content.innerHTML);
-						// pri.document.close();
-						// pri.focus();
-						// pri.print();
+		        		window.location = 'OrderResult.php?order_id=' + data.order_id;		   
 		        	}, 300);
 		        }, 2000);
 		        
