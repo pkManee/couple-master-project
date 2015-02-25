@@ -14,10 +14,16 @@
     <link rel="stylesheet" href="css/bootstrap-select.css">
     <link rel="stylesheet" href="css/jquery.bootstrap-touchspin.css">
 
-    <script src="js/jquery-2.1.1.min.js"></script>
+    <!-- object detect -->
+    <script src="js/objectdetect.js"></script>
+	<script src="js/objectdetect.frontalface.js"></script>
+	
+	<script src="js/jquery-2.1.1.min.js"></script>	
     <script src="js/bootstrap.js"></script>
     <script src="js/bootbox.js"></script>
     <script src="js/bootstrapValidator.js"></script>
+    <!-- object detect -->
+	<script src="js/jquery.objectdetect.js"></script>
   </head>
   <body>  
     <div class="alert alert-success" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
@@ -83,7 +89,7 @@
 		echo '<input type="hidden" id="gender_1" value="' .$gender_1. '">';
 		echo '<input type="hidden" id="scale-x-1" value="' .$_POST['scaleX_1']. '">';
 		echo '<input type="hidden" id="scale-y-1" value="' .$_POST['scaleY_1']. '">';
-
+		echo '<input type="hidden" id="top-1" value="' .$_POST['top_1']. '">';
 
 		$color_2 = $_POST['shirt_color_2'];
 		echo '<input type="hidden" id="color_2" value="' .$color_2. '">';
@@ -95,9 +101,12 @@
 		echo '<input type="hidden" id="gender_2" value="' .$gender_2. '">';
 		echo '<input type="hidden" id="scale-x-2" value="' .$_POST['scaleX_2']. '">';
 		echo '<input type="hidden" id="scale-y-2" value="' .$_POST['scaleY_2']. '">';
+		echo '<input type="hidden" id="top-2" value="' .$_POST['top_2']. '">';
 
 		echo '<input type="hidden" id="print-format" value="' .$print_format. '">';
 		echo '<input type="hidden" id="member-email" value="' .$_SESSION['email']. '">';
+		echo '<input type="hidden" id="height_1" value="' .$member->height_1. '">';
+		echo '<input type="hidden" id="height_2" value="' .$member->height_2. '">';
 
 	}
  	
@@ -346,13 +355,13 @@
 		    <div class="panel-heading" role="tab" id="headingFour">
 		      <h4 class="panel-title">
 		        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-		          ภาพจำลองลายสกรีนขณะลองสวมใส่
+		          จำลองกับภาพถ่าย
 		        </a>
 		      </h4>
 		    </div>
 		    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-		      <div class="panel-body">
-		        <img src="<?php echo $member->photo; ?>" class="img-rounded center-block" style="height: 600px;">
+		      <div class="panel-body" id="try-it">
+		        <img id="xxx" src="<?php echo $member->photo; ?>" >
 		      </div>
 		    </div>
 		  </div>
@@ -364,6 +373,12 @@
     <script type="text/javascript" src="js/jquery.bootstrap-touchspin.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript">
+    var scaleX_1 = document.getElementById('scale-x-1');
+	var scaleY_1 = document.getElementById('scale-y-1');
+	var scaleX_2 = document.getElementById('scale-x-2');
+	var scaleY_2 = document.getElementById('scale-y-2');
+	var top_1 = document.getElementById('top-1').value;
+	var top_2 = document.getElementById('top-2').value;
 
     var A3 = {
             	cmWidth: 29.7, 
@@ -469,25 +484,146 @@
 		getMaterialType($('#color_1').val(), $('#shirt_type_1').val(), $('#gender_1').val(), cboMaterial_1, txtPrice1);
 		getMaterialType($('#color_2').val(), $('#shirt_type_2').val(), $('#gender_2').val(), cboMaterial_2, txtPrice2);
 
-
 		var rectArray = displayCalculatedArea();
-
 		setTimeout(function() {
 			calculateAreaPrice(rectArray);
 			setTimeout(function() { 
 				calTotal();
 			}, 500);
 		}, 500);
+		
+	}); //document ready function
+
+	///begin of "try it"
+	$.fn.highlight = function(rect, color) {
+		$("<div />", {
+			"css": {
+				"border":   "2px solid " + color,
+				"position":	"absolute",
+				"left":		($(this).offset().left + rect[0]) + "px",
+				"top":		($(this).offset().top  + rect[1]) + "px",
+				"width": 	rect[2] + "px",
+				"height": 	rect[3] + "px"
+			}
+		}).appendTo("#try-it");
+	}
+
+	function displayLineScreen(rect, fileName ,who, top, scaleX, scaleY) {
+
+		var img = new Image();
+		img.src = fileName;
+		var offsetTop;
+		var chestTop =  parseInt(1.66 * rect[3]);
+		img.style.left = parseInt($(who).offset().left + rect[0]) + 'px';
+		img.style.top = parseInt($(who).offset().top + rect[1]) + chestTop + 'px';
+		img.style.position = 'absolute';
+		//157 = 260
+		//140 = 260*140/157
+		img.onload = function() {
+			var factor = rect[2] / img.width;
+			img.style.width = parseInt(img.width * factor) + 'px';
+			//img.style.height = Math.abs(img.height * 0.36) + 'px';
+		}
+		$(img).appendTo('#try-it');
+	}
+
+	$('#collapseFour').on('shown.bs.collapse', function () {
+  		$("#xxx").objectdetect("all", {classifier: objectdetect.frontalface}, function(faces) {
+			if (faces.length != 2) return;
+
+			var faceTop_1 = 0,
+				faceTop_2 = 0,
+				faceLeft_1 = 0,
+				faceLeft_2 = 0;
+			
+			$(this).highlight(faces[0], "red");
+			$(this).highlight(faces[1], "red");
+			// displayLineScreen(faces[0], line_screen_1.src, $(this));
+			// displayLineScreen(faces[1], line_screen_2.src, $(this));
+
+			var height_1 = parseFloat(document.getElementById('height_1').value);
+			var height_2 = parseFloat(document.getElementById('height_2').value);
+
+			var topToCal_1 = top_1 - 150;
+
+			//taller on the left
+			if (height_1 > height_2) {
+				
+				var faceTall, faceShort;
+				if (faces[0][1] > faces[1][1]) { //top_0 > top_1 taller is 1					
+					faceTall = faces[1];
+					faceShort = faces[0];
+				} else {					
+					faceTall = faces[0];
+					faceShort = faces[1];
+				}
+
+				displayLineScreen(faceTall, line_screen_1.src, $(this), topToCal_1, scaleX_1.value, scaleY_1.value);
+				displayLineScreen(faceShort, line_screen_2.src, $(this), topToCal_1, scaleX_2.value, scaleY_2.value);
+
+			} else if (height_1 < height_2) { //taller on the right
+				
+				var faceTall, faceShort;
+				if (faces[0][1] > faces[1][1]) { //top_0 > top_1 taller is 1					
+					faceTall = faces[1];
+					faceShort = faces[0];
+				} else {					
+					faceTall = faces[0];
+					faceShort = faces[1];
+				}
+
+				displayLineScreen(faceTall, line_screen_2.src, $(this));
+				displayLineScreen(faceShort, line_screen_1.src, $(this));
+
+			} else if (height_1 === height_2) { //same height
+
+			}
+
+			// faceTop_1 = faces[0][1];
+			// faceTop_2 =  faces[1][1];
+			// faceLeft_1 = faces[0][0];
+			// faceLeft_2 = faces[1][0];
+			// var diff = Math.abs(faceTop_1 - faceTop_2);
+
+			// if (faceLeft_1 > faceLeft_2) {
+			// 	//1 is on the right side
+			// 	//more top means lower face = shorter one
+			// 	var description;
+			// 	var screenToShow;
+			// 	if (faceTop_1 > faceTop_2) {
+			// 		//2 is taller than 1
+			// 		description = 'taller one on the left side';
+			// 		screenToShow = line_screen_1.src;
+			// 	} else {
+			// 		// 1 is taller than 2
+			// 		description = 'taller one on the right side';
+			// 		screenToShow = line_screen_2.src;
+			// 	}
+
+			// 	displayLineScreen
+			// 	console.log('top left: ' + ($(this).offset().top + faceTop_2) + ', ' + 'top right: ' + ($(this).offset().top +faceTop_1) + ' ' + description + ' difference: ' + diff);
+			// } else if (faceLeft_1 < faceLeft_2) {
+			// 	// 1 is on the left side
+
+			// 	var description;
+			// 	if (faceTop_1 > faceTop_2) {
+			// 		//2 is taller than 1
+			// 		description = 'taller one on the right side';
+			// 	} else {
+			// 		// 1 is taller than 2
+			// 		description = 'taller one on the left side';					
+			// 	}
+
+			// 	console.log('top left: ' + ($(this).offset().top + faceTop_2) + ', ' + 'top right: ' + ($(this).offset().top +faceTop_1) + ' ' + description  + ' difference: ' + diff);
+			// }			
+		});
 	});
+	//end of "try it"
 
 	var rect1, rect2;
 	function displayCalculatedArea() {
 		var area1 = document.getElementById('screen-size-1');
-		var area2 = document.getElementById('screen-size-2');
-		var scaleX_1 = document.getElementById('scale-x-1');
-		var scaleY_1 = document.getElementById('scale-y-1');
-		var scaleX_2 = document.getElementById('scale-x-2');
-		var scaleY_2 = document.getElementById('scale-y-2');
+		var area2 = document.getElementById('screen-size-2');		
 		var rtnArray = new Array();
 		
 		if (printSize.split('|')[0] === 'A4') {
