@@ -5,11 +5,9 @@
 	<title>Image Example</title>
 
 	<script src="../js/objectdetect.js"></script>
-	<script src="../js/objectdetect.frontalface.js"></script>
-	<script src="../js/objectdetect.eye.js"></script>
-	<script src="../js/objectdetect.upperbody.js"></script>
+	<script src="../js/objectdetect.frontalface.js"></script>	
 	
-	<script src="js/jquery.js"></script>
+	<script src="../../js/jquery-2.1.1.min.js"></script>
 	<script src="../js/jquery.objectdetect.js"></script>
 	
 	<script>
@@ -50,7 +48,7 @@
 		faceLeft_2 = 0;
 
 	$(window).load(function() {
-		$("#face").objectdetect("all", {classifier: objectdetect.frontalface}, function(faces) {
+		$("#xxx").objectdetect("all", {classifier: objectdetect.frontalface}, function(faces) {
 			if (faces.length != 2) return;
 			
 			$(this).highlight(faces[0], "red");
@@ -100,7 +98,7 @@
 
 <body>
 	<h1>Detect Faces</h1>
-	<img id="face" src="img/c9.jpg">
+	<img id="xxx" src="../../uploads/pk.manee@gmail.com.JPG" style="width: 600px;">
 
 </body>
 </html>
