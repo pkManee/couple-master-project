@@ -361,7 +361,7 @@
 		    </div>
 		    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
 		      <div class="panel-body" id="try-it">
-		        <img id="xxx" src="<?php echo $member->photo; ?>" >
+		        <img id="try-it-photo" src="<?php echo $member->photo; ?>" >
 		      </div>
 		    </div>
 		  </div>
@@ -507,28 +507,40 @@
 			}
 		}).appendTo("#try-it");
 	}
-
-	function displayLineScreen(rect, fileName ,who, top, scaleX, scaleY) {
+	
+	function displayLineScreen(rect, fileName ,who, top, scaleX, scaleY, name) {
+		//ratio of image/canvas
+		var picRatio = document.getElementById('try-it-photo').width / 850;
 
 		var img = new Image();
 		img.src = fileName;
 		var offsetTop;
-		var chestTop =  parseInt(1.66 * rect[3]);
+		var chestTop =  parseInt(1.66 * rect[3] + (top * picRatio));
 		img.style.left = parseInt($(who).offset().left + rect[0]) + 'px';
-		img.style.top = parseInt($(who).offset().top + rect[1]) + chestTop + 'px';
+
+		var screenTop = parseInt($(who).offset().top + rect[1] + rect[2] + (rect[2] * .75));
+		var faceTop = parseInt($(who).offset().top  + rect[1]);
+		var x = screenTop - faceTop;
+		
+		img.style.top = (faceTop + x) + 'px';
 		img.style.position = 'absolute';
+		img.id = name;
+
 		//157 = 260
 		//140 = 260*140/157
 		img.onload = function() {
 			var factor = rect[2] / img.width;
-			img.style.width = parseInt(img.width * factor) + 'px';
+			img.style.width = parseInt(img.width * factor * scaleX) + 'px';
 			//img.style.height = Math.abs(img.height * 0.36) + 'px';
 		}
 		$(img).appendTo('#try-it');
 	}
 
+	var alreadyTryIt = false;
 	$('#collapseFour').on('shown.bs.collapse', function () {
-  		$("#xxx").objectdetect("all", {classifier: objectdetect.frontalface}, function(faces) {
+		if (alreadyTryIt) return;
+
+  		$("#try-it-photo").objectdetect("all", {classifier: objectdetect.frontalface}, function(faces) {
 			if (faces.length != 2) return;
 
 			var faceTop_1 = 0,
@@ -537,18 +549,18 @@
 				faceLeft_2 = 0;
 			
 			$(this).highlight(faces[0], "red");
-			$(this).highlight(faces[1], "red");
-			// displayLineScreen(faces[0], line_screen_1.src, $(this));
-			// displayLineScreen(faces[1], line_screen_2.src, $(this));
+			$(this).highlight(faces[1], "red");			
 
 			var height_1 = parseFloat(document.getElementById('height_1').value);
-			var height_2 = parseFloat(document.getElementById('height_2').value);
+			var height_2 = parseFloat(document.getElementById('height_2').value);			
 
-			var topToCal_1 = top_1 - 150;
-
+			var personLeft, 
+				personRight;
 			//taller on the left
+			//in design page
 			if (height_1 > height_2) {
 				
+				//find who is the taller in photo
 				var faceTall, faceShort;
 				if (faces[0][1] > faces[1][1]) { //top_0 > top_1 taller is 1					
 					faceTall = faces[1];
@@ -557,9 +569,11 @@
 					faceTall = faces[0];
 					faceShort = faces[1];
 				}
+				personLeft = {face: faceTall, line_screen: line_screen_1, line_screen_top: top_1, scaleX: scaleX_1.value, scaleY: scaleY_1.value, id: 'img-01'};
+				personRight = {face: faceShort, line_screen: line_screen_2, line_screen_top: top_2, scaleX: scaleX_2.value, scaleY: scaleY_2.value, id: 'img-02'};
 
-				displayLineScreen(faceTall, line_screen_1.src, $(this), topToCal_1, scaleX_1.value, scaleY_1.value);
-				displayLineScreen(faceShort, line_screen_2.src, $(this), topToCal_1, scaleX_2.value, scaleY_2.value);
+				displayLineScreen(faceTall, line_screen_1.src, $(this), top_1, scaleX_1.value, scaleY_1.value, 'img-01');
+				displayLineScreen(faceShort, line_screen_2.src, $(this), top_2, scaleX_2.value, scaleY_2.value, 'img-02');
 
 			} else if (height_1 < height_2) { //taller on the right
 				
@@ -577,48 +591,14 @@
 
 			} else if (height_1 === height_2) { //same height
 
-			}
-
-			// faceTop_1 = faces[0][1];
-			// faceTop_2 =  faces[1][1];
-			// faceLeft_1 = faces[0][0];
-			// faceLeft_2 = faces[1][0];
-			// var diff = Math.abs(faceTop_1 - faceTop_2);
-
-			// if (faceLeft_1 > faceLeft_2) {
-			// 	//1 is on the right side
-			// 	//more top means lower face = shorter one
-			// 	var description;
-			// 	var screenToShow;
-			// 	if (faceTop_1 > faceTop_2) {
-			// 		//2 is taller than 1
-			// 		description = 'taller one on the left side';
-			// 		screenToShow = line_screen_1.src;
-			// 	} else {
-			// 		// 1 is taller than 2
-			// 		description = 'taller one on the right side';
-			// 		screenToShow = line_screen_2.src;
-			// 	}
-
-			// 	displayLineScreen
-			// 	console.log('top left: ' + ($(this).offset().top + faceTop_2) + ', ' + 'top right: ' + ($(this).offset().top +faceTop_1) + ' ' + description + ' difference: ' + diff);
-			// } else if (faceLeft_1 < faceLeft_2) {
-			// 	// 1 is on the left side
-
-			// 	var description;
-			// 	if (faceTop_1 > faceTop_2) {
-			// 		//2 is taller than 1
-			// 		description = 'taller one on the right side';
-			// 	} else {
-			// 		// 1 is taller than 2
-			// 		description = 'taller one on the left side';					
-			// 	}
-
-			// 	console.log('top left: ' + ($(this).offset().top + faceTop_2) + ', ' + 'top right: ' + ($(this).offset().top +faceTop_1) + ' ' + description  + ' difference: ' + diff);
-			// }			
+			}					
 		});
 	});
 	//end of "try it"
+
+	function checkPosition() {
+
+	}
 
 	var rect1, rect2;
 	function displayCalculatedArea() {
