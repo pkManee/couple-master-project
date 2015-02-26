@@ -46,7 +46,7 @@ if (!isset($_SESSION['email'])){
         <a href="design.php">
           <img class="center-block" src="img/carousel/c3.jpg" alt="">
           <div class="carousel-caption">
-            <h3>คลิ๊กเพื่อใช้เครื่องมือสร้างลายสกรีน</h3>
+            <h3>คลิกเพื่อใช้เครื่องมือสร้างลายสกรีน</h3>
           </div>
         </a>
       </div>
@@ -54,7 +54,7 @@ if (!isset($_SESSION['email'])){
         <a href="design.php">
           <img class="center-block" src="img/carousel/c2.jpg" alt="">
           <div class="carousel-caption">
-            <h3>คลิ๊กเพื่อใช้เครื่องมือสร้างลายสกรีน</h3>
+            <h3>คลิกเพื่อใช้เครื่องมือสร้างลายสกรีน</h3>
           </div>
         </a>
       </div>
@@ -62,7 +62,7 @@ if (!isset($_SESSION['email'])){
         <a href="design.php">
           <img class="center-block" src="img/carousel/c4.jpg" alt="">
           <div class="carousel-caption">
-            <h3>คลิ๊กเพื่อใช้เครื่องมือสร้างลายสกรีน</h3>
+            <h3>คลิกเพื่อใช้เครื่องมือสร้างลายสกรีน</h3>
           </div>
         </a>
       </div>      
