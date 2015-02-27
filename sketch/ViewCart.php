@@ -90,6 +90,7 @@
 		echo '<input type="hidden" id="scale-x-1" value="' .$_POST['scaleX_1']. '">';
 		echo '<input type="hidden" id="scale-y-1" value="' .$_POST['scaleY_1']. '">';
 		echo '<input type="hidden" id="top-1" value="' .$_POST['top_1']. '">';
+		echo '<input type="hidden" id="gap-left-1" value="' .$_POST['gapLeft_1']. '">';
 
 		$color_2 = $_POST['shirt_color_2'];
 		echo '<input type="hidden" id="color_2" value="' .$color_2. '">';
@@ -102,6 +103,7 @@
 		echo '<input type="hidden" id="scale-x-2" value="' .$_POST['scaleX_2']. '">';
 		echo '<input type="hidden" id="scale-y-2" value="' .$_POST['scaleY_2']. '">';
 		echo '<input type="hidden" id="top-2" value="' .$_POST['top_2']. '">';
+		echo '<input type="hidden" id="gap-left-2" value="' .$_POST['gapLeft_2']. '">';
 
 		echo '<input type="hidden" id="print-format" value="' .$print_format. '">';
 		echo '<input type="hidden" id="member-email" value="' .$_SESSION['email']. '">';
@@ -318,13 +320,13 @@
 		      <div class="panel-body">
 		      	<div style="text-align: center; !important">
 		      		<div style="display: inline-block;">
-				  		<img src="<?php echo $_POST['screen1']; ?>" id="img-screen-1">
+				  		<img src="<?php echo $_POST['screen1']; ?>" id="img-screen-1" class="img-thumbnail">
 				  		<div style="text-align: left;">
 				  			<p id="screen-size-1">size 1</p>
 				  		</div>
 				  	</div>
 				  	<div style="display: inline-block;">
-			   			<img src="<?php echo $_POST['screen2']; ?>" id="img-screen-2">
+			   			<img src="<?php echo $_POST['screen2']; ?>" id="img-screen-2" class="img-thumbnail">
 			   			<div style="text-align: left;">
 				  			<p id="screen-size-2">size 2</p>
 				  		</div>
@@ -345,7 +347,7 @@
 		    </div>
 		    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 		      <div class="panel-body">
-		        <img id="product-image" src="<?php echo $_POST['product']; ?>" class="img-rounded center-block" style="width: 595px; height: 420px;">
+		        <img id="product-image" src="<?php echo $_POST['product']; ?>" class="img-thumbnail center-block" style="width: 595px; height: 420px;">
 		      </div>
 		    </div>
 		  </div>
@@ -508,29 +510,29 @@
 		}).appendTo("#try-it");
 	}
 	
-	function displayLineScreen(rect, fileName ,who, top, scaleX, scaleY, name) {
+	function displayLineScreen(person, who) {
 		//ratio of image/canvas
 		var picRatio = document.getElementById('try-it-photo').width / 850;
+		var rect = person.face;
 
 		var img = new Image();
-		img.src = fileName;
+		img.src = person.line_screen.src;
 		var offsetTop;
-		var chestTop =  parseInt(1.66 * rect[3] + (top * picRatio));
-		img.style.left = parseInt($(who).offset().left + rect[0]) + 'px';
+		//var chestTop =  parseInt(1.66 * rect[3] + (person.line_screen_top * picRatio));
+		img.style.left = parseInt($(who).offset().left + rect[0] + ((person.gapLeft - 30) * picRatio)) + 'px';
 
-		var screenTop = parseInt($(who).offset().top + rect[1] + rect[2] + (rect[2] * .75));
-		var faceTop = parseInt($(who).offset().top  + rect[1]);
-		var x = screenTop - faceTop;
+		var screenTop = parseInt($(who).offset().top + rect[3] + rect[3] + rect[3]);
+		var gap = person.line_screen_top * picRatio;
 		
-		img.style.top = (faceTop + x) + 'px';
+		img.style.top = (screenTop + gap) + 'px';
 		img.style.position = 'absolute';
-		img.id = name;
+		img.id = person.id;
 
 		//157 = 260
 		//140 = 260*140/157
 		img.onload = function() {
 			var factor = rect[2] / img.width;
-			img.style.width = parseInt(img.width * factor * scaleX) + 'px';
+			img.style.width = parseInt(img.width * factor * person.scaleX) + 'px';
 			//img.style.height = Math.abs(img.height * 0.36) + 'px';
 		}
 		$(img).appendTo('#try-it');
@@ -552,52 +554,53 @@
 			$(this).highlight(faces[1], "red");			
 
 			var height_1 = parseFloat(document.getElementById('height_1').value);
-			var height_2 = parseFloat(document.getElementById('height_2').value);			
+			var height_2 = parseFloat(document.getElementById('height_2').value);
+			var gapLeft_1 = document.getElementById('gap-left-1').value;
+			var gapLeft_2 = document.getElementById('gap-left-2').value;
 
 			var personLeft, 
-				personRight;
-			//taller on the left
-			//in design page
-			if (height_1 > height_2) {
-				
-				//find who is the taller in photo
-				var faceTall, faceShort;
-				if (faces[0][1] > faces[1][1]) { //top_0 > top_1 taller is 1					
-					faceTall = faces[1];
-					faceShort = faces[0];
-				} else {					
-					faceTall = faces[0];
-					faceShort = faces[1];
-				}
-				personLeft = {face: faceTall, line_screen: line_screen_1, line_screen_top: top_1, scaleX: scaleX_1.value, scaleY: scaleY_1.value, id: 'img-01'};
-				personRight = {face: faceShort, line_screen: line_screen_2, line_screen_top: top_2, scaleX: scaleX_2.value, scaleY: scaleY_2.value, id: 'img-02'};
+				personRight,
+				faceLeft,
+				faceRight;
+			if (faces[0][0] < faces[1][0]) {
+				//faces[0] is on the left side
+				faceLeft = faces[0];
+				faceRight = faces[1];
+			} else {
+				faceLeft = faces[1];
+				faceRight = faces[0];
+			}
 
-				displayLineScreen(faceTall, line_screen_1.src, $(this), top_1, scaleX_1.value, scaleY_1.value, 'img-01');
-				displayLineScreen(faceShort, line_screen_2.src, $(this), top_2, scaleX_2.value, scaleY_2.value, 'img-02');
+			personLeft = {face: faceLeft, line_screen: line_screen_1, line_screen_top: top_1, scaleX: scaleX_1.value, scaleY: scaleY_1.value, id: 'img-01', gapLeft: gapLeft_1};
+			personRight = {face: faceRight, line_screen: line_screen_2, line_screen_top: top_2, scaleX: scaleX_2.value, scaleY: scaleY_2.value, id: 'img-02', gapLeft: gapLeft_2};
+			displayLineScreen(personLeft, $(this));
+			displayLineScreen(personRight, $(this));
 
-			} else if (height_1 < height_2) { //taller on the right
-				
-				var faceTall, faceShort;
-				if (faces[0][1] > faces[1][1]) { //top_0 > top_1 taller is 1					
-					faceTall = faces[1];
-					faceShort = faces[0];
-				} else {					
-					faceTall = faces[0];
-					faceShort = faces[1];
-				}
-
-				displayLineScreen(faceTall, line_screen_2.src, $(this));
-				displayLineScreen(faceShort, line_screen_1.src, $(this));
-
-			} else if (height_1 === height_2) { //same height
-
-			}					
-		});
+			checkPosition(personLeft, personRight);
+			alreadyTryIt = true;
+			
+		}); //objectdetect
 	});
 	//end of "try it"
 
-	function checkPosition() {
+	function checkPosition(personLeft, personRight) {
+		if (personLeft.line_screen_top === personRight.line_screen_top) {
+			//set all to same top
+			//find max top 
+			//in other words the lower one
+			var maxTop = 0;
+			if (personLeft.face[1] < personRight.face[1]) {
+				//left.top < right.top
+				//lower on the right
+				maxTop = document.getElementById(personRight.id).style.top;
+			} else {
+				maxTop = document.getElementById(personLeft.id).style.top;
+			}
 
+			$('#' + personLeft.id).css({'top': maxTop})
+			$('#' + personRight.id).css({'top': maxTop});	
+		}
+			
 	}
 
 	var rect1, rect2;

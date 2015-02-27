@@ -735,7 +735,8 @@ function goSave() {
                             screen1: screen1,
                             scaleX_1: finalLineScreen[0].scaleX,
                             scaleY_1: finalLineScreen[0].scaleY,
-                            top_1: side_cal_1.top,
+                            top_1: finalLineScreen[0].top,
+                            gapLeft_1: finalLineScreen[0].left - borderShirt1.left,
                             gender_2: cboGender2.value,
                             shirt_type_2: cboShirtType2.value,
                             shirt_size_2: cboShirtSize2.value,
@@ -743,7 +744,8 @@ function goSave() {
                             screen2: screen2,
                             scaleX_2: finalLineScreen[1].scaleX,
                             scaleY_2: finalLineScreen[1].scaleY,
-                            top_2: side_cal_2.top,
+                            top_2: finalLineScreen[1].top,
+                            gapLeft_2: finalLineScreen[1].left - borderShirt2.left,
                             product: dataURL
                         });
       } else {
