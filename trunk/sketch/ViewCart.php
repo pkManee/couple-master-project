@@ -521,7 +521,7 @@
 		//var chestTop =  parseInt(1.66 * rect[3] + (person.line_screen_top * picRatio));
 		img.style.left = parseInt($(who).offset().left + rect[0] + ((person.gapLeft - 30) * picRatio)) + 'px';
 
-		var screenTop = parseInt($(who).offset().top + rect[3] + rect[3] + rect[3]);
+		var screenTop = parseInt($(who).offset().top + rect[3] + rect[3]);
 		var gap = person.line_screen_top * picRatio;
 		
 		img.style.top = (screenTop + gap) + 'px';
