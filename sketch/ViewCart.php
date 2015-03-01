@@ -512,19 +512,18 @@
 	
 	function displayLineScreen(person, who) {
 		//ratio of image/canvas
-		var picRatio = document.getElementById('try-it-photo').width / 850;
+		var picHeight = document.getElementById('try-it-photo').height;
+		var picWidth = document.getElementById('try-it-photo').width;
 		var rect = person.face;
 
 		var img = new Image();
 		img.src = person.line_screen.src;
 		var offsetTop;
-		//var chestTop =  parseInt(1.66 * rect[3] + (person.line_screen_top * picRatio));
-		img.style.left = parseInt($(who).offset().left + rect[0] + ((person.gapLeft - 30) * picRatio)) + 'px';
-
-		var screenTop = parseInt($(who).offset().top + rect[3] + rect[3]);
-		var gap = person.line_screen_top * picRatio;
 		
-		img.style.top = (screenTop + gap) + 'px';
+		img.style.left = parseInt($(who).offset().left + rect[0] + ((person.gapLeft * picWidth) / 850)) + 'px';
+		var screenTop = parseInt($(who).offset().top + rect[1] + rect[3] + (rect[3] * 0.5));
+		
+		img.style.top = parseInt((person.line_screen_top - 150) * picHeight /600) + screenTop + 'px';
 		img.style.position = 'absolute';
 		img.id = person.id;
 
