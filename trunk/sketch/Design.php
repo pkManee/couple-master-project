@@ -52,7 +52,7 @@
           <button id="btn-pencil" title="Pencil" class="geo-button icon-pencil" data-toggle="tooltip" data-placement="bottom"></button>      
           <button id="btn-brush" title="Circle" class="geo-button icon-brush" data-toggle="tooltip" data-placement="bottom"></button>
           
-          <div class="btn-group">
+          <div class="btn-group" data-toggle="tooltip" data-placement="right" title="Random Spray" >
             <button type="button" class="geo-button icon-spray dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></button>
             <ul class="dropdown-menu" role="menu" style="min-width: 0px !important;">
               <li><a id="btn-spray" href="#">Glass Storm</a></li>
@@ -84,14 +84,14 @@
             <button title="Heart [hit del button to delete]" class="geo-button icon-heart" data-toggle="tooltip" data-placement="bottom"></button>
           </div>
           <button id="btn-erase" title="Erase All" class="geo-button icon-erase" data-toggle="tooltip" data-placement="bottom"></button>
-          <div class="btn-group">
+          <div class="btn-group" data-toggle="tooltip" data-placement="right" title="Cliparts">
             <button type="button" class="geo-button icon-drawer dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></button>
             <ul class="dropdown-menu" role="menu">
               <li><a href="#" id="btn-love">Love</a></li>
               <li><a href="#" id="btn-valentine">Valentine</a></li>
             </ul>
           </div>
-          <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;">
+          <span class="fakeInputContainer" style="position: relative; overflow: hidden; z-index: 0; width: 40px; height: 40px;" data-toggle="tooltip" data-placement="right" title="Upload File">
             <button id="btn-open" class="geo-button icon-upload"></button>
             <input type="file" id="upload-button" capture="camera" name="files[]"
                     style="position: absolute; top: 0px; z-index: 1000; font-size: 1000px; text-align: right; width: inherit; height: inherit; cursor: pointer; right: 0px; opacity: 0;">

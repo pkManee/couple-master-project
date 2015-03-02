@@ -523,7 +523,8 @@
 		img.style.left = parseInt($(who).offset().left + rect[0] + ((person.gapLeft * picWidth) / 850)) + 'px';
 		var screenTop = parseInt($(who).offset().top + rect[1] + rect[3] + (rect[3] * 0.5));
 		
-		img.style.top = parseInt((person.line_screen_top - 150) * picHeight /600) + screenTop + 'px';
+		//150 means standard fram in shirt mode
+		img.style.top = parseInt(person.line_screen_top - 150) + screenTop + 'px';
 		img.style.position = 'absolute';
 		img.id = person.id;
 
