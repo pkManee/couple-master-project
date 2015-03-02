@@ -15,8 +15,10 @@
     <link rel="stylesheet" href="css/jquery.bootstrap-touchspin.css">
 
     <!-- object detect -->
-    <script src="js/objectdetect.js"></script>
+    <script src="js/objectdetect.js"></script>	
 	<script src="js/objectdetect.frontalface.js"></script>
+	<script src="js/objectdetect.frontalface_alt.js"></script>
+	<script src="js/objectdetect.upperbody.js"></script>
 	
 	<script src="js/jquery-2.1.1.min.js"></script>	
     <script src="js/bootstrap.js"></script>
@@ -110,6 +112,7 @@
 		echo '<input type="hidden" id="height_1" value="' .$member->height_1. '">';
 		echo '<input type="hidden" id="height_2" value="' .$member->height_2. '">';
 
+		echo '<input type="hidden" id="member-photo" value="' .$member->photo. '">';
 	}
  	
 	function getColor($color_hex) {
@@ -496,6 +499,8 @@
 		
 	}); //document ready function
 
+	var alreadyTryIt = false;	
+
 	///begin of "try it"
 	$.fn.highlight = function(rect, color) {
 		$("<div />", {
@@ -521,7 +526,7 @@
 		var offsetTop;
 		
 		img.style.left = parseInt($(who).offset().left + rect[0] + ((person.gapLeft * picWidth) / 850)) + 'px';
-		var screenTop = parseInt($(who).offset().top + rect[1] + rect[3] + (rect[3] * 0.5));
+		var screenTop = parseInt($(who).offset().top + rect[1] + rect[3] + (rect[3] * 0.3));
 		
 		//150 means standard fram in shirt mode
 		img.style.top = parseInt(person.line_screen_top - 150) + screenTop + 'px';
@@ -580,8 +585,7 @@
 			alreadyTryIt = true;
 			
 		}); //objectdetect
-	});
-	//end of "try it"
+	});	
 
 	function checkPosition(personLeft, personRight) {
 		if (personLeft.line_screen_top === personRight.line_screen_top) {
@@ -599,9 +603,9 @@
 
 			$('#' + personLeft.id).css({'top': maxTop})
 			$('#' + personRight.id).css({'top': maxTop});	
-		}
-			
+		}			
 	}
+	//end of "try it"
 
 	var rect1, rect2;
 	function displayCalculatedArea() {
