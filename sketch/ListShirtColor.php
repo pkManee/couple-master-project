@@ -93,7 +93,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo "<tr>";
 
         echo "<th scope=\"row\">" .$i. "</th>";
-        echo "<td><a href=\"manageshirtcolor.php?color=" .urlencode($color). "\">" .$color. "</a></td>";
+        echo "<td><a href=\"ManageShirtColor.php?color=" .urlencode($color). "\">" .$color. "</a></td>";
         echo "<td>" .$color_hex. "</td>";
         echo "<td><span class=\"form-control\" style=\"background-color:" .$color_hex. "; height: 20px;\"</span></td>";
         //echo "<td><div class=\"well\" style=\"background:".$color_hex. ";\"></div></td>";

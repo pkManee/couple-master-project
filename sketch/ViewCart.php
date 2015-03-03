@@ -526,7 +526,7 @@
 		var offsetTop;
 		
 		img.style.left = parseInt($(who).offset().left + rect[0] + ((person.gapLeft * picWidth) / 850)) + 'px';
-		var screenTop = parseInt($(who).offset().top + rect[1] + rect[3] + (rect[3] * 0.3));
+		var screenTop = parseInt($(who).offset().top + rect[1] + rect[3] + (rect[3] * 0.5));
 		
 		//150 means standard fram in shirt mode
 		img.style.top = parseInt(person.line_screen_top - 150) + screenTop + 'px';
