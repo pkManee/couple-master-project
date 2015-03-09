@@ -15,36 +15,10 @@ switch ($method) {
   case 'insert':
         insertOrder();
         break;
-  case 'delete':
-        deleteOrder();
-        break;
   default:
     header("Content-Type: application/json");
     echo json_encode(array("result"=>"no_method"));
     break;
-}
-
-function deleteOrder() {
-  try {
-      $dbh = dbConnect::getInstance()->dbh;
-  } catch (PDOException $e) {
-      print "Error!: " . $e->getMessage() . "<br/>";
-      die();
-  }
-
-  $sql = "delete from shirt_color where color = :color ";
-  $stmt = $dbh->prepare($sql);
-  $stmt->bindValue(":color", $_POST["isDelete"]);
-
-  
-  if ($stmt->execute()) {      
-    header("Content-Type: application/json");  
-    echo json_encode(array("result"=>"success"));
-
-  } else {
-    header("Content-Type: application/json");
-    echo json_encode($stmt->errorInfo());
-  }
 }
 
 function insertOrder(){
