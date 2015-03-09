@@ -10,10 +10,11 @@
     
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/bootstrap-dialog.css" >
 
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
-    <script src="js/bootbox.js"></script>
+    <script src="js/bootstrap-dialog.js"></script>
   </head>
   <body>  
     <div class="alert alert-success" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
@@ -375,6 +376,31 @@
 		pri.document.close();
 		pri.focus();
 		pri.print();		
+    }
+
+    var totalPrice = document.getElementById('total-price').innerHTML;
+    var btnPaid = document.getElementById('btn-paid');    
+    btnPaid.onclick = function() {
+    	BootstrapDialog.confirm({
+    		title: 'ยืนยันการรับชำระเงิน',
+            message: 'ยืนยันรับชำระเงินจำนวน: <b>' + totalPrice + ' บาท</b>',
+            type: BootstrapDialog.TYPE_SUCCESS, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+            closable: true, // <-- Default value is false
+            draggable: true, // <-- Default value is false
+            btnCancelLabel: 'ไม่ยืนยัน', // <-- Default value is 'Cancel',
+            btnOKLabel: 'ยืนยัน', // <-- Default value is 'OK',
+            btnOKClass: 'btn-success', // <-- If you didn't specify it, dialog type will be used,
+            callback: function(result) {
+                // result will be true if button was click, while it will be false if users close the dialog directly.
+                if(result) {
+                    confirmOrder();
+                }
+            }
+        });
+    }
+
+    function confirmOrder() {
+
     }
     </script>
   </body>

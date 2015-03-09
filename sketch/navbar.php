@@ -46,7 +46,7 @@
             <li><a href="ListShirts.php">เสื้อ</a></li>
             <li><a href="ListSizePrice.php">ราคาลายสกรีน</a></li>
             <li class="divider"></li>
-            <li><a href="#">Cell</a></li>
+            <li><a href="ListOrder.php">รายการสั่งซื้อ</a></li>
           </ul>
         </li>
       </ul>
