@@ -108,7 +108,7 @@
 	                        <?php echo $result[ 'qty_1']; ?>
 	                    </td>
 	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo number_format($result[ 'shirt_price_1'] * $result[ 'qty_1'], 2) ?>
+	                        <?php echo number_format($result['shirt_price_1'] * $result[ 'qty_1'], 2) ?>
 	                    </td>
 	                </tr>
 	                <tr class="alt">
@@ -400,7 +400,28 @@
     }
 
     function confirmOrder() {
+    	var orderId;
+    	$.ajax({
+	        type: "POST",
+	        dataType: "json",
+	        url: "data/ShirtOrder.data.php",
+	        data: {method: "confirmOrder", order_id: orderId}
+	    })
+	    .done(function(data) {
+	        if (data.result === "success") {
+	            Toast.init({
+	                "selector": ".alert-success"
+	            });
+	            Toast.show("<strong>Error on getPrice !!!<strong> " + data);
+	        }
 
+	    })//done
+	    .fail(function(data) { 
+	        bootbox.dialog({
+	                title: 'Fatal Error',
+	                message : '<div class="alert alert-danger" role="alert"><strong>Error in getPrice !!!</strong></div>'
+	        });//bootbox
+	    });//fail
     }
     </script>
   </body>
