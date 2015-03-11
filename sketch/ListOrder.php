@@ -65,6 +65,7 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
         echo '<option value="paid" ' .(($selectedItem == 'paid') ? 'selected':''). '>ชำระเงินแล้ว</option>';
         echo '<option value="delivered" ' .(($selectedItem == 'delivered') ? 'selected':''). '>จัดส่งแล้ว</option>';        
         echo '<option value="canceled" ' .(($selectedItem == 'canceled') ? 'selected':''). '>ยกเลิก</option>';        
+        echo '<option value="all" ' .(($selectedItem == 'all') ? 'selected':''). '>ทั้งหมด</option>';        
       ?>       
       </select>
     </div>
@@ -99,6 +100,8 @@ $sql .= 'inner join shirt_color c1 on s1.color_hex = c1.color_hex ';
 $sql .= 'inner join shirt_color c2 on s2.color_hex = c2.color_hex ';
 $sql .= 'where 1 = 1 ';
 
+if (!isset($_GET['OrderStatus'])) $_GET['OrderStatus'] = 'order';
+
 switch ($_GET['OrderStatus']) {
   case 'order':   
     $sql .= 'and order_date is not null and paid_date is null and deliver_date is null and cancel_date is null ';
@@ -106,12 +109,13 @@ switch ($_GET['OrderStatus']) {
   case 'paid' :
     $sql .= 'and order_date is not null and paid_date is not null and deliver_date is null and cancel_date is null ';
     break;
-  case 'delivered';
+  case 'delivered':
     $sql .= 'and order_date is not null and paid_date is not null and deliver_date is not null and cancel_date is null ';
     break;
-  default:
-    //cancel
+  case 'cancel':
     $sql .= 'and cancel_date is not null ';
+    break;
+  default:
     break;
 }
 
@@ -127,26 +131,6 @@ if (!empty($_GET["txtSearch"])){
   $stmt = $dbh->prepare($sql);
 }
 
-// else if (!empty($_GET["txtSearch"]) && !empty($_GET['OrderStatus'])) {
-//   $sql .= 'and o.order_id = :order_id ';
-//   $sql .= "order by order_date asc, order_id asc ";
-
-//   $stmt = $dbh->prepare($sql);
-//   $stmt->bindValue(":order_id",$_GET["txtSearch"]);
-//   $stmt->bindValue(":order_status", $_GET['OrderStatus']);
-// } else if (empty($_GET["txtSearch"]) && !empty($_GET['OrderStatus'])) {
-
-//   $sql .= "order by order_date asc, order_id asc ";
-
-//   $stmt = $dbh->prepare($sql);
-//   $stmt->bindValue(":order_status", $_GET['OrderStatus']);
-// } else {
-//   $sql .= "order by order_date asc, order_id asc ";
-
-//   $stmt = $dbh->prepare($sql);
-//   $stmt->bindValue(":order_status", 'order');
-// }
-
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -160,12 +144,13 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>วันที่สั่งซื้อ</th>       
         <th>วันที่รับชำระเงิน</th>       
         <th>วันที่ส่งของ</th>       
-        <th>ยอดสั่งซื้อ (บาท)</th>
+        <th style="width: 150px; text-align: right;">ยอดสั่งซื้อ (บาท)</th>
         <th>ยกเลิก</th>
       </tr>
     </thead>
     <tbody data-link="row" class="rowlink">
       <?php
+      $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
       $i = 1;
       foreach($result as $row) {       
         $order_id = $row['order_id'];
@@ -174,7 +159,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo '<th scope="row">' .$order_id. '</th>';
         echo '<td>' .$row['member_name']. '</td>';
         echo '<td>' .$row['email']. '</td>';        
-        echo '<td><a href="JobToDo.php?order_id=' .$order_id. '">' .$row['order_date']. '</a></td>';
+        echo '<td><a href="JobToDo.php?order_id=' .$order_id. '&rtn=' .$actual_link. '">' .$row['order_date']. '</a></td>';
         echo '<td>' .$row['paid_date']. '</td>';
         echo '<td>' .$row['deliver_date']. '</td>';
         echo '<td style="text-align: right;">' .number_format($row['amt']). '</td>';

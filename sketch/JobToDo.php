@@ -38,6 +38,7 @@
 		}
 		
 		$sql = 'select o.order_id, o.line_screen_price_1, o.line_screen_price_2, o.qty_1, o.qty_2, o.amt, o.order_date, ';
+		$sql .= 'o.paid_date, o.deliver_date, o.cancel_date, ';
 		$sql .= 'o.screen_width_1, o.screen_height_1, o.screen_width_2, o.screen_height_2, o.color_area_1, o.color_area_2, ';
 		$sql .= 's1.shirt_name as shirt_name_1, s1.gender as gender_1, s1.shirt_type as shirt_type_1, s1.color_hex as color_hex_1, s1.shirt_price as shirt_price_1, ';
 		$sql .= 's2.shirt_name as shirt_name_2, s2.gender as gender_2, s2.shirt_type as shirt_type_2, s2.color_hex as color_hex_2, s2.shirt_price as shirt_price_2, ';
@@ -63,6 +64,13 @@
 			echo "error -> " .$stmt->errorInfo()[2];
 			die();
 		}
+
+		echo '<input type="hidden" value="' .$_GET['order_id']. '" id="order-id"></input>';
+		echo '<input type="hidden" value="' .$_GET['rtn']. '" id="return-url"></input>';
+
+		$paidDate = $result['paid_date'];
+		$deliverDate = $result['deliver_date'];
+		$cancelDate = $result['cancel_date'];
 
 		$shirt1 = '<b>เสื้อ: </b>'. $result['shirt_name_1'] . '<b> เพศ: </b>' . (($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_1'] . '<b> สี: </b>' . $result['color_1'];
 		$shirt2 = '<b>เสื้อ: </b>'. $result['shirt_name_2'] . '<b> เพศ: </b>' . (($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_2'] . '<b> สี: </b>' . $result['color_2'];
@@ -162,6 +170,11 @@
 	                    <td colspan="4" style="padding: 0;font-size: 12px">
 	                        <div style="text-align: center;font-size: 13px;min-height: 25px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
 	                            <b>รวม</b>
+	                            <?php	        
+	                            //echo !!empty($paidDate);//(!empty($paidDate) && empty($deliverDate) && empty($cancelDate));                    
+	                            if (!empty($paidDate)) echo 'ชำระเงินแล้ว: ' .$paidDate;
+	                            if (!empty($deliverDate)) echo 'ส่งสินค้าแล้ว: ' .$deliverDate;
+	                            ?>
 	                        </div>
 	                    </td>
 	                    <td style="text-align: right;padding: 0;font-size: 12px">
@@ -358,8 +371,10 @@
 	<div class="row"></div>
 		<div class="col-xs-6">
 			<button type="button" class="btn btn-primary" id="btn-print">พิมพ์ใบงาน</button>
-			<button type="button" class="btn btn-success" id="btn-paid">ยืนยันการรับชำระเงิน</button>
-			<button type="button" class="btn btn-danger" id="btn-cancel">ยกเลิกคำสั่งซื้อ</button>
+			<button type="button" class="btn btn-success <?php echo (empty($paidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-paid">ยืนยันการรับชำระเงิน</button>
+			<button type="button" class="btn btn-success <?php echo (!empty($paidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-deliver">ยืนยันการส่งสินค้า</button>
+			<button type="button" class="btn btn-danger <?php echo (empty($paidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-cancel">ยกเลิกรายการสั่งซื้อ</button>
+			<a class="btn btn-default" href="<?php echo $_GET['rtn'] ?>">กลับ</a>
 		</div>
 
     </div> <!-- container -->
@@ -400,7 +415,7 @@
     }
 
     function confirmOrder() {
-    	var orderId;
+    	var orderId = document.getElementById('order-id').value;
     	$.ajax({
 	        type: "POST",
 	        dataType: "json",
@@ -409,19 +424,46 @@
 	    })
 	    .done(function(data) {
 	        if (data.result === "success") {
+
+	        	var rtnUrl = document.getElementById('return-url').value;
+	        	window.scrollTo(0, 0);
 	            Toast.init({
 	                "selector": ".alert-success"
 	            });
-	            Toast.show("<strong>Error on getPrice !!!<strong> " + data);
+	            Toast.show('<strong>Success !!!<strong><br>redirecting ...');
+
+	            setTimeout(function() {
+	            	window.location = rtnUrl;
+	            }, 2000);
 	        }
 
 	    })//done
 	    .fail(function(data) { 
 	        bootbox.dialog({
 	                title: 'Fatal Error',
-	                message : '<div class="alert alert-danger" role="alert"><strong>Error in getPrice !!!</strong></div>'
+	                message : '<div class="alert alert-danger" role="alert"><strong>Error in Confirm order !!!</strong></div>'
 	        });//bootbox
 	    });//fail
+    }
+
+    var btnDeliver = document.getElementById('btn-deliver');
+    btnDeliver.onclick = function() {
+    	BootstrapDialog.confirm({
+    		title: 'ยืนยันการส่งสินค้า',
+            message: 'ต้องการยืนยันการจัดส่งสินค้ารายการนี้หรือไม่',
+            type: BootstrapDialog.TYPE_SUCCESS, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+            closable: true, // <-- Default value is false
+            draggable: true, // <-- Default value is false
+            btnCancelLabel: 'ไม่ยืนยัน', // <-- Default value is 'Cancel',
+            btnOKLabel: 'ยืนยัน', // <-- Default value is 'OK',
+            btnOKClass: 'btn-success', // <-- If you didn't specify it, dialog type will be used,
+            callback: function(result) {
+                // result will be true if button was click, while it will be false if users close the dialog directly.
+                if(result) {
+                    confirmDeliver();
+                }
+            }
+        });
     }
     </script>
   </body>
