@@ -15,6 +15,12 @@ switch ($method) {
   case 'confirmOrder':
         confirmOrder();
         break;
+  case 'confirmDeliver':
+        confirmDeliver();
+        break;
+  case 'cancelOrder':
+        cancelOrder();
+        break;
   case 'delete':
         deleteOrder();
         break;
