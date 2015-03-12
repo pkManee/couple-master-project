@@ -112,7 +112,7 @@ switch ($_GET['OrderStatus']) {
   case 'delivered':
     $sql .= 'and order_date is not null and paid_date is not null and deliver_date is not null and cancel_date is null ';
     break;
-  case 'cancel':
+  case 'canceled':
     $sql .= 'and cancel_date is not null ';
     break;
   default:
@@ -150,24 +150,35 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </thead>
     <tbody data-link="row" class="rowlink">
       <?php
-      $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+      $actual_link = urlencode(getUrl());
       $i = 1;
       foreach($result as $row) {       
         $order_id = $row['order_id'];
+        $orderDate = (empty($row['order_date']))?'':date('d-m-Y', strtotime($row['order_date']));
+        $paidDate = (empty($row['paid_date']))?'':date('d-m-Y', strtotime($row['paid_date']));
+        $deliverDate = (empty($row['deliver_date']))?'':date('d-m-Y', strtotime($row['deliver_date']));
+        $cancelDate = (empty($row['cancel_date']))?'':date('d-m-Y', strtotime($row['cancel_date']));
         echo '<tr>';
 
         echo '<th scope="row">' .$order_id. '</th>';
         echo '<td>' .$row['member_name']. '</td>';
         echo '<td>' .$row['email']. '</td>';        
-        echo '<td><a href="JobToDo.php?order_id=' .$order_id. '&rtn=' .$actual_link. '">' .$row['order_date']. '</a></td>';
-        echo '<td>' .$row['paid_date']. '</td>';
-        echo '<td>' .$row['deliver_date']. '</td>';
+        echo '<td><a href="JobToDo.php?order_id=' .$order_id. '&rtn=' .$actual_link. '">' .$orderDate. '</a></td>';
+        echo '<td>' .$paidDate. '</td>';
+        echo '<td>' .$deliverDate. '</td>';
         echo '<td style="text-align: right;">' .number_format($row['amt']). '</td>';
-        echo '<td>' .$row['cancel_date']. '</td>';
+        echo '<td>' .$cancelDate. '</td>';
        
         echo '</tr>';
 
         $i ++;
+      }
+
+      function getUrl() {
+        $url  = @( $_SERVER["HTTPS"] != 'on' ) ? 'http://'.$_SERVER["SERVER_NAME"] :  'https://'.$_SERVER["SERVER_NAME"];
+        $url .= ( $_SERVER["SERVER_PORT"] !== 80 ) ? ":".$_SERVER["SERVER_PORT"] : "";
+        $url .= $_SERVER["REQUEST_URI"];
+        return $url;
       }
       ?>       
     </tbody>

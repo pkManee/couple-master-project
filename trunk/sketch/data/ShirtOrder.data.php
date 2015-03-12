@@ -21,8 +21,11 @@ switch ($method) {
   case 'cancelOrder':
         cancelOrder();
         break;
-  case 'delete':
-        deleteOrder();
+  case 'confirmCancel':
+        confirmCancel();
+        break;
+  case 'confirmDelete':
+        confirmDelete();
         break;
   default:
     header("Content-Type: application/json");
@@ -32,6 +35,7 @@ switch ($method) {
 
 function confirmOrder() {
   $order_id = $_POST['order_id'];
+  $paid_date = $_POST['paid_date']; 
 
   try {
       $dbh = dbConnect::getInstance()->dbh;
@@ -41,8 +45,98 @@ function confirmOrder() {
   }
   
   $sql = 'update shirt_order ';
-  $sql .= 'set paid_date = current_date ';
+  $sql .= 'set paid_date = :paid_date ';
   $sql .= 'where order_id = :order_id ';
+
+  $stmt = $dbh->prepare($sql);
+
+  $stmt->bindValue(':order_id', $order_id);
+  $stmt->bindValue(':paid_date', $paid_date);
+
+  if ($stmt->execute()) {
+    
+    header("Content-Type: application/json");
+    echo json_encode(array("result"=>"success"));
+
+  }else{
+    header("Content-Type: application/json");
+    echo json_encode($stmt->errorInfo());
+  } 
+}
+
+function confirmDeliver() {
+  $order_id = $_POST['order_id'];
+  $deliver_date = $_POST['deliver_date'];
+
+  try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      print "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+  
+  $sql = 'update shirt_order ';
+  $sql .= 'set deliver_date = :deliver_date ';
+  $sql .= 'where order_id = :order_id ';
+
+  $stmt = $dbh->prepare($sql);
+
+  $stmt->bindValue(':order_id', $order_id);
+  $stmt->bindValue(':deliver_date', $deliver_date);  
+
+  if ($stmt->execute()) {
+    
+    header("Content-Type: application/json");
+    echo json_encode(array("result"=>"success"));
+
+  }else{
+    header("Content-Type: application/json");
+    echo json_encode($stmt->errorInfo());
+  } 
+}
+
+function confirmCancel() {
+  $order_id = $_POST['order_id'];
+  $cancel_remark = (empty($_POST['cancel_remark'])) ? null : $_POST['cancel_remark'];
+
+  try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      print "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+  
+  $sql = 'update shirt_order ';
+  $sql .= 'set cancel_date = current_date, ';
+  $sql .= 'cancel_remark = :cancel_remark ';
+  $sql .= 'where order_id = :order_id ';
+
+  $stmt = $dbh->prepare($sql);
+
+  $stmt->bindValue(':order_id', $order_id);
+  $stmt->bindValue(':cancel_remark', $cancel_remark);
+
+  if ($stmt->execute()) {    
+    header("Content-Type: application/json");
+    echo json_encode(array("result"=>"success"));
+  } else {
+    header("Content-Type: application/json");
+    echo json_encode($stmt->errorInfo());
+  }
+}
+
+function confirmDelete() {
+  $order_id = $_POST['order_id'];
+
+  try {
+      $dbh = dbConnect::getInstance()->dbh;
+  } catch (PDOException $e) {
+      print "Error!: " . $e->getMessage() . "<br/>";
+      die();
+  }
+  
+  $sql = 'delete from shirt_order ';
+  $sql .= 'where order_id = :order_id and cancel_date is not null ';
 
   $stmt = $dbh->prepare($sql);
 
