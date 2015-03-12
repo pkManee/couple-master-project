@@ -38,7 +38,7 @@
 		}
 		
 		$sql = 'select o.order_id, o.line_screen_price_1, o.line_screen_price_2, o.qty_1, o.qty_2, o.amt, o.order_date, ';
-		$sql .= 'o.paid_date, o.deliver_date, o.cancel_date, ';
+		$sql .= 'o.paid_date, o.deliver_date, o.cancel_date, o.cancel_remark, ';
 		$sql .= 'o.screen_width_1, o.screen_height_1, o.screen_width_2, o.screen_height_2, o.color_area_1, o.color_area_2, ';
 		$sql .= 's1.shirt_name as shirt_name_1, s1.gender as gender_1, s1.shirt_type as shirt_type_1, s1.color_hex as color_hex_1, s1.shirt_price as shirt_price_1, ';
 		$sql .= 's2.shirt_name as shirt_name_2, s2.gender as gender_2, s2.shirt_type as shirt_type_2, s2.color_hex as color_hex_2, s2.shirt_price as shirt_price_2, ';
@@ -68,9 +68,11 @@
 		echo '<input type="hidden" value="' .$_GET['order_id']. '" id="order-id"></input>';
 		echo '<input type="hidden" value="' .$_GET['rtn']. '" id="return-url"></input>';
 
-		$paidDate = $result['paid_date'];
-		$deliverDate = $result['deliver_date'];
-		$cancelDate = $result['cancel_date'];
+		$orderDate = (empty($result['order_date']))?'':date('d-m-Y', strtotime($result['order_date']));
+        $paidDate = (empty($result['paid_date']))?'':date('d-m-Y', strtotime($result['paid_date']));
+        $deliverDate = (empty($result['deliver_date']))?'':date('d-m-Y', strtotime($result['deliver_date']));
+        $cancelDate = (empty($result['cancel_date']))?'':date('d-m-Y', strtotime($result['cancel_date']));
+        $cancelRemark = $result['cancel_remark'];
 
 		$shirt1 = '<b>เสื้อ: </b>'. $result['shirt_name_1'] . '<b> เพศ: </b>' . (($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_1'] . '<b> สี: </b>' . $result['color_1'];
 		$shirt2 = '<b>เสื้อ: </b>'. $result['shirt_name_2'] . '<b> เพศ: </b>' . (($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_2'] . '<b> สี: </b>' . $result['color_2'];
@@ -97,7 +99,7 @@
 	            <thead>
 	                <tr>
 	                    <th style="text-align: center;width: 20px;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ลำดับ</th>
-	                    <th style="padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">รายการสั่งซื้อ <?php echo '<b>#' . $_GET['order_id'] . '</b> (' . $result['order_date'] .')' ?></th>
+	                    <th style="padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">รายการสั่งซื้อ <?php echo '<b>#' . $_GET['order_id'] . '</b> (' .$orderDate.')' ?></th>
 	                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ราคา (บาท)</th>
 	                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">จำนวน</th>
 	                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">รวม (บาท)</th>
@@ -173,7 +175,8 @@
 	                            <?php	        
 	                            //echo !!empty($paidDate);//(!empty($paidDate) && empty($deliverDate) && empty($cancelDate));                    
 	                            if (!empty($paidDate)) echo 'ชำระเงินแล้ว: ' .$paidDate;
-	                            if (!empty($deliverDate)) echo 'ส่งสินค้าแล้ว: ' .$deliverDate;
+	                            if (!empty($deliverDate)) echo ' ส่งสินค้าแล้ว: ' .$deliverDate;
+	                            if (!empty($cancelDate)) echo ' ยกเลิกแล้ว: ' .$cancelDate. ' สาเหตุ: ' .nl2br($cancelRemark);
 	                            ?>
 	                        </div>
 	                    </td>
@@ -373,8 +376,9 @@
 			<button type="button" class="btn btn-primary" id="btn-print">พิมพ์ใบงาน</button>
 			<button type="button" class="btn btn-success <?php echo (empty($paidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-paid">ยืนยันการรับชำระเงิน</button>
 			<button type="button" class="btn btn-success <?php echo (!empty($paidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-deliver">ยืนยันการส่งสินค้า</button>
-			<button type="button" class="btn btn-danger <?php echo (empty($paidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-cancel">ยกเลิกรายการสั่งซื้อ</button>
-			<a class="btn btn-default" href="<?php echo $_GET['rtn'] ?>">กลับ</a>
+			<button type="button" class="btn btn-warning <?php echo (empty($paidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-cancel">ยกเลิกรายการสั่งซื้อ</button>
+			<button type="button" class="btn btn-danger <?php echo (!empty($cancelDate)) ?'':'hidden'; ?>" id="btn-delete">ลบรายการสั่งซื้อ</button>
+			<a class="btn btn-default" href="<?php echo $_GET['rtn'] ?>">กลับ</a>			
 		</div>
 
     </div> <!-- container -->
@@ -396,31 +400,57 @@
     var totalPrice = document.getElementById('total-price').innerHTML;
     var btnPaid = document.getElementById('btn-paid');    
     btnPaid.onclick = function() {
-    	BootstrapDialog.confirm({
-    		title: 'ยืนยันการรับชำระเงิน',
-            message: 'ยืนยันรับชำระเงินจำนวน: <b>' + totalPrice + ' บาท</b>',
-            type: BootstrapDialog.TYPE_SUCCESS, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-            closable: true, // <-- Default value is false
-            draggable: true, // <-- Default value is false
-            btnCancelLabel: 'ไม่ยืนยัน', // <-- Default value is 'Cancel',
-            btnOKLabel: 'ยืนยัน', // <-- Default value is 'OK',
-            btnOKClass: 'btn-success', // <-- If you didn't specify it, dialog type will be used,
-            callback: function(result) {
-                // result will be true if button was click, while it will be false if users close the dialog directly.
-                if(result) {
-                    confirmOrder();
-                }
-            }
-        });
+    	var msg = '<div class="container">';
+    	msg += '<div class="row">';
+    	msg += '<label class="form-control-static col-xs-3">รับชำระเงินแล้วจำนวน:</label>';
+    	msg += '<p class="form-control-static col-xs-2"><b>' + totalPrice + ' บาท</b></p>';
+    	msg += '</div>';
+    	msg += '<div class="row">';    	
+    	msg += '<label class="form-control-static col-xs-3">วันที่</label>';
+    	msg += '<div class="col-xs-2">';   	
+    	msg += '<input type="date" class="form-control" value="<?php echo date("Y-m-d");?>">';
+    	msg += '</div>';
+    	msg += '</div>';
+    	msg += '</div>';
+
+    	var dialog = new BootstrapDialog({
+    		type    :   BootstrapDialog.TYPE_SUCCESS,
+			title	:	'ยืนยันการรับชำระเงิน',
+			message	:	$(msg),
+			buttons	:	[{
+				label	:	'ไม่ยืนยัน',
+				action	:	function(dialog){
+					dialog.close();
+				}
+			}, {
+				label	:	'ยืนยัน',
+				cssClass:	'btn-success',
+				action	:	function(dialog){
+					var paidDate = dialog.getModalBody().find('input').val();
+					dialog.close();
+                    confirmOrder(paidDate);					
+				}
+			}]
+		});
+		dialog.open();
     }
 
-    function confirmOrder() {
+    function confirmOrder(paidDate) {
+    	if (paidDate === '') {
+    		BootstrapDialog.show({
+	        		type: BootstrapDialog.TYPE_WARNING,
+	                title: 'Error',
+	                message : '<div class="alert alert-warning" role="alert"><strong>กรุราระบุวันที่ !!!</strong></div>'
+	        });//bootbox
+	        return false;
+    	}
+
     	var orderId = document.getElementById('order-id').value;
     	$.ajax({
 	        type: "POST",
 	        dataType: "json",
 	        url: "data/ShirtOrder.data.php",
-	        data: {method: "confirmOrder", order_id: orderId}
+	        data: {method: "confirmOrder", order_id: orderId, paid_date: paidDate}
 	    })
 	    .done(function(data) {
 	        if (data.result === "success") {
@@ -439,19 +469,163 @@
 
 	    })//done
 	    .fail(function(data) { 
-	        bootbox.dialog({
+	        BootstrapDialog.show({
+	        		type: BootstrapDialog.TYPE_WARNING,
 	                title: 'Fatal Error',
-	                message : '<div class="alert alert-danger" role="alert"><strong>Error in Confirm order !!!</strong></div>'
+	                message : '<div class="alert alert-danger" role="alert"><strong>Error in confirmOrder !!!</strong></div>'
 	        });//bootbox
 	    });//fail
     }
 
     var btnDeliver = document.getElementById('btn-deliver');
-    btnDeliver.onclick = function() {
+    btnDeliver.onclick = function() {    	
+        var msg = '<div class="container">';
+    	msg += '<div class="row">';
+    	msg += '<label class="form-control-static col-xs-3">ส่งสินค้ารายการนี้</label>';    	
+    	msg += '</div>';
+    	msg += '<div class="row">';    	
+    	msg += '<label class="form-control-static col-xs-3">วันที่</label>';
+    	msg += '<div class="col-xs-2">';   	
+    	msg += '<input type="date" class="form-control" value="<?php echo date("Y-m-d");?>">';
+    	msg += '</div>';
+    	msg += '</div>';
+    	msg += '</div>';
+
+        BootstrapDialog.show({
+            title: 'ยืนยันการส่งสินค้า',
+            message: msg,
+            buttons: [{
+                label: 'ไม่ยืนยัน',
+                action: function(dialog) {
+                    dialog.close();
+                }
+            }, {
+                label: 'ยืนยัน',
+                cssClass: 'btn-success',
+                action: function(dialog) {
+                	var deliverDate = dialog.getModalBody().find('input').val();
+                	dialog.close();
+                	confirmDeliver(deliverDate);
+                }
+            }]
+        });
+    }
+
+    function confirmDeliver(deliverDate) {
+    	if (deliverDate === '') {
+    		BootstrapDialog.show({
+	        		type: BootstrapDialog.TYPE_WARNING,
+	                title: 'Error',
+	                message : '<div class="alert alert-warning" role="alert"><strong>กรุราระบุวันที่ !!!</strong></div>'
+	        });//bootbox
+	        return false;
+    	}
+
+    	var orderId = document.getElementById('order-id').value;
+    	$.ajax({
+	        type: "POST",
+	        dataType: "json",
+	        url: "data/ShirtOrder.data.php",
+	        data: {method: "confirmDeliver", order_id: orderId, deliver_date: deliverDate}
+	    })
+	    .done(function(data) {
+	        if (data.result === "success") {
+
+	        	var rtnUrl = document.getElementById('return-url').value;
+	        	window.scrollTo(0, 0);
+	            Toast.init({
+	                "selector": ".alert-success"
+	            });
+	            Toast.show('<strong>Success !!!<strong><br>redirecting ...');
+
+	            setTimeout(function() {
+	            	window.location = rtnUrl;
+	            }, 2000);
+	        }
+
+	    })//done
+	    .fail(function(data) { 
+	        BootstrapDialog.show({
+	        		type: BootstrapDialog.TYPE_WARNING,
+	                title: 'Fatal Error',
+	                message : '<div class="alert alert-danger" role="alert"><strong>Error in confirmDeliver !!!</strong></div>'
+	        });//bootbox
+	    });//fail
+    }
+
+    var btnCancel = document.getElementById('btn-cancel');
+    btnCancel.onclick = function() {
+
+        var msg = '<div class="container">';
+    	msg += 		'<div class="row">';
+    	msg += 			'<label class="control-lable col-xs-3">ยกเลิกรายการสั่งซื้อ</label>';
+    	msg += 		'</div>';
+    	msg += 		'<div class="row col-xs-6">'; 		
+    	msg += 			'<label class="control-lable">เหตผล</label>';    	 	
+    	msg += 			'<input type="text" class="form-control">';
+    	msg += 		'</div>';
+    	msg += '</div>';
+
+        BootstrapDialog.show({
+        	type: BootstrapDialog.TYPE_WARNING,
+            title: 'ยกเลิกรายการสั่งซื้อสินค้า',
+            message: msg,
+            buttons: [{
+                label: 'ไม่ยืนยัน',
+                action: function(dialog) {
+                    dialog.close();
+                }
+            }, {
+                label: 'ยืนยัน',
+                cssClass: 'btn-success',
+                action: function(dialog) {
+                	var cancelRemark = dialog.getModalBody().find('input').val();
+                	dialog.close();
+                	confirmCancel(cancelRemark);
+                }
+            }]
+        });
+    }
+
+    function confirmCancel(cancelRemark) {
+    	var orderId = document.getElementById('order-id').value;
+    	$.ajax({
+	        type: "POST",
+	        dataType: "json",
+	        url: "data/ShirtOrder.data.php",
+	        data: {method: "confirmCancel", order_id: orderId, cancel_remark: cancelRemark}
+	    })
+	    .done(function(data) {
+	        if (data.result === "success") {
+
+	        	var rtnUrl = document.getElementById('return-url').value;
+	        	window.scrollTo(0, 0);
+	            Toast.init({
+	                "selector": ".alert-success"
+	            });
+	            Toast.show('<strong>Success !!!<strong><br>redirecting ...');
+
+	            setTimeout(function() {
+	            	window.location = rtnUrl;
+	            }, 2000);
+	        }
+
+	    })//done
+	    .fail(function(data) { 
+	        BootstrapDialog.show({
+	        		type: BootstrapDialog.TYPE_WARNING,
+	                title: 'Fatal Error',
+	                message : '<div class="alert alert-danger" role="alert"><strong>Error in confirmCancel !!!</strong></div>'
+	        });//bootbox
+	    });//fail
+    }
+
+    var btnDelete = document.getElementById('btn-delete');
+    btnDelete.onclick = function() {
     	BootstrapDialog.confirm({
-    		title: 'ยืนยันการส่งสินค้า',
-            message: 'ต้องการยืนยันการจัดส่งสินค้ารายการนี้หรือไม่',
-            type: BootstrapDialog.TYPE_SUCCESS, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+    		title: 'ลบรายการสั่งซื้อ',
+            message: 'รายการสั่งซื้อนี้จะถูกลบออกอย่างถาวร<br><b>ท่านต้องการลบรายการสั่งซื้อนี้หรือไม่</b>',
+            type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
             closable: true, // <-- Default value is false
             draggable: true, // <-- Default value is false
             btnCancelLabel: 'ไม่ยืนยัน', // <-- Default value is 'Cancel',
@@ -460,10 +634,43 @@
             callback: function(result) {
                 // result will be true if button was click, while it will be false if users close the dialog directly.
                 if(result) {
-                    confirmDeliver();
+                    confirmDelete();
                 }
             }
         });
+    }
+
+    function confirmDelete() {
+    	var orderId = document.getElementById('order-id').value;
+    	$.ajax({
+	        type: "POST",
+	        dataType: "json",
+	        url: "data/ShirtOrder.data.php",
+	        data: {method: "confirmDelete", order_id: orderId}
+	    })
+	    .done(function(data) {
+	        if (data.result === "success") {
+
+	        	var rtnUrl = document.getElementById('return-url').value;
+	        	window.scrollTo(0, 0);
+	            Toast.init({
+	                "selector": ".alert-success"
+	            });
+	            Toast.show('<strong>Success !!!<strong><br>redirecting ...');
+
+	            setTimeout(function() {
+	            	window.location = rtnUrl;
+	            }, 2000);
+	        }
+
+	    })//done
+	    .fail(function(data) { 
+	        BootstrapDialog.show({
+	        		type: BootstrapDialog.TYPE_WARNING,
+	                title: 'Fatal Error',
+	                message : '<div class="alert alert-danger" role="alert"><strong>Error in confirmDelete !!!</strong></div>'
+	        });//bootbox
+	    });//fail
     }
     </script>
   </body>
