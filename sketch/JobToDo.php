@@ -38,7 +38,7 @@
 		}
 		
 		$sql = 'select o.order_id, o.line_screen_price_1, o.line_screen_price_2, o.qty_1, o.qty_2, o.amt, o.order_date, ';
-		$sql .= 'o.paid_date, o.deliver_date, o.cancel_date, o.cancel_remark, ';
+		$sql .= 'o.paid_date, o.deliver_date, o.cancel_date, o.cancel_remark, o.tracking_id, ';
 		$sql .= 'o.screen_width_1, o.screen_height_1, o.screen_width_2, o.screen_height_2, o.color_area_1, o.color_area_2, ';
 		$sql .= 's1.shirt_name as shirt_name_1, s1.gender as gender_1, s1.shirt_type as shirt_type_1, s1.color_hex as color_hex_1, s1.shirt_price as shirt_price_1, ';
 		$sql .= 's2.shirt_name as shirt_name_2, s2.gender as gender_2, s2.shirt_type as shirt_type_2, s2.color_hex as color_hex_2, s2.shirt_price as shirt_price_2, ';
@@ -73,6 +73,7 @@
         $deliverDate = (empty($result['deliver_date']))?'':date('d-m-Y', strtotime($result['deliver_date']));
         $cancelDate = (empty($result['cancel_date']))?'':date('d-m-Y', strtotime($result['cancel_date']));
         $cancelRemark = $result['cancel_remark'];
+        $trackingId = $result['tracking_id'];
 
 		$shirt1 = '<b>เสื้อ: </b>'. $result['shirt_name_1'] . '<b> เพศ: </b>' . (($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_1'] . '<b> สี: </b>' . $result['color_1'];
 		$shirt2 = '<b>เสื้อ: </b>'. $result['shirt_name_2'] . '<b> เพศ: </b>' . (($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_2'] . '<b> สี: </b>' . $result['color_2'];
@@ -171,13 +172,14 @@
 	                <tr>
 	                    <td colspan="4" style="padding: 0;font-size: 12px">
 	                        <div style="text-align: center;font-size: 13px;min-height: 25px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
-	                            <b>รวม</b>
-	                            <?php	        
+	                             <?php	        
 	                            //echo !!empty($paidDate);//(!empty($paidDate) && empty($deliverDate) && empty($cancelDate));                    
 	                            if (!empty($paidDate)) echo 'ชำระเงินแล้ว: ' .$paidDate;
 	                            if (!empty($deliverDate)) echo ' ส่งสินค้าแล้ว: ' .$deliverDate;
+	                            if (!empty($trackingId)) echo ' หมายเลขสิ่งของ: ' .$trackingId;
 	                            if (!empty($cancelDate)) echo ' ยกเลิกแล้ว: ' .$cancelDate. ' สาเหตุ: ' .nl2br($cancelRemark);
 	                            ?>
+	                            <b style="padding-left: 30px;">รวม</b>	                           
 	                        </div>
 	                    </td>
 	                    <td style="text-align: right;padding: 0;font-size: 12px">
@@ -480,15 +482,29 @@
     var btnDeliver = document.getElementById('btn-deliver');
     btnDeliver.onclick = function() {    	
         var msg = '<div class="container">';
+
     	msg += '<div class="row">';
-    	msg += '<label class="form-control-static col-xs-3">ส่งสินค้ารายการนี้</label>';    	
+    	msg += 		'<div class="col-xs-2">';
+    	msg += 			'<p class="form-control-static">ส่งสินค้ารายการนี้</p>';    
+    	msg += 		'</div>';	
     	msg += '</div>';
-    	msg += '<div class="row">';    	
-    	msg += '<label class="form-control-static col-xs-3">วันที่</label>';
-    	msg += '<div class="col-xs-2">';   	
-    	msg += '<input type="date" class="form-control" value="<?php echo date("Y-m-d");?>">';
+    	msg += '<div class="row">';
+    	msg += 		'<div class="col-xs-2">';
+    	msg += 			'<p class="form-control-static">วันที่</p>';
+    	msg += 		'</div>';
+    	msg += 		'<div class="col-xs-2">';   	
+    	msg += 			'<input type="date" class="form-control" id="delivery-date" value="<?php echo date("Y-m-d");?>">';
+    	msg += 		'</div>';
     	msg += '</div>';
+    	msg += '<div class="row">';
+    	msg += 		'<div class="col-xs-2">';
+    	msg +=			'<p class="form-control-static">หมายเลขสิ่งของ</p>';
+		msg += 		'</div>';
+    	msg +=		'<div class="col-xs-2">';
+    	msg +=			'<input type="text" class="form-control" id="tracking-id">';
+    	msg +=		'</div>';
     	msg += '</div>';
+
     	msg += '</div>';
 
         BootstrapDialog.show({
@@ -503,15 +519,16 @@
                 label: 'ยืนยัน',
                 cssClass: 'btn-success',
                 action: function(dialog) {
-                	var deliverDate = dialog.getModalBody().find('input').val();
+                	var deliverDate = dialog.getModalBody().find('#delivery-date').val();
+                	var trackingId = dialog.getModalBody().find('#tracking-id').val();
                 	dialog.close();
-                	confirmDeliver(deliverDate);
+                	confirmDeliver(deliverDate, trackingId);
                 }
             }]
         });
     }
 
-    function confirmDeliver(deliverDate) {
+    function confirmDeliver(deliverDate, trackingId) {
     	if (deliverDate === '') {
     		BootstrapDialog.show({
 	        		type: BootstrapDialog.TYPE_WARNING,
@@ -526,7 +543,7 @@
 	        type: "POST",
 	        dataType: "json",
 	        url: "data/ShirtOrder.data.php",
-	        data: {method: "confirmDeliver", order_id: orderId, deliver_date: deliverDate}
+	        data: {method: "confirmDeliver", order_id: orderId, deliver_date: deliverDate, tracking_id: trackingId}
 	    })
 	    .done(function(data) {
 	        if (data.result === "success") {
