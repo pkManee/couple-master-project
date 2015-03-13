@@ -67,6 +67,7 @@ function confirmOrder() {
 function confirmDeliver() {
   $order_id = $_POST['order_id'];
   $deliver_date = $_POST['deliver_date'];
+  $tracking_id = (!empty($_POST['tracking_id'])) ? $_POST['tracking_id'] : null;
 
   try {
       $dbh = dbConnect::getInstance()->dbh;
@@ -76,13 +77,15 @@ function confirmDeliver() {
   }
   
   $sql = 'update shirt_order ';
-  $sql .= 'set deliver_date = :deliver_date ';
+  $sql .= 'set deliver_date = :deliver_date, ';
+  $sql .= 'tracking_id = :tracking_id ';
   $sql .= 'where order_id = :order_id ';
 
   $stmt = $dbh->prepare($sql);
 
   $stmt->bindValue(':order_id', $order_id);
   $stmt->bindValue(':deliver_date', $deliver_date);  
+  $stmt->bindValue(':tracking_id', $tracking_id);  
 
   if ($stmt->execute()) {
     

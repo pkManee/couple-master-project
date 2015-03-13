@@ -84,7 +84,7 @@ try {
 }
 
 $sql = 'select o.order_id, o.email as email, o.line_screen_price_1, o.line_screen_price_2, o.qty_1, o.qty_2, o.amt, o.order_date, ';
-$sql .= 'o.paid_date, o.deliver_date, o.cancel_date, ';
+$sql .= 'o.paid_date, o.deliver_date, o.cancel_date, o.tracking_id, ';
 $sql .= 'o.screen_width_1, o.screen_height_1, o.screen_width_2, o.screen_height_2, o.color_area_1, o.color_area_2, ';
 $sql .= 's1.shirt_name as shirt_name_1, s1.gender as gender_1, s1.shirt_type as shirt_type_1, s1.color_hex as color_hex_1, s1.shirt_price as shirt_price_1, ';
 $sql .= 's2.shirt_name as shirt_name_2, s2.gender as gender_2, s2.shirt_type as shirt_type_2, s2.color_hex as color_hex_2, s2.shirt_price as shirt_price_2, ';
@@ -143,7 +143,8 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>อีเมล์สมาชิก</th>
         <th>วันที่สั่งซื้อ</th>       
         <th>วันที่รับชำระเงิน</th>       
-        <th>วันที่ส่งของ</th>       
+        <th>วันที่ส่งของ</th>
+        <th>หมายเลขสิ่งของ</th>
         <th style="width: 150px; text-align: right;">ยอดสั่งซื้อ (บาท)</th>
         <th>ยกเลิก</th>
       </tr>
@@ -166,6 +167,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo '<td><a href="JobToDo.php?order_id=' .$order_id. '&rtn=' .$actual_link. '">' .$orderDate. '</a></td>';
         echo '<td>' .$paidDate. '</td>';
         echo '<td>' .$deliverDate. '</td>';
+        echo '<td>' .$row['tracking_id']. '</td>';
         echo '<td style="text-align: right;">' .number_format($row['amt']). '</td>';
         echo '<td>' .$cancelDate. '</td>';
        
