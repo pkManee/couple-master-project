@@ -63,6 +63,8 @@
 			die();
 		}
 
+		$orderDate = date('d-m-Y', strtotime($result['order_date']));
+
 		$shirt1 = '<b>เสื้อ: </b>'. $result['shirt_name_1'] . '<b> เพศ: </b>' . (($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_1'] . '<b> สี: </b>' . $result['color_1'];
 		$shirt2 = '<b>เสื้อ: </b>'. $result['shirt_name_2'] . '<b> เพศ: </b>' . (($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_2'] . '<b> สี: </b>' . $result['color_2'];
 	}
@@ -88,7 +90,7 @@
 	            <thead>
 	                <tr>
 	                    <th style="text-align: center;width: 20px;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ลำดับ</th>
-	                    <th style="padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">รายการสั่งซื้อ <?php echo '<b>#' . $_GET['order_id'] . '</b> (' . $result['order_date'] .')' ?></th>
+	                    <th style="padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">รายการสั่งซื้อ <?php echo '<b>#' . $_GET['order_id'] . '</b> (' . $orderDate .')' ?></th>
 	                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ราคา (บาท)</th>
 	                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">จำนวน</th>
 	                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">รวม (บาท)</th>
@@ -178,7 +180,7 @@
    	<br/>
   	<div class="panel panel-info" >			
 	    <div class="panel-heading">
-		    <h4 class="panel-title"><?php echo 'รายการสั่งซื้อ ' . '<b>#' . $_GET['order_id'] . '</b> (' . $result['order_date'] .')' ?></h4>
+		    <h4 class="panel-title"><?php echo 'รายการสั่งซื้อ ' . '<b>#' . $_GET['order_id'] . '</b> (' . $orderDate .')' ?></h4>
 	    </div>
 	    		    	
     	<div class="panel-body">
