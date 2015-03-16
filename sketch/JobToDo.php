@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
     <link rel="stylesheet" href="css/bootstrap-dialog.css" >
+    <style type="text/css">
+    	@media print {
+        .no-print { display:none; }
+    	}
+    </style>
 
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
@@ -192,17 +197,35 @@
 	        </table>
 	    </div>
 	    <br>
-	    <p style="text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ลายสกรีน</p>
-	    <div style="text-align: center;">
-		    <img style="width: 300px;" src="<?php echo 'uploads/' .$result['order_id']. '/01.png' ?>">
-		    <img style="width: 300px;" src="<?php echo 'uploads/' .$result['order_id']. '/02.png' ?>">
-		</div>	    
+	    <div class="no-print">
+		    <p style="text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ลายสกรีน</p>
+		    <div style="text-align: center;">
+		    	<div style="text-align: center; !important">
+		      		<div style="display: inline-block;">
+				  		<img style="width: 300px;" src="<?php echo 'uploads/' .$result['order_id']. '/01.png' ?>">
+				  		<div style="text-align: left;">
+				  			<p><?php echo 'กว้าง x ยาว (ซม.): ' .$result['screen_width_1']. ' x ' .$result['screen_height_1']; ?></p>
+				  		</div>
+				  	</div>
+				  	<div style="display: inline-block;">
+			   			<img style="width: 300px;" src="<?php echo 'uploads/' .$result['order_id']. '/02.png' ?>">
+			   			<div style="text-align: left;">
+				  			<p><?php echo 'กว้าง x ยาว (ซม.): ' .$result['screen_width_2']. ' x ' .$result['screen_height_2']; ?></p>
+				  		</div>
+			   		</div>
+		   		</div>
+			</div>
+		</div>
 	   
 	    <br>
-	    <p style="page-break-before: always; text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ภาพตัวอย่าง</p>
+	    <p style="text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">
+	    ภาพตัวอย่าง <br>	    	
+    		<?php echo 'ด้านซ้าย : กว้าง ' .$result['screen_width_1']. ' สูง ' .$result['screen_height_1']. ' ซม. <br>'; ?>    	
+    		<?php echo 'ด้านขวา : กว้าง ' .$result['screen_width_2']. ' สูง ' .$result['screen_height_2']. ' ซม.'; ?> 
+	    </p>
 	    <div style="text-align: center;">
-	    	<img src="<?php echo 'uploads/' .$result['order_id']. '/03.png' ?>">
-	    </div>
+	    	<img src="<?php echo 'uploads/' .$result['order_id']. '/03.png' ?>">	    	
+	    </div>	    
     </div> 
     <!-- print area -->
 
@@ -372,7 +395,7 @@
 		</div>
 	   
   	</div>
-	<img src="">
+	
 	<div class="row"></div>
 		<div class="col-xs-6">
 			<button type="button" class="btn btn-primary" id="btn-print">พิมพ์ใบงาน</button>
@@ -391,7 +414,14 @@
     	var content = document.getElementById('print-area');
 		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
 		var myStyle = '<html><div style="font-size: 16px; font-family: tahoma ">';
-		var body = myStyle + content.innerHTML + '</div></html>';
+		var myCss = '';
+		myCss += '<style type="text/css">';
+		myCss += 	'@media print {';
+		myCss += 	'.no-print { display:none; }';
+		myCss += 	'}';
+		myCss += '</style>';
+
+		var body = myStyle + myCss + content.innerHTML + '</div></html>';
 		pri.document.open();
 		pri.document.write(body);
 		pri.document.close();

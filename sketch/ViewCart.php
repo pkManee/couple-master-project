@@ -522,24 +522,21 @@
 		var rect = person.face;
 
 		var img = new Image();
-		img.src = person.line_screen.src;
-		var offsetTop;
 		
-		img.style.left = parseInt($(who).offset().left + rect[0] + ((person.gapLeft * picWidth) / 850)) + 'px';
-		var screenTop = parseInt($(who).offset().top + rect[1] + rect[3] + (rect[3] * 0.5));
-		
-		//150 means standard fram in shirt mode
-		img.style.top = parseInt(person.line_screen_top - 150) + screenTop + 'px';
-		img.style.position = 'absolute';
-		img.id = person.id;
-
-		//157 = 260
-		//140 = 260*140/157
 		img.onload = function() {
 			var factor = rect[2] / img.width;
 			img.style.width = parseInt(img.width * factor * person.scaleX) + 'px';
-			//img.style.height = Math.abs(img.height * 0.36) + 'px';
+			img.style.left = parseInt($(who).offset().left + rect[0] + ((person.gapLeft * picWidth) / 850)) + 'px';
+			var screenTop = parseInt($(who).offset().top + rect[1] + rect[3] + (rect[3] * 0.5));
+			
+			//150 means standard frame in shirt mode
+			img.style.top = parseInt(person.line_screen_top - 150) + screenTop + 'px';
+			img.style.position = 'absolute';
+			img.id = person.id;
+			
 		}
+		img.src = person.line_screen.src;
+
 		$(img).appendTo('#try-it');
 	}
 
