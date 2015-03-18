@@ -22,14 +22,14 @@ class MyService extends  REST {
 		// If the method not exist with in this class, response would be "Page not found".
 	}
 
-    function abc(){
+    function HelloWorld(){
     	if($this->get_request_method() != "POST")
 		{
 			$this->response('',406);
 		}
 
 		$str = 'your name is '. $this->_request['yourname'];
-        $this->response(json_encode($str), 200);
+        $this->response(json_encode(array("result"=>$str)), 200);
     }
 
     function memberLogin(){
