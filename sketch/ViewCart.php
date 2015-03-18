@@ -16,9 +16,7 @@
 
     <!-- object detect -->
     <script src="js/objectdetect.js"></script>	
-	<script src="js/objectdetect.frontalface.js"></script>
-	<script src="js/objectdetect.frontalface_alt.js"></script>
-	<script src="js/objectdetect.upperbody.js"></script>
+	<script src="js/objectdetect.frontalface.js"></script>	
 	
 	<script src="js/jquery-2.1.1.min.js"></script>	
     <script src="js/bootstrap.js"></script>
@@ -532,10 +530,9 @@
 			//150 means standard frame in shirt mode
 			img.style.top = parseInt(person.line_screen_top - 150) + screenTop + 'px';
 			img.style.position = 'absolute';
-			img.id = person.id;
-			
 		}
 		img.src = person.line_screen.src;
+		img.id = person.id;
 
 		$(img).appendTo('#try-it');
 	}
@@ -552,8 +549,11 @@
 				faceLeft_1 = 0,
 				faceLeft_2 = 0;
 			
-			$(this).highlight(faces[0], "red");
-			$(this).highlight(faces[1], "red");			
+			// $(this).highlight(faces[0], "red");
+			// $(this).highlight(faces[1], "red");
+
+			$(this).highlight(faces[0], "transparent");
+			$(this).highlight(faces[1], "transparent");	
 
 			var height_1 = parseFloat(document.getElementById('height_1').value);
 			var height_2 = parseFloat(document.getElementById('height_2').value);
