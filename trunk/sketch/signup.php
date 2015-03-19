@@ -223,32 +223,8 @@
                       message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
           });
         });//fail
-      }//goSave
+      }//goSave     
       
-      // var spanEmai = document.getElementById('email-error');
-      // var txtEmail = document.getElementById('txt-form-email');
-      // txtEmail.onblur = function() {
-      //   if (!this.value) return;
-
-      //   $.ajax({
-      //     type: 'POST',
-      //     url: 'data/signup.data.php',
-      //     data: {method: 'checkEmail', email: this.value}
-      //   })//ajax
-      //   .done(function(data) {
-      //     if (data.email) {
-      //       spanEmai.innerHTML = 'อีเมล์นี้มีในระบบแล้ว ไม่สามารถสมัครสมาชิกโดยการใช้อีเมล์นี้ได้ !!!';
-      //     } else {
-      //       spanEmai.innerHTML = 'ท่านสามารถใช้อีเมล์นี้ในการสมัครสมาชิกได้';
-      //     }
-      //   })//done
-      //   .fail(function(data) {
-      //     bootbox.dialog({
-      //                 title: 'Fatal Error',
-      //                 message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
-      //     });
-      //   });//fail
-      // }
 
     </script>
   </body>
