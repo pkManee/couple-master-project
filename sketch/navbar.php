@@ -30,6 +30,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ข้อมูลสมาชิก<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="EditProfile.php">จัดการข้อมูลสมาชิก</a></li>
+            <li><a href="ConfirmPayment.php">ยืนยันการชำระเงิน</a></li>
             <li class="divider"></li>
             <li><a href="#">เกี่ยวกับ</a></li>
           </ul>
