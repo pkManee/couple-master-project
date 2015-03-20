@@ -91,18 +91,37 @@
     
     <div class="container">
    	<div id="print-area">
-   		<div>
-	    	<label>ชื่อ-นามสกุล</label>        	
-	    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
-	    </div>
-	    <div>
-	    	<label>อีเมล์</label>        	
-	    	<p style="display: inline-block; margin-left: 20px;"><?php echo $_SESSION['email']; ?></p>
-	    </div>
-	    <div>
-	    	<label>ที่อยู่</label>	    	
-	    	<p style="display: inline-table; margin-left: 20px;"><?php echo nl2br($result['address']); ?></p>
-	    </div>
+   		<div style="width: 100%; border-color: #E6E6E6; border-width: 1px; border-style: solid; -moz-border-radius: 5px; border-radius: 5px; display: inline-block; padding: 10px 10px 10px 10px;">
+	   		<div style="float: left; display: inline-block;">
+				
+				<b><p>ร้านขายเสื้อคู่</p></b>
+				<p>28/1 ซ.กิจการ ถ.รัชดาภิเษก</p>
+				<p>แขวนดินแดง เขตดินแดง กรุงเทพฯ</p>
+				<p>โทร. 02-247-8897</p>
+				
+			</div>
+			<div style="float: right; width: 50%; display: inline-block; text-align: right;">
+				<div>
+					<p>เลขที่คำสั่งซื้อ</p>
+					<b><P style="font-size: 25px;"><?php echo $result['order_id'] ?></P></b>
+				</div>
+			</div>
+		</div>
+   		<div style="width: 50%;">
+	   		<div>
+		    	<label>ชื่อ-นามสกุล</label>        	
+		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
+		    </div>
+		    <div>
+		    	<label>อีเมล์</label>        	
+		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $_SESSION['email']; ?></p>
+		    </div>
+		    <div>
+		    	<label>ที่อยู่</label>	    	
+		    	<p style="display: inline-table; margin-left: 20px;"><?php echo nl2br($result['address']); ?></p>
+		    </div>
+		</div>
+		
 	   
 		<div style="font: normal 12px/150% Arial, Helvetica, sans-serif;background: #fff;overflow: hidden;border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px">
 	        <table style="border-collapse: collapse;text-align: left;width: 100%">
