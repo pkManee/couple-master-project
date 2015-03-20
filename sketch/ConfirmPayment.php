@@ -30,7 +30,7 @@
       require("service/message_service.php");
       require("service/db_connect.php");
     ?>
-    <form id="sign-up-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
+    <form id="confirm-payment-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
     <?php echo '<input type="hidden" id="hidden-email" value="' .$_SESSION['email']. '">'; ?>
     <div class="container">
     <div class="col-xs-6 col-md-4">    
@@ -40,7 +40,8 @@
       </div>
 
       <div class="form-group">
-        <label class="control-label" for="txt-paid-date">วันที่โอน</label>
+        <label class="control-label" for="txt-paid-date">วันที่โอน เข้าบัญชี 999-9-999999</label>
+        <p class="form-control-static"> ธนาคาร___ ชื่อบัญชี นายภาสกร มณี</p>
         <input type="date" class="form-control" id="txt-member-name" placeholder="วันที่โอน" name="txtPaidDate" >
       </div>      
       <div class="form-group">
@@ -53,21 +54,15 @@
       </div>
       <div class="form-group">
         <label class="control-label" for="input-file">แนบหลักฐาน</label>
-        <input type="file" class="form-control" id="input-file" placeholder="แนบหลักฐาน" name="fileToUpload" >
+        <input type="file" class="form-control" id="input-file" placeholder="แนบหลักฐาน" name="FileInput" >
       </div>  
       <button type="submit" class="btn btn-primary" id="btn-signup-submit">ยืนยันการโอน</button>
     </div>
     </div>
     </form>
     <script type="text/javascript">
-    var file;
-    var fileUpload = document.getElementById('input-file');
-    fileUpload.onchange = function(e) {
-      file = e.target.files;      
-    }
-
       $(document).ready(function() {
-      $('#sign-up-form')
+      $('#confirm-payment-form')
           .bootstrapValidator({
               //... options ...
               feedbackIcons: {
@@ -88,7 +83,8 @@
                                 return {
                                         method: 'checkExistingOrder', 
                                         email: document.getElementById('hidden-email').value,
-                                        order_id: validator.getFieldElements('txtOrderId').val()
+                                        order_id: validator.getFieldElements('txtOrderId').val(),
+                                        amount: 0
                                       };
                               },
                               message: 'ไม่พบเลขที่สั่งซื้อในระบบ กรุณาตรวจสอบ',
@@ -122,13 +118,32 @@
                             value: 0,
                             inclusive: false,
                             message: 'กรุณาระบุตัวเลขที่มากกว่าศูนย์'
+                          },
+                          remote: {
+                              url: 'data/ShirtOrder.data.php',
+                              data: function(validator) {
+                                return {
+                                        method: 'checkExistingOrder', 
+                                        email: document.getElementById('hidden-email').value,
+                                        order_id: validator.getFieldElements('txtOrderId').val(),
+                                        amount: validator.getFieldElements('txtAmt').val()
+                                      };
+                              },
+                              message: 'จำนวนเงินไม่ถูกต้อง กรุณาตรวจสอบ',
+                              type: 'POST'
                           }
                       }
                   },
-                  fileToUpload: {
+                  FileInput: {
                     validators: {
+                      file: {
+                          extension: 'jpg,jpeg,pdf',
+                          type: 'image/jpeg,application/pdf',
+                          maxSize: 2097152,   // 2048 * 1024
+                          message: 'กรุณาแนบหลักฐานการโอน (JPG, PDF) ขนาดไม่เกิน 2MB'
+                      },
                       notEmpty: {
-                        message: 'กรุณาแนบหลักฐานการโอน (JPG, PDF)'
+                        message: 'กรุณาแนบหลักฐานการโอน (JPG, PDF) ขนาดไม่เกิน 2MB'
                       }
                     }
                   }
@@ -150,18 +165,25 @@
 
 
       function goSave($form){
+        var file = $('#input-file').prop('files')[0];
+        var formData = new FormData($('#confirm-payment-form')[0]);
+        formData.append('method', 'customerPaid');
+        formData.append('file', file);
         $.ajax({
             type: 'POST',
-            url: 'data/ShirtOrder.data.php', 
-            data: $form.serialize() + '&method=customerPaid&FileInput=' + file
+            url: 'data/ShirtOrder.data.php',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData
         })
         .done(function(data){
           if (data.result === "success"){
             Toast.init({
                 "selector": ".alert-success"
             });
-            Toast.show("<strong>Save completed!!!</strong> redirecting ...<br/>Please <strong>Conform Payment</strong> with your email");
-            //setTimeout(function(){ window.location = "index.php" }, 3000);
+            Toast.show("<strong>Save completed!!!</strong> redirecting ...");
+            setTimeout(function(){ window.location = "index.php" }, 3000);
           }else{
             Toast.init({
               "selector": ".alert-danger"
@@ -169,7 +191,7 @@
             Toast.show("<strong>Error on saving!!!<strong> " + data);
           }
         })//done
-        .fail(function() {
+        .fail(function(data) {
           bootbox.dialog({
                       title: 'Fatal Error',
                       message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
