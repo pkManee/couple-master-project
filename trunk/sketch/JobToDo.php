@@ -44,6 +44,7 @@
 		
 		$sql = 'select o.order_id, o.line_screen_price_1, o.line_screen_price_2, o.qty_1, o.qty_2, o.amt, o.order_date, ';
 		$sql .= 'o.paid_date, o.deliver_date, o.cancel_date, o.cancel_remark, o.tracking_id, ';
+		$sql .= 'o.confirm_paid_date, o.slip, o.paid_time, ';
 		$sql .= 'o.screen_width_1, o.screen_height_1, o.screen_width_2, o.screen_height_2, o.color_area_1, o.color_area_2, ';
 		$sql .= 's1.shirt_name as shirt_name_1, s1.gender as gender_1, s1.shirt_type as shirt_type_1, s1.color_hex as color_hex_1, s1.shirt_price as shirt_price_1, ';
 		$sql .= 's2.shirt_name as shirt_name_2, s2.gender as gender_2, s2.shirt_type as shirt_type_2, s2.color_hex as color_hex_2, s2.shirt_price as shirt_price_2, ';
@@ -72,20 +73,23 @@
 
 		echo '<input type="hidden" value="' .$_GET['order_id']. '" id="order-id"></input>';
 		echo '<input type="hidden" value="' .$_GET['rtn']. '" id="return-url"></input>';
+		echo '<input type="hidden" value="' .$result['slip']. '" id="slip"></input>';		
 
 		$orderDate = (empty($result['order_date']))?'':date('d-m-Y', strtotime($result['order_date']));
         $paidDate = (empty($result['paid_date']))?'':date('d-m-Y', strtotime($result['paid_date']));
+        $confirmPaidDate = (empty($result['confirm_paid_date']))?'':date('d-m-Y', strtotime($result['confirm_paid_date']));
         $deliverDate = (empty($result['deliver_date']))?'':date('d-m-Y', strtotime($result['deliver_date']));
         $cancelDate = (empty($result['cancel_date']))?'':date('d-m-Y', strtotime($result['cancel_date']));
         $cancelRemark = $result['cancel_remark'];
         $trackingId = $result['tracking_id'];
+        $paidTime = $result['paid_time'];
 
 		$shirt1 = '<b>เสื้อ: </b>'. $result['shirt_name_1'] . '<b> เพศ: </b>' . (($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_1'] . '<b> สี: </b>' . $result['color_1'];
 		$shirt2 = '<b>เสื้อ: </b>'. $result['shirt_name_2'] . '<b> เพศ: </b>' . (($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_2'] . '<b> สี: </b>' . $result['color_2'];
 	}
     ?>
     
-    <div class="container" >
+    <div class="container">
    	<div id="print-area">
    		<div>
 	    	<label>ชื่อ-นามสกุล</label>        	
@@ -179,7 +183,8 @@
 	                        <div style="text-align: center;font-size: 13px;min-height: 25px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
 	                             <?php	        
 	                            //echo !!empty($paidDate);//(!empty($paidDate) && empty($deliverDate) && empty($cancelDate));                    
-	                            if (!empty($paidDate)) echo 'ชำระเงินแล้ว: ' .$paidDate;
+	                            if (!empty($paidDate)) echo ' แจ้งชำระเงินแล้ว: ' .$paidDate. ' เวลา: ' .$paidTime;
+	                            if (!empty($confirmPaidDate)) echo ' ยืนยันชำระเงินแล้ว: ' .$confirmPaidDate;
 	                            if (!empty($deliverDate)) echo ' ส่งสินค้าแล้ว: ' .$deliverDate;
 	                            if (!empty($trackingId)) echo ' หมายเลขสิ่งของ: ' .$trackingId;
 	                            if (!empty($cancelDate)) echo ' ยกเลิกแล้ว: ' .$cancelDate. ' สาเหตุ: ' .nl2br($cancelRemark);
@@ -233,26 +238,33 @@
    	<br/>
   	<div class="panel panel-info" >			
 	    <div class="panel-heading">
-		    <h4 class="panel-title"><?php echo 'รายการสั่งซื้อ ' . '<b>#' . $_GET['order_id'] . '</b> (' . $orderDate .')' ?></h4>
+		    <h4 class="panel-title"><?php echo 'รายการสั่งซื้อ ' . ' เลขที่#' . $_GET['order_id']; ?></h4>
 	    </div>
 	    		    	
     	<div class="panel-body">
-			<div class="form-group">
-	        	<label class="col-xs-3 form-control-static">ชื่อ-นามสกุล</label>
+    		<div class="form-group">
+	        	<label class="col-xs-3 control-label">วันที่</label>
 	        	<div class="col-xs-9">
-	        		<p class="form-control-static"><?php echo $result['member_name']; ?></p>
+	        		<p ><?php echo $orderDate; ?></p>
+	        		<p >abcd</p>
+	        	</div>		        	
+		    </div>
+			<div class="form-group">
+	        	<label class="col-xs-3 control-label">ชื่อ-นามสกุล</label>
+	        	<div class="col-xs-9">
+	        		<p ><?php echo $result['member_name']; ?></p>
 	        	</div>		        	
 		    </div>
 		    <div class="form-group">
-		    	<label class="col-xs-3 form-control-static">อีเมล์</label>
+		    	<label class="col-xs-3 control-label">อีเมล์</label>
 	        	<div class="col-xs-9">
-	        		<p class="form-control-static"><?php echo $_SESSION['email']; ?></p>
+	        		<p><?php echo $_SESSION['email']; ?></p>
 	        	</div>
 		    </div>
 		    <div class="form-group">
-		    	<label class="col-xs-3 form-control-static">ที่อยู่</label>
+		    	<label class="col-xs-3 control-label">ที่อยู่</label>
 		    	<div class="col-xs-6">
-		    		<p class="form-control-static" name="txtAddress" id="txt-address"><?php echo nl2br($result['address']); ?></p>
+		    		<p><?php echo nl2br($result['address']); ?></p>
 		    	</div>
 		    </div>
       		<div class="form-group">
@@ -261,59 +273,59 @@
 		      			<div class="panel-heading">เสื้อตัวที่ 1</div>	
 		      			<div class="panel-body">	
 	      				<div class="row">
-				      		<label class="form-control-static col-xs-3">เพศ</label>
+				      		<label class="control-label col-xs-3">เพศ</label>
 				      		<div class="col-xs-3">
-				      			<p class="form-control-static"><?php echo ($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
+				      			<p><?php echo ($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
 				      		</div>
 				      	</div>				      	
 				      	<div class="row">
 		      				<div class="form-group">
-				      			<label class="form-control-static col-xs-3">ประเภท</label>
+				      			<label class="control-label col-xs-3">ประเภท</label>
 					      		<div class="col-xs-3">
-					      			<p class="form-control-static"><?php echo $result['shirt_type_1']; ?></p>
+					      			<p ><?php echo $result['shirt_type_1']; ?></p>
 					      		</div>
 					      	</div>
 				      	</div>
 				      	<div class="row">					      
-				      		<label class="form-control-static col-xs-3">สี</label>
+				      		<label class="control-label col-xs-3">สี</label>
 		      				<div class="col-xs-4">
-				      			<p class="form-control-static"><?php echo $result['color_1']; ?></p>								      			
+				      			<p><?php echo $result['color_1']; ?></p>								      			
 				      		</div>
 				      		<div class="col-xs-2">
 				      			<span class="form-control label-sm" style="background: <?php echo $result['color_hex_1']; ?>"></span>
 				      		</div>					      	
 				      	</div>
 				      	<div class="row">					      	
-				      		<label class="form-control-static col-xs-3">ชนิดผ้า - ขนาด</label>
+				      		<label class="control-label col-xs-3">ชนิดผ้า - ขนาด</label>
 				      		<div class="col-xs-3">
-				      			<p class="form-control-static"><?php echo $result['material_type_1'] . ' - ' . $result['size_code_1']; ?></p>
+				      			<p><?php echo $result['material_type_1'] . ' - ' . $result['size_code_1']; ?></p>
 				      		</div>					      	
 				      	</div>
 				      	<div class="row">				      	
-				      		<label class="form-control-static col-xs-3">ราคาเสื้อเปล่า</label>
+				      		<label class="control-label col-xs-3">ราคาเสื้อเปล่า</label>
 				      		<div class="col-xs-3">
-				      			<p class="form-control-static" id="price-1"><?php echo $result['shirt_price_1']; ?></p>
+				      			<p><?php echo $result['shirt_price_1']; ?></p>
 				      		</div>				      	
 				      	</div>
 				      	<div class="row">
-				      		<label class="form-control-static col-xs-3" for="screen-price-1">ราคาลายสกรีน</label>
+				      		<label class="control-label col-xs-3" for="screen-price-1">ราคาลายสกรีน</label>
 				      		<div class="col-xs-3">
-				      			<p class="form-control-static" id="screen-price-1"><?php echo $result['line_screen_price_1'] ?></p>
+				      			<pid="screen-price-1"><?php echo $result['line_screen_price_1'] ?></p>
 				      		</div>
 				      	</div>
 				      	<div class="row">
-				      		<label class="form-control-static col-xs-3" for="qty-1">จำนวน</label>
+				      		<label class="control-label col-xs-3" for="qty-1">จำนวน</label>
 				      		<div class="col-xs-6">
-				      			<p class="form-control-static"><?php echo $result['qty_1'] ?></p>
+				      			<p><?php echo $result['qty_1'] ?></p>
 				      		</div>
 				      	</div>
 				      	<div class="row">
-				      		<label class="form-control-static col-xs-3">รวม</label>
+				      		<label class="control-label col-xs-3">รวม</label>
 				      		<div class="col-xs-3">
 				      			<?php
 				      			$total_1 = ($result['shirt_price_1'] + $result['line_screen_price_1']) * $result['qty_1'];
 				      			?>
-				      			<p class="form-control-static"><?php echo number_format($total_1, 2); ?></p>
+				      			<p><?php echo number_format($total_1, 2); ?></p>
 				      		</div>
 				      	</div>
 				      	</div>
@@ -325,57 +337,57 @@
 		      			<div class="panel-heading">เสื้อตัวที่ 2</div>
 		      			<div class="panel-body">
 		      				<div class="row">
-					      		<label class="form-control-static col-xs-3">เพศ</label>
+					      		<label class="control-label col-xs-3">เพศ</label>
 					      		<div class="col-xs-3">
-					      			<p class="form-control-static"><?php echo ($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
+					      			<p><?php echo ($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง' ; ?></p>
 					      		</div>
 					      	</div>
 		      				<div class="row">
-				      			<label class="form-control-static col-xs-3">ประเภท</label>
+				      			<label class="control-label col-xs-3">ประเภท</label>
 					      		<div class="col-xs-3">
-					      			<p class="form-control-static"><?php echo $result['shirt_type_2']; ?></p>
+					      			<p><?php echo $result['shirt_type_2']; ?></p>
 					      		</div>
 					      	</div>
 					      	<div class="row">
-				      			<label class="form-control-static col-xs-3">สี</label>							      								      			
+				      			<label class="control-label col-xs-3">สี</label>							      								      			
 			      				<div class="col-xs-3">
-					      			<p class="form-control-static"><?php echo $result['color_2']; ?></p>								      			
+					      			<p><?php echo $result['color_2']; ?></p>								      			
 					      		</div>
 					      		<div class="col-xs-2">
 					      			<span class="form-control" style="background: <?php echo $result['color_hex_2']; ?>"></span>
 					      		</div>						      			
 					      	</div>
 					      	<div class="row">
-					      		<label class="form-control-static col-xs-3">ชนิดผ้า - ขนาด</label>						      								      		
+					      		<label class="control-label col-xs-3">ชนิดผ้า - ขนาด</label>						      								      		
 					      		<div class="col-xs-3">
-					      			<p class="form-control-static"><?php echo $result['material_type_2'] . ' - ' . $result['size_code_2']; ?></p>						      			
+					      			<p><?php echo $result['material_type_2'] . ' - ' . $result['size_code_2']; ?></p>						      			
 					      		</div>
 					      	</div>
 					      	<div class="row">
-					      		<label class="form-control-static col-xs-3">ราคาเสื้อเปล่า</label>
+					      		<label class="control-label col-xs-3">ราคาเสื้อเปล่า</label>
 					      		<div class="col-xs-3">
-					      			<p class="form-control-static"><?php echo $result['shirt_price_2']; ?></p>
+					      			<p><?php echo $result['shirt_price_2']; ?></p>
 					      		</div>
 					      	</div>
 					      	<div class="row">
-					      		<label class="form-control-static col-xs-3" for="screen-price-2">ราคาลายสกรีน</label>
+					      		<label class="control-label col-xs-3" for="screen-price-2">ราคาลายสกรีน</label>
 					      		<div class="col-xs-3">
-					      			<p class="form-control-static" id="screen-price-2"><?php echo $result['line_screen_price_2']; ?></p>
+					      			<p><?php echo $result['line_screen_price_2']; ?></p>
 					      		</div>
 					      	</div>
 					      	<div class="row">
-					      		<label class="form-control-static col-xs-3">จำนวน</label>
+					      		<label class="control-label col-xs-3">จำนวน</label>
 					      		<div class="col-xs-6">
-					      			<p class="form-control-static"><?php echo $result['qty_2'] ?></p>
+					      			<p><?php echo $result['qty_2'] ?></p>
 					      		</div>
 					      	</div>
 					      	<div class="row">
-					      		<label class="form-control-static col-xs-3">รวม</label>
+					      		<label class="control-label col-xs-3">รวม</label>
 					      		<div class="col-xs-3">
 					      			<?php
 					      			$total_2 = ($result['shirt_price_2'] + $result['line_screen_price_2']) * $result['qty_2'];
 					      			?>
-					      			<p class="form-control-static"><?php echo number_format($total_2, 2); ?></p>
+					      			<p><?php echo number_format($total_2, 2); ?></p>
 					      		</div>
 					      	</div>
 				      	</div>
@@ -385,9 +397,9 @@
 
       		<div class="col-xs-6">
 	      		<div class="form-group">
-	      			<label class="form-control-static col-xs-3">รวมทั้งสิ้น (บาท)</label>
+	      			<label class="control-label col-xs-3">รวมทั้งสิ้น (บาท)</label>
 	      			<div >
-	      				<b><p class="form-control-static text-success" id="total-price"><?php echo number_format($result['amt'], 2); ?></p></b>
+	      				<b><p id="total-price" class="text-success"><?php echo number_format($result['amt'], 2); ?></p></b>
 	      			</div>				      			
 				</div>
 			</div>
@@ -399,14 +411,15 @@
 	<div class="row"></div>
 		<div class="col-xs-6">
 			<button type="button" class="btn btn-primary" id="btn-print">พิมพ์ใบงาน</button>
-			<button type="button" class="btn btn-success <?php echo (empty($paidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-paid">ยืนยันการรับชำระเงิน</button>
-			<button type="button" class="btn btn-success <?php echo (!empty($paidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-deliver">ยืนยันการส่งสินค้า</button>
-			<button type="button" class="btn btn-warning <?php echo (empty($paidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-cancel">ยกเลิกรายการสั่งซื้อ</button>
+			<button type="button" class="btn btn-success <?php echo (!empty($paidDate) && empty($confirmPaidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-paid">ยืนยันการรับชำระเงิน</button>
+			<button type="button" class="btn btn-success <?php echo (!empty($paidDate) && !empty($confirmPaidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-deliver">ยืนยันการส่งสินค้า</button>
+			<button type="button" class="btn btn-warning <?php echo (empty($paidDate) && empty($confirmPaidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-cancel">ยกเลิกรายการสั่งซื้อ</button>
 			<button type="button" class="btn btn-danger <?php echo (!empty($cancelDate)) ?'':'hidden'; ?>" id="btn-delete">ลบรายการสั่งซื้อ</button>
 			<a class="btn btn-default" href="<?php echo $_GET['rtn'] ?>">กลับ</a>			
 		</div>
 
     </div> <!-- container -->
+
     <iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute"></iframe>    
     <script type="text/javascript">
     var btnPrint = document.getElementById('btn-print');
@@ -432,10 +445,14 @@
     var totalPrice = document.getElementById('total-price').innerHTML;
     var btnPaid = document.getElementById('btn-paid');    
     btnPaid.onclick = function() {
+    	var slipUrl = document.getElementById('slip').value;
     	var msg = '<div class="container">';
     	msg += '<div class="row">';
     	msg += '<label class="form-control-static col-xs-3">รับชำระเงินแล้วจำนวน:</label>';
-    	msg += '<p class="form-control-static col-xs-2"><b>' + totalPrice + ' บาท</b></p>';
+    	msg += '<p class="form-control-static col-xs-2"><b>' + totalPrice + ' บาท</b></p>';    	
+    	msg += '</div>';
+    	msg += '<div class="row">';
+    	msg += '<a class="col-xs-3" href="#" onclick="window.open(\'' + slipUrl + '\')">หลักฐานการโอน</a>';
     	msg += '</div>';
     	msg += '<div class="row">';    	
     	msg += '<label class="form-control-static col-xs-3">วันที่</label>';
@@ -458,17 +475,17 @@
 				label	:	'ยืนยัน',
 				cssClass:	'btn-success',
 				action	:	function(dialog){
-					var paidDate = dialog.getModalBody().find('input').val();
+					var confirmPaidDate = dialog.getModalBody().find('input').val();
 					dialog.close();
-                    confirmOrder(paidDate);					
+                    confirmPaidOrder(confirmPaidDate);					
 				}
 			}]
 		});
 		dialog.open();
     }
 
-    function confirmOrder(paidDate) {
-    	if (paidDate === '') {
+    function confirmPaidOrder(confirmPaidDate) {
+    	if (confirmPaidDate === '') {
     		BootstrapDialog.show({
 	        		type: BootstrapDialog.TYPE_WARNING,
 	                title: 'Error',
@@ -482,7 +499,7 @@
 	        type: "POST",
 	        dataType: "json",
 	        url: "data/ShirtOrder.data.php",
-	        data: {method: "confirmOrder", order_id: orderId, paid_date: paidDate}
+	        data: {method: "confirmPaid", order_id: orderId, confirm_paid_date: confirmPaidDate}
 	    })
 	    .done(function(data) {
 	        if (data.result === "success") {
@@ -504,7 +521,7 @@
 	        BootstrapDialog.show({
 	        		type: BootstrapDialog.TYPE_WARNING,
 	                title: 'Fatal Error',
-	                message : '<div class="alert alert-danger" role="alert"><strong>Error in confirmOrder !!!</strong></div>'
+	                message : '<div class="alert alert-danger" role="alert"><strong>Error in Confirm Paid !!!</strong></div>'
 	        });//bootbox
 	    });//fail
     }

@@ -35,40 +35,41 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
   ?>  
   <form id="list-shirt-color-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
   <div class="container">
-    <div class="col-md-2">
-    <div class="form-group"> 
-      <div class="input-group">
-        <span class="input-group-btn">
-          <button class="btn btn-default icon-search" type="submit"></button>
-        </span>
-        <input type="text" class="form-control" id="txt-search" placeholder="ID" name="txtSearch"
-        value="<?php 
-          if (!empty($_GET['txtSearch'])) {
-            echo $_GET['txtSearch'];
-          } else {
-            echo '';
-          }
-        ?>"
-        >        
+    <div class="col-md-3">
+      <div class="form-group"> 
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button class="btn btn-default icon-search" type="submit"></button>
+          </span>
+          <input type="text" class="form-control" id="txt-search" placeholder="ID" name="txtSearch"
+          value="<?php 
+            if (!empty($_GET['txtSearch'])) {
+              echo $_GET['txtSearch'];
+            } else {
+              echo '';
+            }
+          ?>"
+          >        
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="order-status">สถานะคำสั่งซื้อ</label>
-      <select class="form-control" name="OrderStatus" id="order-status">
-      <?php
+      <div class="form-group">
+        <label for="order-status">สถานะคำสั่งซื้อ</label>
+        <select class="form-control" name="OrderStatus" id="order-status">
+        <?php
 
-        $selectedItem = '';
-        if (isset($_GET['OrderStatus']) && !empty($_GET['OrderStatus'])) {
-          $selectedItem = $_GET['OrderStatus'];
-        }
-        echo '<option value="order" ' .(($selectedItem == 'order') ? 'selected' : ''). '>รับคำสั่งซื้อ</option>';
-        echo '<option value="paid" ' .(($selectedItem == 'paid') ? 'selected':''). '>ชำระเงินแล้ว</option>';
-        echo '<option value="delivered" ' .(($selectedItem == 'delivered') ? 'selected':''). '>จัดส่งแล้ว</option>';        
-        echo '<option value="canceled" ' .(($selectedItem == 'canceled') ? 'selected':''). '>ยกเลิก</option>';        
-        echo '<option value="all" ' .(($selectedItem == 'all') ? 'selected':''). '>ทั้งหมด</option>';        
-      ?>       
-      </select>
-    </div>
+          $selectedItem = '';
+          if (isset($_GET['OrderStatus']) && !empty($_GET['OrderStatus'])) {
+            $selectedItem = $_GET['OrderStatus'];
+          }
+          echo '<option value="order" ' .(($selectedItem == 'order') ? 'selected' : ''). '>รับคำสั่งซื้อ</option>';
+          echo '<option value="paid" ' .(($selectedItem == 'paid') ? 'selected':''). '>ลูกค้าแจ้งจำระเงินแล้ว</option>';
+          echo '<option value="receive" ' .(($selectedItem == 'receive') ? 'selected':''). '>ยืนยันชำระเงินแล้ว</option>';
+          echo '<option value="delivered" ' .(($selectedItem == 'delivered') ? 'selected':''). '>จัดส่งแล้ว</option>';        
+          echo '<option value="canceled" ' .(($selectedItem == 'canceled') ? 'selected':''). '>ยกเลิก</option>';        
+          echo '<option value="all" ' .(($selectedItem == 'all') ? 'selected':''). '>ทั้งหมด</option>';        
+        ?>       
+        </select>
+      </div>
     </div>    
   </div>
   </form>
@@ -106,8 +107,11 @@ switch ($_GET['OrderStatus']) {
   case 'order':   
     $sql .= 'and order_date is not null and paid_date is null and deliver_date is null and cancel_date is null ';
     break;
-  case 'paid' :
-    $sql .= 'and order_date is not null and paid_date is not null and deliver_date is null and cancel_date is null ';
+  case 'paid':
+    $sql .= 'and order_date is not null and paid_date is not null and confirm_paid_date is null and deliver_date is null and cancel_date is null ';
+    break;
+  case 'receive':
+    $sql .= 'and order_date is not null and paid_date is not null and confirm_paid_date is not null and deliver_date is null and cancel_date is null ';
     break;
   case 'delivered':
     $sql .= 'and order_date is not null and paid_date is not null and deliver_date is not null and cancel_date is null ';

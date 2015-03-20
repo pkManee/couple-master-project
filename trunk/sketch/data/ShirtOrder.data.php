@@ -51,12 +51,16 @@ function customerPaid() {
   $paid_date = $_POST['txtPaidDate'];
   $paid_time = $_POST['txtPaidTime'];
   $confirm_paid_amount = $_POST['txtAmt'];
+  $slipPath = '';
+
+  if (!isset($_FILES['file'])) die('No file input');
+  if ($_FILES["file"]["error"] != UPLOAD_ERR_OK) die($_FILES["file"]["error"]);
 
   //upload slip
-  if(isset($_FILES["FileInput"]) && $_FILES["FileInput"]["error"] == UPLOAD_ERR_OK)
+  if(isset($_FILES["file"]) && $_FILES["file"]["error"] == UPLOAD_ERR_OK)
   {
       ############ Edit settings ##############
-      $UploadDirectory    = '../uploads/'; //specify upload directory ends with / (slash)
+      $UploadDirectory    = '../uploads/'.$order_id.'/'; //specify upload directory ends with / (slash)
       ##########################################
       
       /*
@@ -71,12 +75,12 @@ function customerPaid() {
       }      
       
       //Is file size is less than allowed size.
-      if ($_FILES["FileInput"]["size"] > 5242880) {
+      if ($_FILES["file"]["size"] > 5242880) {
           die("File size is too big!");
       }
       
       //allowed file type Server side check
-      switch(strtolower($_FILES['FileInput']['type']))
+      switch(strtolower($_FILES['file']['type']))
           {
               //allowed file types
               // case 'image/png': 
@@ -95,15 +99,15 @@ function customerPaid() {
                   die('Unsupported File!'); //output error
       }
       
-      $File_Name          = strtolower($_FILES['FileInput']['name']);
+      $File_Name          = strtolower($_FILES['file']['name']);
       $File_Ext           = substr($File_Name, strrpos($File_Name, '.')); //get file extention      
       $NewFileName        = 'slip' .$order_id.$File_Ext; //new file name
+      $slipPath           = $UploadDirectory.$NewFileName;
       
-      if(move_uploaded_file($_FILES['FileInput']['tmp_name'], $UploadDirectory.$NewFileName ))
+      if(move_uploaded_file($_FILES['file']['tmp_name'], $slipPath))
          {
           // do other stuff 
-            header("Content-Type: application/json");
-            echo json_encode(array("result"=>"success"));
+          //continue upload
       } else {
           die('error uploading File!');
       }
@@ -113,20 +117,21 @@ function customerPaid() {
   {    
     die('Something wrong with upload! Is "upload_max_filesize" set correctly?');
   }
-
-  header("Content-Type: application/json");
-  echo json_encode(array("result"=>"success"));
-  die();
+  
   //----  
 
   $sql = 'update shirt_order ';
-  $sql .= 'set paid_date = :paid_date ';
+  $sql .= 'set paid_date = :paid_date, ';
+  $sql .= 'paid_time = :paid_time, ';
+  $sql .= 'slip = :slip ';
   $sql .= 'where order_id = :order_id ';
 
   $stmt = $dbh->prepare($sql);
 
   $stmt->bindValue(':order_id', $order_id);
   $stmt->bindValue(':paid_date', $paid_date);
+  $stmt->bindValue(':paid_time', $paid_time);
+  $stmt->bindValue(':slip', substr($slipPath, 3));
 
   if ($stmt->execute()) {
     
@@ -139,9 +144,10 @@ function customerPaid() {
   } 
 }
 
+//Owner confirm the paid order
 function confirmPaid() {
   $order_id = $_POST['order_id'];
-  $paid_date = $_POST['paid_date']; 
+  $confirm_paid_date = $_POST['confirm_paid_date']; 
 
   try {
       $dbh = dbConnect::getInstance()->dbh;
@@ -151,13 +157,13 @@ function confirmPaid() {
   }
   
   $sql = 'update shirt_order ';
-  $sql .= 'set confirm_paid_date = :paid_date ';
+  $sql .= 'set confirm_paid_date = :confirm_paid_date ';
   $sql .= 'where order_id = :order_id and confirm_paid_date is null ';
 
   $stmt = $dbh->prepare($sql);
 
   $stmt->bindValue(':order_id', $order_id);
-  $stmt->bindValue(':paid_date', $paid_date);
+  $stmt->bindValue(':confirm_paid_date', $confirm_paid_date);
 
   if ($stmt->execute()) {
     
@@ -271,16 +277,26 @@ function checkExistingOrder() {
 
   $order_id = $_POST['order_id'];
   $email = $_POST['email'];
+  $amt = 0;
+  if (isset($_POST['amount'])) {
+    $amt = $_POST['amount'];
+  }
 
   $sql = 'select order_id from shirt_order ';
   $sql .= 'where order_id = :order_id ';
   $sql .= 'and email = :email ';
   $sql .= 'and paid_date is null ';
+  if ($amt > 0) {
+    $sql .= 'and amt = :amt ';
+  } else {
+    $sql .= 'and amt > :amt';
+  }
 
   $stmt = $dbh->prepare($sql);
 
   $stmt->bindValue(':order_id', $order_id);
   $stmt->bindValue(':email', $email);
+  $stmt->bindValue(':amt', $amt);
 
   if ($stmt->execute()) {
     $results = $stmt->fetch(PDO::FETCH_ASSOC);
