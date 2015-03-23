@@ -1,9 +1,8 @@
 
 <nav class="navbar navbar-default">
   <div class="container">
-    <div class="navbar-header">
-     
-      <a class="navbar-brand" href="index.php">Brand</a>
+    <div class="navbar-header">     
+      <a class="navbar-brand" href="index.php"><img src="img/logo-1.png" style="height: 30px"></a>
     </div>
    
     <p id="lbl1" class="navbar-text"><?php if ($_SESSION["email"] == "") echo "สมาชิก ล็อกอิน"; 
@@ -18,7 +17,7 @@
           <label class="sr-only" for="txt-password">รหัสผ่าน</label>
           <input id="txt-password" type="password" class="form-control" placeholder="รหัสผ่าน" value="111111">
         </div>
-        <button type="button" id="btn-sign-in" class="btn btn-primary">ล็อกอิน</button>
+        <button type="button" id="btn-sign-in" class="btn btn-success">ล็อกอิน</button>
       </form>
 
       <ul class="nav navbar-nav">
@@ -46,6 +45,7 @@
             <li><a href="listshirtcolor.php">สีเสื้อ</a></li>
             <li><a href="ListShirts.php">เสื้อ</a></li>
             <li><a href="ListSizePrice.php">ราคาลายสกรีน</a></li>
+            <li><a href="SystemInit.php">ค่าตั้งต้น</a></li>
             <li class="divider"></li>
             <li><a href="ListOrder.php">รายการสั่งซื้อ</a></li>
           </ul>
@@ -81,7 +81,7 @@ btnSignin.onclick = function(){
   } else {   
 
     bootbox.confirm({
-                  title: '', 
+                  title: 'ยืนยันออกจากระบบ', 
                   message: '<div class="alert alert-info" role="alert">ท่านต้องการ <strong>ล็อกเอาท์</strong> หรือไม่?</div>',
                   callback: function(result) {                   
                     if (result) {
@@ -91,7 +91,7 @@ btnSignin.onclick = function(){
                     }
                   }
     }); 
-  }  
+  }
 }
 
 function doLogin(data){
@@ -114,6 +114,7 @@ function doLogin(data){
   txtEmail.disabled = true;
   txtPassword.disabled =true;
   btnSignin.innerHTML = btnSignoutText;
+  btnSignin.className = 'btn btn-danger';
   dropdown.style.display = 'block';
 
   if (txtEmail.value = 'pk.manee@gmail.com') {

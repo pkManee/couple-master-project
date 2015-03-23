@@ -10,12 +10,7 @@
     
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
-    <link rel="stylesheet" href="css/bootstrap-dialog.css" >
-    <style type="text/css">
-    	@media print {
-        .no-print { display:none; }
-    	}
-    </style>
+    <link rel="stylesheet" href="css/bootstrap-dialog.css" >    
 
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
@@ -91,28 +86,34 @@
     
     <div class="container">
    	<div id="print-area">
-   		<div style="width: 100%; border-color: #E6E6E6; border-width: 1px; border-style: solid; -moz-border-radius: 5px; border-radius: 5px; display: inline-block; padding: 10px 10px 10px 10px;">
+   	<style type="text/css">
+    	@media print {
+        .no-print { display:none; }
+        .small-print { width: 98% !important; }
+    	}
+    </style>
+   		<div class="small-print" style="width: 100%; border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px; display: inline-block; padding: 10px 10px 10px 10px;">
 	   		<div style="float: left; display: inline-block;">
-				
-				<b><p>ร้านขายเสื้อคู่</p></b>
+				<img src="img/logo-1.png" style="width: 40px;">
+				<b style="display: inline-block; font-size: 20px;"><p>ร้านขายเสื้อคู่</p></b>
 				<p>28/1 ซ.กิจการ ถ.รัชดาภิเษก</p>
 				<p>แขวนดินแดง เขตดินแดง กรุงเทพฯ</p>
-				<p>โทร. 02-247-8897</p>
-				
+				<p>โทร. 02-247-8897</p>				
 			</div>
 			<div style="float: right; width: 50%; display: inline-block; text-align: right;">
 				<div>
 					<p>เลขที่คำสั่งซื้อ</p>
-					<b><P style="font-size: 25px;"><?php echo $result['order_id'] ?></P></b>
+					<b><P style="font-size: 20px;"><?php echo $result['order_id'] ?></P></b>
+					<p><?php echo 'วันที่ ' . $orderDate; ?></p>					
 				</div>
 			</div>
 		</div>
-   		<div style="width: 50%;">
-	   		<div>
+   		<div style="width: 70%;">
+	   		<div style="display: inline-table;">
 		    	<label>ชื่อ-นามสกุล</label>        	
 		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
 		    </div>
-		    <div>
+		    <div style="display: inline-table; margin-left: 40px;">
 		    	<label>อีเมล์</label>        	
 		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $_SESSION['email']; ?></p>
 		    </div>
@@ -240,8 +241,6 @@
 		   		</div>
 			</div>
 		</div>
-	   
-	    <br>
 	    <p style="text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">
 	    ภาพตัวอย่าง <br>	    	
     		<?php echo 'ด้านซ้าย : กว้าง ' .$result['screen_width_1']. ' สูง ' .$result['screen_height_1']. ' ซม. <br>'; ?>    	
@@ -265,7 +264,6 @@
 	        	<label class="col-xs-3 control-label">วันที่</label>
 	        	<div class="col-xs-9">
 	        		<p ><?php echo $orderDate; ?></p>
-	        		<p >abcd</p>
 	        	</div>		        	
 		    </div>
 			<div class="form-group">
@@ -445,15 +443,9 @@
     btnPrint.onclick = function() {    	
     	var content = document.getElementById('print-area');
 		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
-		var myStyle = '<html><div style="font-size: 16px; font-family: tahoma ">';
-		var myCss = '';
-		myCss += '<style type="text/css">';
-		myCss += 	'@media print {';
-		myCss += 	'.no-print { display:none; }';
-		myCss += 	'}';
-		myCss += '</style>';
+		var myStyle = '<html><div style="font-size: 16px; font-family: tahoma ">';		
 
-		var body = myStyle + myCss + content.innerHTML + '</div></html>';
+		var body = myStyle + content.innerHTML + '</div></html>';
 		pri.document.open();
 		pri.document.write(body);
 		pri.document.close();
