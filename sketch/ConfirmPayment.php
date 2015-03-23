@@ -41,7 +41,7 @@
 
       <div class="form-group">
         <label class="control-label" for="txt-paid-date">วันที่โอน เข้าบัญชี 999-9-999999</label>
-        <p class="form-control-static"> ธนาคาร___ ชื่อบัญชี นายภาสกร มณี</p>
+        <p class="form-control-static"> ธนาคารไทยวาณิชย์ ชื่อบัญชี นายภาสกร มณี</p>
         <input type="date" class="form-control" id="txt-member-name" placeholder="วันที่โอน" name="txtPaidDate" >
       </div>      
       <div class="form-group">

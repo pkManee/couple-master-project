@@ -374,6 +374,46 @@ class MyService extends  REST {
         $this->response(json_encode($files), 200);
 	}
 
+	function updateSystemInit() {
+		if($this->get_request_method() != "POST")
+		{
+			$this->response('',406);
+		}
+
+		try {
+		  $dbh = dbConnect::getInstance()->dbh;
+		} catch (PDOException $e) {
+		  $this->response("Error!: " . $e->getMessage() . "<br/>", 500);
+		  die();
+		}
+
+		$print_format = $this->_request['print_format'];
+		$width = $this->_request['width'];
+		$height = $this->_request['height'];
+		$vat_rate = $this->_request['vat_rate'];
+		$old_print_format = $this->_request['old_print_format'];
+
+		$sql = 'update printer set ';
+		$sql .= 'print_format = :print_format, ';
+		$sql .= 'width = :width, ';
+		$sql .= 'height = :height, ';
+		$sql .= 'vat_rate = :vat_rate ';
+		$sql .= 'where print_format = :old_print_format ';
+
+		$stmt = $dbh->prepare($sql);
+		$stmt->bindValue(":print_format", $print_format);
+		$stmt->bindValue(":width", $width);
+		$stmt->bindValue(":height", $height);
+		$stmt->bindValue(":vat_rate", $vat_rate);
+		$stmt->bindValue(":old_print_format", $old_print_format);
+
+		if ($stmt->execute()) {
+			$this->response(json_encode(array("result"=>"success")), 200);
+		} else {		
+			$this->response(json_encode($stmt->errorInfo()), 500);
+		}
+	}
+
 }//class 
 
 // Initiiate Library
