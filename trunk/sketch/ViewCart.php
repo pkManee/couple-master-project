@@ -68,8 +68,8 @@
 			}
 		}		
 
-		$sql = "select email, member_name, address, province_id, amphur_id, district_id, password, postcode ";
-		$sql .= ",photo, height_1, height_2 ";
+		$sql = "select email, member_name, address, province_id, amphur_id, district_id, password, postcode, ";
+		$sql .= "photo, height_1, height_2 ";
 		$sql .= "from member where email = :email ";
 		$stmt = $dbh->prepare($sql);
 		$stmt->bindValue(":email", $_SESSION["email"]);
@@ -365,8 +365,8 @@
 		    </div>
 		    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
 		      <div class="panel-body" id="try-it">
-		        <img id="try-it-photo" src="<?php echo $member->photo; ?>" >
-		        <canvas id="c"></canvas>
+		        <img id="try-it-photo" src="<?php echo $member->photo; ?>" style="z-index: 1; position: relative;" >
+		        <canvas id="c" style="z-index: 2;"></canvas>
 		        <img src="<?php echo $_POST['shirt_photo_1'] ?>" class="img-thumnail" style="position: absolute; left: 100px; top: 500px; width: 200px;">
 		        <img src="<?php echo $_POST['shirt_photo_2'] ?>" class="img-thumnail" style="position: absolute; left: 100px; top: 500px; width: 200px;">
 		      </div>
@@ -380,7 +380,7 @@
     <script type="text/javascript" src="js/jquery.bootstrap-touchspin.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript">
-    var canvas = this.__canvas = new fabric.Canvas('c');  //normal event
+    var canvas = new fabric.Canvas('c');  //normal event
 	fabric.Object.prototype.selectable = false;	
 	canvas.selection = false;
 
@@ -538,6 +538,7 @@
 			//150 means standard frame in shirt mode
 			img.style.top = parseInt(person.line_screen_top - 150) + screenTop + 'px';
 			img.style.position = 'absolute';
+			img.style.zIndex = '3';
 		}
 		img.src = person.line_screen.src;
 		img.id = person.id;
