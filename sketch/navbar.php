@@ -53,7 +53,7 @@
       </ul>
   </div>  
 </nav>
-
+<script src="js/bootbox.js"></script>
 <script type="text/javascript">
 var btnSignin = document.getElementById('btn-sign-in');
 var txtEmail = document.getElementById('txt-email');
@@ -150,6 +150,7 @@ function init(){
     txtEmail.disabled = true;
     txtPassword.disabled =true;
     btnSignin.innerHTML = btnSignoutText;
+    btnSignin.className = 'btn btn-danger';
     dropdown.style.display = 'block';
 
     if (txtEmail.value === 'pk.manee@gmail.com') {

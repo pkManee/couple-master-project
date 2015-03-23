@@ -726,6 +726,8 @@ function goSave() {
             var dataURL = shirtCanvas.toDataURL();
             var screen1 = splitLineScreen[0]; //finalLineScreen[0].toDataURL();
             var screen2 = splitLineScreen[1]; //finalLineScreen[1].toDataURL(); 
+            splitShirt();
+
             $.redirect("ViewCart.php",
                         {
                             gender_1: cboGender1.value, 
@@ -746,7 +748,9 @@ function goSave() {
                             scaleY_2: finalLineScreen[1].scaleY,
                             top_2: finalLineScreen[1].top,
                             gapLeft_2: finalLineScreen[1].left - borderShirt2.left,
-                            product: dataURL
+                            product: dataURL,
+                            shirt_photo_1: splitShirtArray[0],
+                            shirt_photo_2: splitShirtArray[1]
                         });
       } else {
         bootbox.dialog({
@@ -761,6 +765,30 @@ function goSave() {
                 message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
         });
     });//fail
+}
+
+var splitShirtArray;
+function splitShirt() {
+    splitShirtArray = [];    
+
+    var format = 'png',
+        quality = '10';       
+    var cropping1 = {
+        y: 0,
+        x: 0,
+        width: 425,
+        height: 600
+    };
+    var cropping2 = {
+        y: 0,
+        x: 425,
+        width: 425,
+        height: 600
+    };
+  
+    shirtCanvas.deactivateAll();
+    splitShirtArray.push(shirtCanvas.toDataURLWithCropping(format, cropping1, quality));
+    splitShirtArray.push(shirtCanvas.toDataURLWithCropping(format, cropping2, quality));
 }
 
 var Toast = (function() {
