@@ -24,6 +24,7 @@
     <script src="js/bootstrapValidator.js"></script>
     <!-- object detect -->
 	<script src="js/jquery.objectdetect.js"></script>
+	<script src="js/fabric.js"></script>
   </head>
   <body>  
     <div class="alert alert-success" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
@@ -365,6 +366,9 @@
 		    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
 		      <div class="panel-body" id="try-it">
 		        <img id="try-it-photo" src="<?php echo $member->photo; ?>" >
+		        <canvas id="c"></canvas>
+		        <img src="<?php echo $_POST['shirt_photo_1'] ?>" class="img-thumnail" style="position: absolute; left: 100px; top: 500px; width: 200px;">
+		        <img src="<?php echo $_POST['shirt_photo_2'] ?>" class="img-thumnail" style="position: absolute; left: 100px; top: 500px; width: 200px;">
 		      </div>
 		    </div>
 		  </div>
@@ -376,6 +380,10 @@
     <script type="text/javascript" src="js/jquery.bootstrap-touchspin.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript">
+    var canvas = this.__canvas = new fabric.Canvas('c');  //normal event
+	fabric.Object.prototype.selectable = false;	
+	canvas.selection = false;
+
     var scaleX_1 = document.getElementById('scale-x-1');
 	var scaleY_1 = document.getElementById('scale-y-1');
 	var scaleX_2 = document.getElementById('scale-x-2');
