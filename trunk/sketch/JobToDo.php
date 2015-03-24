@@ -646,13 +646,13 @@
             title: 'ยกเลิกรายการสั่งซื้อสินค้า',
             message: msg,
             buttons: [{
-                label: 'ไม่ยืนยัน',
+                label: 'ไม่ยกเลิก',
                 action: function(dialog) {
                     dialog.close();
                 }
             }, {
-                label: 'ยืนยัน',
-                cssClass: 'btn-success',
+                label: 'ยกเลิก',
+                cssClass: 'btn-warning',
                 action: function(dialog) {
                 	var cancelRemark = dialog.getModalBody().find('input').val();
                 	dialog.close();
