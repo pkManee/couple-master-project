@@ -12,12 +12,18 @@
     <link rel="stylesheet" href="css/bootstrap-theme.css">
     <link rel="stylesheet" href="css/bootstrapValidator.css">
     <link rel="stylesheet" href="css/bootstrap-select.css">
-    <link rel="stylesheet" href="css/jquery.bootstrap-touchspin.css">   
+    <link rel="stylesheet" href="css/jquery.bootstrap-touchspin.css">
+
+    <!-- object detect -->
+    <script src="js/objectdetect.js"></script>	
+	<script src="js/objectdetect.frontalface.js"></script>	
 	
 	<script src="js/jquery-2.1.1.min.js"></script>	
     <script src="js/bootstrap.js"></script>
     <script src="js/bootbox.js"></script>
-    <script src="js/bootstrapValidator.js"></script>   
+    <script src="js/bootstrapValidator.js"></script>
+    <!-- object detect -->
+	<script src="js/jquery.objectdetect.js"></script>
 	<script src="js/fabric.js"></script>
   </head>
   <body>  
@@ -359,11 +365,10 @@
 		    </div>
 		    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
 		      <div class="panel-body" id="try-it">
-		        <img id="try-it-photo" src="<?php echo $member->photo; ?>" class="hidden">
-		        <canvas id="c"></canvas>
-		        <canvas id="temp-canvas" class="hidden"></canvas>
-		        <img id="shirt-photo-1" src="<?php echo $_POST['shirt_photo_1'] ?>" class="hidden">
-		        <img id="shirt-photo-2" src="<?php echo $_POST['shirt_photo_2'] ?>" class="hidden">
+		        <img id="try-it-photo" src="<?php echo $member->photo; ?>" style="z-index: 1; position: relative;" >
+		        <canvas id="c" style="z-index: 2;"></canvas>
+		        <img src="<?php echo $_POST['shirt_photo_1'] ?>" class="img-thumnail" style="position: absolute; left: 100px; top: 500px; width: 200px;">
+		        <img src="<?php echo $_POST['shirt_photo_2'] ?>" class="img-thumnail" style="position: absolute; left: 100px; top: 500px; width: 200px;">
 		      </div>
 		    </div>
 		  </div>
@@ -374,20 +379,10 @@
     <script type="text/javascript" src="js/bootstrap-select.js"></script>
     <script type="text/javascript" src="js/jquery.bootstrap-touchspin.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
-
-    <script type="text/javascript" src="js/objectdetect.js"></script>
-	<script type="text/javascript" src="js/objectdetect.frontalface.js"></script>
-	<script type="text/javascript" src="js/objectdetect.eye.js"></script>
     <script type="text/javascript">
-    var c = document.getElementById('c');
-    c.style.width = '850px';
-    c.style.height = '600px';
-    c.width = 850;
-    c.height = 600;
-
     var canvas = new fabric.Canvas('c');  //normal event
 	fabric.Object.prototype.selectable = false;	
-	canvas.selection = false;	
+	canvas.selection = false;
 
     var scaleX_1 = document.getElementById('scale-x-1');
 	var scaleY_1 = document.getElementById('scale-y-1');
@@ -510,115 +505,112 @@
 		
 	}); //document ready function
 
-	//=======================
-	//try it
-	//=======================
+	var alreadyTryIt = false;	
+
+	///begin of "try it"
+	$.fn.highlight = function(rect, color) {
+		$("<div />", {
+			"css": {
+				"border":   "2px solid " + color,
+				"position":	"absolute",
+				"left":		($(this).offset().left + rect[0]) + "px",
+				"top":		($(this).offset().top  + rect[1]) + "px",
+				"width": 	rect[2] + "px",
+				"height": 	rect[3] + "px"
+			}
+		}).appendTo("#try-it");
+	}
+	
+	function displayLineScreen(person, who) {
+		//ratio of image/canvas
+		var picHeight = document.getElementById('try-it-photo').height;
+		var picWidth = document.getElementById('try-it-photo').width;
+		var rect = person.face;
+
+		var img = new Image();
+		
+		img.onload = function() {
+			var factor = rect[2] / img.width;
+			img.style.width = parseInt(img.width * factor * person.scaleX) + 'px';
+			img.style.left = parseInt($(who).offset().left + rect[0] + ((person.gapLeft * picWidth) / 850)) + 'px';
+			var screenTop = parseInt($(who).offset().top + rect[1] + rect[3] + (rect[3] * 0.5));
+			
+			//150 means standard frame in shirt mode
+			img.style.top = parseInt(person.line_screen_top - 150) + screenTop + 'px';
+			img.style.position = 'absolute';
+			img.style.zIndex = '3';
+		}
+		img.src = person.line_screen.src;
+		img.id = person.id;
+
+		$(img).appendTo('#try-it');
+	}
+
 	var alreadyTryIt = false;
-	var size = 600;
-	var detector;
 	$('#collapseFour').on('shown.bs.collapse', function () {
 		if (alreadyTryIt) return;
 
-		var photo = new Image();
-		photo.src = document.getElementById('try-it-photo').src;
+  		$("#try-it-photo").objectdetect("all", {classifier: objectdetect.frontalface}, function(faces) {
+			if (faces.length != 2) return;
 
-		fabric.Image.fromURL(photo.src, function(oImg) {  			
-            canvas.add(oImg);
-            canvas.sendToBack(oImg);
-            canvas.renderAll();
-        });
+			var faceTop_1 = 0,
+				faceTop_2 = 0,
+				faceLeft_1 = 0,
+				faceLeft_2 = 0;
+			
+			// $(this).highlight(faces[0], "red");
+			// $(this).highlight(faces[1], "red");
 
-		var tmpCanvas = document.getElementById('temp-canvas');
-		
-		//tmpCanvas.className = 'hidden';
-		tmpCanvas.width = ~~(size * photo.width / photo.height);
-		tmpCanvas.height = ~~(size);
-		tmpCanvas.getContext('2d').drawImage(photo, 0, 0, tmpCanvas.width, tmpCanvas.height);
-		detector = new objectdetect.detector(tmpCanvas.width, tmpCanvas.height, 1.2, objectdetect.eye);
-		detectFaces(tmpCanvas);		
+			$(this).highlight(faces[0], "transparent");
+			$(this).highlight(faces[1], "transparent");	
 
-		alreadyTryIt = true;
+			var height_1 = parseFloat(document.getElementById('height_1').value);
+			var height_2 = parseFloat(document.getElementById('height_2').value);
+			var gapLeft_1 = document.getElementById('gap-left-1').value;
+			var gapLeft_2 = document.getElementById('gap-left-2').value;
+
+			var personLeft, 
+				personRight,
+				faceLeft,
+				faceRight;
+			if (faces[0][0] < faces[1][0]) {
+				//faces[0] is on the left side
+				faceLeft = faces[0];
+				faceRight = faces[1];
+			} else {
+				faceLeft = faces[1];
+				faceRight = faces[0];
+			}
+
+			personLeft = {face: faceLeft, line_screen: line_screen_1, line_screen_top: top_1, scaleX: scaleX_1.value, scaleY: scaleY_1.value, id: 'img-01', gapLeft: gapLeft_1};
+			personRight = {face: faceRight, line_screen: line_screen_2, line_screen_top: top_2, scaleX: scaleX_2.value, scaleY: scaleY_2.value, id: 'img-02', gapLeft: gapLeft_2};
+			displayLineScreen(personLeft, $(this));
+			displayLineScreen(personRight, $(this));
+
+			checkPosition(personLeft, personRight);
+			alreadyTryIt = true;
+			
+		}); //objectdetect
 	});	
 
-	function detectFaces(tmpCanvas) {
-		// Detect faces in the image:			
-		var rects = detector.detect(tmpCanvas);
-		
-		// Draw rectangles around detected faces:
-		for (var i = 0; i < rects.length; ++i) {
-			var coord = rects[i];			
-			
-			var rect = new fabric.Rect({
-				id: 'eye0' + i,
-		        width: coord[2],
-		        height: coord[3],
-		        top: parseInt(coord[1]),
-		        left: parseInt(coord[0]),
-		        fill: 'rgba(0, 0, 0,0)',
-		        stroke: 'rgba(0, 0, 0, 0)',
-		        selectable: false
-		    });
-		   
-		    canvas.add(rect);
-		    canvas.bringToFront(rect);	
-		    canvas.renderAll();	    
-		}		
-
-		var arrayObj = canvas.getObjects();
-		var x1, x2, y;
-		var shirt_photo_1 = document.getElementById('shirt-photo-1');
-		var shirt_photo_2 = document.getElementById('shirt-photo-2');
-
-		
-
-		fabric.Image.fromURL(shirt_photo_1.src, function(oImg1) {
-
-			for (var i = 0; i < arrayObj.length; i++) {
-				if (arrayObj[i].id === 'eye02') {
-					x1 = arrayObj[i].left + arrayObj[i].width;
-					y = arrayObj[i].top + (arrayObj[i].height * 2);
-					continue;
-				}
-				if (arrayObj[i].id === 'eye03') {
-					x2 = arrayObj[i].left + arrayObj[i].width;
-					continue;
-				}
+	function checkPosition(personLeft, personRight) {
+		if (personLeft.line_screen_top === personRight.line_screen_top) {
+			//set all to same top
+			//find max top 
+			//in other words the lower one
+			var maxTop = 0;
+			if (personLeft.face[1] < personRight.face[1]) {
+				//left.top < right.top
+				//lower on the right
+				maxTop = document.getElementById(personRight.id).style.top;
+			} else {
+				maxTop = document.getElementById(personLeft.id).style.top;
 			}
 
-            canvas.add(oImg1);
-            canvas.bringToFront(oImg1);           
-            oImg1.set({ lockUniScaling: true, selectable: true, left: parseInt(((x1+x2)/2) - (oImg1.width/2)), top: y });
-            oImg1.setCoords();
-            canvas.renderAll();          
-        });
-		
-
-		fabric.Image.fromURL(shirt_photo_2.src, function(oImg2) {
-
-			x1 = 0;
-			x2 = 0;
-			y = 0;
-			for (var i = 0; i < arrayObj.length; i++) {
-				if (arrayObj[i].id === 'eye00') {
-					x1 = arrayObj[i].left + arrayObj[i].width;
-					y = arrayObj[i].top + (arrayObj[i].height * 2);
-					continue;
-				}
-				if (arrayObj[i].id === 'eye01') {
-					x2 = arrayObj[i].left + arrayObj[i].width;
-					continue;
-				}
-			}
-            canvas.add(oImg2);
-            canvas.bringToFront(oImg2);
-            oImg2.set({ lockUniScaling: true, selectable: true, left: parseInt(((x1+x2)/2) - (oImg2.width/2)), top: y });
-            oImg2.setCoords();
-            canvas.renderAll();          
-        });
-
-        canvas.renderAll();
+			$('#' + personLeft.id).css({'top': maxTop})
+			$('#' + personRight.id).css({'top': maxTop});	
+		}			
 	}
-	
 	//end of "try it"
 
 	var rect1, rect2;
