@@ -703,8 +703,8 @@
             type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
             closable: true, // <-- Default value is false
             draggable: true, // <-- Default value is false
-            btnCancelLabel: 'ไม่ยืนยัน', // <-- Default value is 'Cancel',
-            btnOKLabel: 'ยืนยัน', // <-- Default value is 'OK',
+            btnCancelLabel: 'ไม่ยืนยันลบ', // <-- Default value is 'Cancel',
+            btnOKLabel: 'ยืนยันลบ', // <-- Default value is 'OK',
             btnOKClass: 'btn-success', // <-- If you didn't specify it, dialog type will be used,
             callback: function(result) {
                 // result will be true if button was click, while it will be false if users close the dialog directly.
