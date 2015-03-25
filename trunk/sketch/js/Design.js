@@ -169,8 +169,8 @@ function getShirtColor1() {
             var text = '';
             shirtColor1 = data;
             data.forEach(function(item){
-                text += "<option data-content=\"<table style='width:100%; text-aligh:left;'><tr><td style='width: 50%;'>" +item.color+ "</td><td style='width: '50%'; text-aligh: right' bgcolor='" +item.color_hex+ "'></td></tr></table>\" ";
-                text +="value=\"" +item.color_hex+ "\" >" +item.color+ "</option>";
+                text += "<option data-content=\"<span></span><span>"+item.color+"</span><span class='pull-right' style='width:50px;height:20px;background-color:"+item.color_hex+"'></span>\" ";
+                text += "value=\"" +item.color_hex+ "\" >" +item.color_hex+ "</option>";
             });
 
             $(cboShirtColor1).html(text).selectpicker('refresh');
@@ -205,8 +205,8 @@ function getShirtColor2() {
             var text = '';
             shirtColor2 = data;
             data.forEach(function(item){
-                text += "<option data-content=\"<table style='width:100%; text-aligh:left;'><tr><td style='width: 50%;'>" +item.color+ "</td><td style='width: '50%'; text-aligh: right' bgcolor='" +item.color_hex+ "'></td></tr></table>\" ";
-                text +="value=\"" +item.color_hex+ "\" >" +item.color+ "</option>";
+                text += "<option data-content=\"<span></span><span>"+item.color+"</span><span class='pull-right' style='width:50px;height:20px;background-color:"+item.color_hex+"'></span>\" ";
+                text += "value=\"" +item.color_hex+ "\" >" +item.color_hex+ "</option>";
             });
 
             $(cboShirtColor2).html(text).selectpicker('refresh');
@@ -338,6 +338,150 @@ function designInit() {
     getShirtType1();    
 }
 
+var jointColor;
+$(document).ajaxStop(function () {
+    jointColor = [];
+    jointColor = shirtColor1.filter(function(val) {
+      return shirtColor2.map(function(e) { return e.color_hex; }).indexOf(val.color_hex) != -1; //shirtColor2.indexOf(val) == -1;
+    });
+});
+
+function getJointColor() {
+    var colorType;
+    if (cboColorStyle_1.value === cboColorStyle_2.value) {
+        colorType = cboColorStyle_1.value;
+    }
+
+    if (colorType === '') return;
+
+    var img = new Image();
+    img.src = canvas.toDataURL();
+    var c = colorThief.getColor(img);
+    if (!c) return;
+    
+    var dominantColor = 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+
+    var recommend;
+    var divColor = document.getElementById('recommend-color-3');
+    divColor.innerHTML = '';
+
+    var heart = document.createElement('span');
+    heart.className = 'icon-heart';
+    heart.style.paddingLeft = '10px';
+    divColor.appendChild(heart);
+
+    var span = document.createElement('span');    
+    span.className = 'span-color form-control';
+    span.style.background = dominantColor;
+    span.title = 'โทนสีหลัก';
+    divColor.appendChild(span);
+   
+    switch (colorType) {       
+        case 'analogous':
+            recommend = tinycolor.analogous(dominantColor);            
+
+            var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
+            var recommend_1 = findColor(temp, jointColor, dominantColor, 'center');
+            var existingColor = undefined;
+
+            for (var i = 0; i < recommend_1.length; i++) { 
+                var nearestColor = recommend_1[i][0].colorInStore;
+                if (tinycolor(nearestColor).toHexString() === tinycolor(dominantColor).toHexString()) {
+                    continue;
+                }
+                if (!existingColor) { 
+                        existingColor = nearestColor;
+                    } else {
+                        if (existingColor === nearestColor) break;
+                    }
+                var span = document.createElement('span');
+                span.className = 'span-color form-control clickable';
+                span.style.background = nearestColor;
+                span.title = "เปลี่ยนสีเสื้อ";
+                span.setAttribute('data-toggle', 'tooltip');
+                span.addEventListener('click', setBothColor, false);               
+                
+                divColor.appendChild(span);
+            }
+            break;
+
+        case 'triad':
+            recommend = tinycolor.triad(dominantColor);            
+            
+            var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
+            var recommend_1 = findColor(temp, shirtColor2, dominantColor, 'shirt1');
+            var existingColor = undefined;
+
+            for (var i = 0; i < recommend_1.length; i++) { 
+                var nearestColor = recommend_1[i][0].colorInStore;
+                if (tinycolor(nearestColor).toHexString() === tinycolor(dominantColor).toHexString()) {
+                    continue;
+                }
+                if (!existingColor) { 
+                        existingColor = nearestColor;
+                    } else {
+                        if (existingColor === nearestColor) break;
+                    }
+                var span = document.createElement('span');
+                span.className = 'span-color form-control clickable';
+                span.style.background = nearestColor;
+                span.title = "เปลี่ยนสีเสื้อ";
+                span.setAttribute('data-toggle', 'tooltip');
+                span.addEventListener('click', setBothColor, false);
+                
+                divColor.appendChild(span);
+            }            
+            break;
+
+         case 'complementary':
+            recommend = tinycolor.complement(dominantColor);           
+
+            var temp = [recommend.toHexString()];
+            var recommend_1 = findColor(temp, shirtColor2, dominantColor, 'shirt1');
+            var existingColor = undefined;
+
+            for (var i = 0; i < recommend_1.length; i++) { 
+                var nearestColor = recommend_1[i][0].colorInStore;
+                if (tinycolor(nearestColor).toHexString() === tinycolor(dominantColor).toHexString()) {
+                    continue;
+                }
+                if (!existingColor) { 
+                        existingColor = nearestColor;
+                } else {
+                    if (existingColor === nearestColor) break;
+                }
+                var span = document.createElement('span');
+                span.className = 'span-color form-control clickable';
+                span.style.background = nearestColor;
+                span.title = "เปลี่ยนสีเสื้อ";
+                span.setAttribute('data-toggle', 'tooltip');
+                span.addEventListener('click', setBothColor, false);
+                
+                divColor.appendChild(span);
+            }
+            
+            break;
+
+        default:
+            recommend = undefined;
+            divColor.innerHTML = '';
+            break;
+    }
+
+    $('.span-color').tooltip();
+    recommend = undefined;
+}
+
+function setBothColor() {
+    var colorHex = tinycolor(this.style.background).toHexString();
+
+    $(cboShirtColor1).selectpicker('val', colorHex);
+    cboShirtColor1.onchange();
+
+    $(cboShirtColor2).selectpicker('val', colorHex);
+    cboShirtColor2.onchange();
+}
+
 var btnCal = document.getElementById('btn-calculation');
 btnCal.onclick = function() {
     loadShirt(getURI1(cboShirtType1.value), getURI2(cboShirtType2.value));
@@ -365,22 +509,13 @@ cboColorStyle_1.onchange = function() {
     var span = document.createElement('span');
     span.className = 'span-color form-control';
     span.style.background = dominantColor;
+    span.title = 'โทนสีหลัก';
     divColor.appendChild(span);
 
+    getJointColor();
     switch (this.value) {       
         case 'analogous':
-            recommend = tinycolor.analogous(dominantColor);
-            // var span = document.createElement('span');
-            // span.className = 'span-color form-control';
-            // span.style.background = recommend[1].toHexString();            
-            // divColor.appendChild(span);
-            // span = undefined;
-
-            // span = document.createElement('span');
-            // span.className = 'span-color form-control';
-            // span.style.background = recommend[2].toHexString();
-            // divColor.appendChild(span);
-            // span = undefined;
+            recommend = tinycolor.analogous(dominantColor);            
 
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
             var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
@@ -412,18 +547,7 @@ cboColorStyle_1.onchange = function() {
             break;
 
         case 'triad':
-            recommend = tinycolor.triad(dominantColor);
-            // var span = document.createElement('span');
-            // span.className = 'span-color form-control';
-            // span.style.background = recommend[1].toHexString();            
-            // divColor.appendChild(span);
-            // span = undefined;
-
-            // span = document.createElement('span');
-            // span.className = 'span-color form-control';
-            // span.style.background = recommend[2].toHexString();
-            // divColor.appendChild(span);
-            // span = undefined;
+            recommend = tinycolor.triad(dominantColor);            
             
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
             var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
@@ -455,13 +579,7 @@ cboColorStyle_1.onchange = function() {
             break;
 
          case 'complementary':
-            recommend = tinycolor.complement(dominantColor);
-
-            // var span = document.createElement('span');
-            // span.className = 'span-color form-control';
-            // span.style.background = recommend.toHexString();
-            // divColor.appendChild(span);
-            // span = undefined;
+            recommend = tinycolor.complement(dominantColor);           
 
             var temp = [recommend.toHexString()];
             var recommend_1 = findColor(temp, shirtColor1, dominantColor, 'shirt1');
@@ -510,7 +628,7 @@ var cboColorStyle_2 = document.getElementById('cbo-color-style-2');
 cboColorStyle_2.onchange = function() {
     //display dominant color
     var img = new Image();
-    img.src = splitLineScreen[0];
+    img.src = splitLineScreen[1];
     var c = colorThief.getColor(img);
     if (!c) return;
     
@@ -522,22 +640,13 @@ cboColorStyle_2.onchange = function() {
     var span = document.createElement('span');
     span.className = 'span-color form-control';
     span.style.background = dominantColor;
+    span.title = 'โทนสีหลัก';
     divColor.appendChild(span);
 
+    getJointColor();
     switch (this.value) {       
         case 'analogous':
-            recommend = tinycolor.analogous(dominantColor);
-            // var span = document.createElement('span');
-            // span.className = 'span-color form-control';
-            // span.style.background = recommend[1].toHexString();            
-            // divColor.appendChild(span);
-            // span = undefined;
-
-            // span = document.createElement('span');
-            // span.className = 'span-color form-control';
-            // span.style.background = recommend[2].toHexString();
-            // divColor.appendChild(span);
-            // span = undefined;
+            recommend = tinycolor.analogous(dominantColor);            
 
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
             var recommend_1 = findColor(temp, shirtColor2, dominantColor, 'shirt1');
@@ -569,18 +678,7 @@ cboColorStyle_2.onchange = function() {
             break;
 
         case 'triad':
-            recommend = tinycolor.triad(dominantColor);
-            // var span = document.createElement('span');
-            // span.className = 'span-color form-control';
-            // span.style.background = recommend[1].toHexString();            
-            // divColor.appendChild(span);
-            // span = undefined;
-
-            // span = document.createElement('span');
-            // span.className = 'span-color form-control';
-            // span.style.background = recommend[2].toHexString();
-            // divColor.appendChild(span);
-            // span = undefined;
+            recommend = tinycolor.triad(dominantColor);            
             
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
             var recommend_1 = findColor(temp, shirtColor2, dominantColor, 'shirt1');
@@ -612,13 +710,7 @@ cboColorStyle_2.onchange = function() {
             break;
 
          case 'complementary':
-            recommend = tinycolor.complement(dominantColor);
-
-            // var span = document.createElement('span');
-            // span.className = 'span-color form-control';
-            // span.style.background = recommend.toHexString();
-            // divColor.appendChild(span);
-            // span = undefined;
+            recommend = tinycolor.complement(dominantColor);           
 
             var temp = [recommend.toHexString()];
             var recommend_1 = findColor(temp, shirtColor2, dominantColor, 'shirt1');

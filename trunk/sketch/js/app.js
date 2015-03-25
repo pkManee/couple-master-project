@@ -85,7 +85,7 @@ btnShirt.onclick = function(){
 
     if (isShirtMode){        
         splitCanvas();
-        designInit();
+        designInit();        
     }
 }
 var btnDesign = document.getElementById('btn-design');
