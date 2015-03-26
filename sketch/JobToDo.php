@@ -81,6 +81,17 @@
 
 		$shirt1 = '<b>เสื้อ: </b>'. $result['shirt_name_1'] . '<b> เพศ: </b>' . (($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_1'] . '<b> สี: </b>' . $result['color_1'];
 		$shirt2 = '<b>เสื้อ: </b>'. $result['shirt_name_2'] . '<b> เพศ: </b>' . (($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_2'] . '<b> สี: </b>' . $result['color_2'];
+
+		$sql = "select * from printer ";
+		$stmt = $dbh->prepare($sql);
+		if ($stmt->execute()){			
+			$printer = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			echo '<input type="hidden" value="' .$printer['vat_rate']. '" id="vat-rate"></input>';
+		} else {
+			echo "error -> " .$stmt->errorInfo()[2];
+			die();
+		}
 	}
     ?>
     

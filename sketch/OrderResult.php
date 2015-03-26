@@ -67,23 +67,58 @@
 
 		$shirt1 = '<b>เสื้อ: </b>'. $result['shirt_name_1'] . '<b> เพศ: </b>' . (($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_1'] . '<b> สี: </b>' . $result['color_1'];
 		$shirt2 = '<b>เสื้อ: </b>'. $result['shirt_name_2'] . '<b> เพศ: </b>' . (($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_2'] . '<b> สี: </b>' . $result['color_2'];
+
+		$sql = "select * from printer ";
+		$stmt = $dbh->prepare($sql);
+		if ($stmt->execute()){			
+			$printer = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			echo '<input type="hidden" value="' .$printer['vat_rate']. '" id="vat-rate"></input>';
+		} else {
+			echo "error -> " .$stmt->errorInfo()[2];
+			die();
+		}
 	}
     ?>
     
     <div class="container" >
    	<div id="print-area" class="hidden">
-   		<div >
-	    	<label>ชื่อ-นามสกุล</label>        	
-	    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
-	    </div>
-	    <div>
-	    	<label>อีเมล์</label>        	
-	    	<p style="display: inline-block; margin-left: 20px;"><?php echo $_SESSION['email']; ?></p>
-	    </div>
-	    <div>
-	    	<label>ที่อยู่</label>	    	
-	    	<p style="display: inline-table; margin-left: 20px;"><?php echo nl2br($result['address']); ?></p>
-	    </div>
+   		<style type="text/css">
+    	@media print {
+        .no-print { display:none; }
+        .small-print { width: 98% !important; }
+    	}
+    </style>
+   		<div class="small-print" style="width: 100%; border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px; display: inline-block; padding: 10px 10px 10px 10px;">
+	   		<div style="float: left; display: inline-block;">
+				<img src="img/logo-1.png" style="width: 40px;">
+				<b style="display: inline-block; font-size: 20px;"><p>ร้านขายเสื้อคู่</p></b>
+				<p>28/1 ซ.กิจการ ถ.รัชดาภิเษก</p>
+				<p>แขวนดินแดง เขตดินแดง กรุงเทพฯ</p>
+				<p>โทร. 02-247-8897</p>				
+			</div>
+			<div style="float: right; width: 50%; display: inline-block; text-align: right;">
+				<div>
+					<p>เลขที่คำสั่งซื้อ</p>
+					<b><P style="font-size: 20px;"><?php echo $result['order_id'] ?></P></b>
+					<p><?php echo 'วันที่ ' . $orderDate; ?></p>					
+				</div>
+			</div>
+		</div>
+   		<div style="width: 70%;">
+	   		<div style="display: inline-table;">
+		    	<label>ชื่อ-นามสกุล</label>        	
+		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
+		    </div>
+		    <div style="display: inline-table; margin-left: 40px;">
+		    	<label>อีเมล์</label>        	
+		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $_SESSION['email']; ?></p>
+		    </div>
+		    <div>
+		    	<label>ที่อยู่</label>	    	
+		    	<p style="display: inline-table; margin-left: 20px;"><?php echo nl2br($result['address']); ?></p>
+		    </div>
+		</div>
 	   
 		<div style="font: normal 12px/150% Arial, Helvetica, sans-serif;background: #fff;overflow: hidden;border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px">
 	        <table style="border-collapse: collapse;text-align: left;width: 100%">
@@ -157,12 +192,34 @@
 	                        <?php echo number_format($result[ 'line_screen_price_2'] * $result[ 'qty_2'], 2) ?>
 	                    </td>
 	                </tr>
+	                <tr>
+	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal"></td>
+	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+	                        <?php echo 'VAT('.$printer['vat_rate']. '%) '  ?>
+	                    </td>
+	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+	                        <?php
+                            	$vatRate = $printer['vat_rate'];
+                            	$beforeVat = number_format(($result['amt'] * 100 / (100 + $vatRate)), 2);
+                            	$vatAmt = $beforeVat * $vatRate / 100;
+                            	$diff = abs(($beforeVat + $vatAmt) - $result['amt']);
+                            	$vatAmt = $vatAmt + $diff;
+                            	echo number_format($vatAmt, 2);
+                            ?>
+	                    </td>
+	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+	                        
+	                    </td>
+	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+	                        <?php echo number_format($beforeVat, 2); ?>
+	                    </td>
+	                </tr>
 	            </tbody>
 	            <tfoot style="min-height: 25px !important;">
 	                <tr>
 	                    <td colspan="4" style="padding: 0;font-size: 12px">
 	                        <div style="text-align: center;font-size: 13px;min-height: 25px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
-	                            <b>รวม</b>
+	                            <b>รวม</b>	                            
 	                        </div>
 	                    </td>
 	                    <td style="text-align: right;padding: 0;font-size: 12px">
@@ -365,34 +422,37 @@
 		pri.document.close();
 		pri.focus();
 		pri.print();
-		$.ajax({
-			type: "POST",
-	        dataType: "json",
-	        url: "SendMail.php",
-	        data: {email_body: body}
-	    })
-	    .done(function(data) {
-	    	if (data.result === 'success') {
-	    		$btn.button('reset');
-	    		$btnHome.button('reset');
-	    		window.location = 'index.php';
-	    	} else {
-	    		bootbox.dialog({
-		                title: 'การส่งอีเมล์ผิดพลาด',
-		                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ อีเมล์ของท่านอาจมีปัญหา!!!</strong></div>'
-		        });//bootbox
-		        $btn.button('reset');
-		        $btnHome.button('reset');
-	    	}
-	    })
-	    .fail(function(data) {
-	    	bootbox.dialog({
-	                title: 'Fatal Error',
-	                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ !!!</strong></div>'
-	        });//bootbox
-	        $btn.button('reset');
-	        $btnHome.button('reset');
-	    });
+		// $.ajax({
+		// 	type: "POST",
+	 //        dataType: "json",
+	 //        url: "SendMail.php",
+	 //        data: {email_body: body}
+	 //    })
+	 //    .done(function(data) {
+	 //    	if (data.result === 'success') {
+	 //    		$btn.button('reset');
+	 //    		$btnHome.button('reset');
+	 //    		window.location = 'index.php';
+	 //    	} else {
+	 //    		bootbox.dialog({
+		//                 title: 'การส่งอีเมล์ผิดพลาด',
+		//                 message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ อีเมล์ของท่านอาจมีปัญหา!!!</strong></div>'
+		//         });//bootbox
+		//         $btn.button('reset');
+		//         $btnHome.button('reset');
+	 //    	}
+	 //    })
+	 //    .fail(function(data) {
+	 //    	bootbox.dialog({
+	 //                title: 'Fatal Error',
+	 //                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ !!!</strong></div>'
+	 //        });//bootbox
+	 //        $btn.button('reset');
+	 //        $btnHome.button('reset');
+	 //    });
+
+	$btn.button('reset');
+	$btnHome.button('reset');
     }
     </script>
   </body>
