@@ -36,6 +36,7 @@
 		  die();
 		}
 		
+		if (!isset($_GET['order_id'])) die();
 		$sql = 'select o.order_id, o.line_screen_price_1, o.line_screen_price_2, o.qty_1, o.qty_2, o.amt, o.order_date, ';
 		$sql .= 'o.screen_width_1, o.screen_height_1, o.screen_width_2, o.screen_height_2, o.color_area_1, o.color_area_2, ';
 		$sql .= 's1.shirt_name as shirt_name_1, s1.gender as gender_1, s1.shirt_type as shirt_type_1, s1.color_hex as color_hex_1, s1.shirt_price as shirt_price_1, ';
@@ -105,7 +106,7 @@
 				</div>
 			</div>
 		</div>
-   		<div style="width: 70%;">
+   		<div style="width: 70%; font-size: 12px;">
 	   		<div style="display: inline-table;">
 		    	<label>ชื่อ-นามสกุล</label>        	
 		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
@@ -191,29 +192,7 @@
 	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
 	                        <?php echo number_format($result[ 'line_screen_price_2'] * $result[ 'qty_2'], 2) ?>
 	                    </td>
-	                </tr>
-	                <tr>
-	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal"></td>
-	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo 'VAT('.$printer['vat_rate']. '%) '  ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php
-                            	$vatRate = $printer['vat_rate'];
-                            	$beforeVat = number_format(($result['amt'] * 100 / (100 + $vatRate)), 2);
-                            	$vatAmt = $beforeVat * $vatRate / 100;
-                            	$diff = abs(($beforeVat + $vatAmt) - $result['amt']);
-                            	$vatAmt = $vatAmt + $diff;
-                            	echo number_format($vatAmt, 2);
-                            ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo number_format($beforeVat, 2); ?>
-	                    </td>
-	                </tr>
+	                </tr>	               
 	            </tbody>
 	            <tfoot style="min-height: 25px !important;">
 	                <tr>
@@ -225,6 +204,27 @@
 	                    <td style="text-align: right;padding: 0;font-size: 12px">
 	                        <div style="min-height: 25px;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
 	                            <b style="padding-right: 8px;"><?php echo number_format($result['amt'], 2); ?></b>
+	                        </div>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td colspan="4" style="padding: 0;font-size: 12px">
+	                        <div style="text-align: right;font-size: 12px;min-height: 20px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
+	                            <?php echo 'VAT('.$printer['vat_rate']. '%) included'  ?>	                            
+	                        </div>
+	                    </td>
+	                    <td style="text-align: right;padding: 0;font-size: 12px">
+	                        <div style="min-height: 20px;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
+	                            <span style="padding-right: 8px;">
+	                            	<?php
+		                            	$vatRate = $printer['vat_rate'];
+		                            	$beforeVat = round(($result['amt'] * 100 / (100 + $vatRate)), 2);
+		                            	$vatAmt = round($beforeVat * $vatRate / 100, 2);
+		                            	$diff = abs(($beforeVat + $vatAmt) - $result['amt']);
+		                            	$vatAmt = $vatAmt + $diff;
+		                            	echo number_format($vatAmt, 2);
+		                            ?>
+	                            </span>
 	                        </div>
 	                    </td>
 	                </tr>
