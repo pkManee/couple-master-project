@@ -119,7 +119,7 @@
 				</div>
 			</div>
 		</div>
-   		<div style="width: 70%;">
+   		<div style="width: 70%; font-size: 12px;">
 	   		<div style="display: inline-table;">
 		    	<label>ชื่อ-นามสกุล</label>        	
 		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
@@ -133,9 +133,7 @@
 		    	<p style="display: inline-table; margin-left: 20px;"><?php echo nl2br($result['address']); ?></p>
 		    </div>
 		</div>
-		
-	   
-		<div style="font: normal 12px/150% Arial, Helvetica, sans-serif;background: #fff;overflow: hidden;border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px">
+		<div style="font: normal 12px/150% Arial, Helvetica, sans-serif;background: #fff;overflow: hidden;border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;">
 	        <table style="border-collapse: collapse;text-align: left;width: 100%">
 	            <thead>
 	                <tr>
@@ -211,28 +209,50 @@
 	            <tfoot style="min-height: 25px !important;">
 	                <tr>
 	                    <td colspan="4" style="padding: 0;font-size: 12px">
-	                        <div style="text-align: center;font-size: 13px;min-height: 25px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
-	                             <?php	        
-	                            //echo !!empty($paidDate);//(!empty($paidDate) && empty($deliverDate) && empty($cancelDate));                    
+	                        <div style="text-align: center;font-size: 10px;min-height: 25px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
+	                            
+	                            <?php	        
+	                            //echo !!empty($paidDate);//(!empty($paidDate) && empty($deliverDate) && empty($cancelDate));	                             
 	                            if (!empty($paidDate)) echo ' แจ้งชำระเงินแล้ว: ' .$paidDate. ' เวลา: ' .$paidTime;
 	                            if (!empty($confirmPaidDate)) echo ' ยืนยันชำระเงินแล้ว: ' .$confirmPaidDate;
 	                            if (!empty($deliverDate)) echo ' ส่งสินค้าแล้ว: ' .$deliverDate;
 	                            if (!empty($trackingId)) echo ' หมายเลขสิ่งของ: ' .$trackingId;
 	                            if (!empty($cancelDate)) echo ' ยกเลิกแล้ว: ' .$cancelDate. ' สาเหตุ: ' .nl2br($cancelRemark);
 	                            ?>
-	                            <b style="padding-left: 30px;">รวม</b>	                           
+	                            
+	                            <b style="padding-left: 40px; font-size: 14px;">รวม</b>
 	                        </div>
 	                    </td>
-	                    <td style="text-align: right;padding: 0;font-size: 12px">
+	                    <td style="text-align: right;padding: 0;font-size: 14px">
 	                        <div style="min-height: 25px;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
 	                            <b style="padding-right: 8px;"><?php echo number_format($result['amt'], 2); ?></b>
 	                        </div>
 	                    </td>
 	                </tr>
+	                <tr>
+	                    <td colspan="4" style="padding: 0;font-size: 10px">
+	                        <div style="text-align: right;font-size: 10px;min-height: 20px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
+	                            <?php echo 'VAT('.$printer['vat_rate']. '%) included'  ?>	                            
+	                        </div>
+	                    </td>
+	                    <td style="text-align: right;padding: 0;font-size: 10px">
+	                        <div style="min-height: 20px;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
+	                            <span style="padding-right: 8px;">
+	                            	<?php
+		                            	$vatRate = $printer['vat_rate'];
+		                            	$beforeVat = round(($result['amt'] * 100 / (100 + $vatRate)), 2);
+		                            	$vatAmt = round($beforeVat * $vatRate / 100, 2);
+		                            	$diff = abs(($beforeVat + $vatAmt) - $result['amt']);
+		                            	$vatAmt = $vatAmt + $diff;
+		                            	echo number_format($vatAmt, 2);
+		                            ?>
+	                            </span>
+	                        </div>
+	                    </td>
+	                </tr>
 	            </tfoot>
 	        </table>
-	    </div>
-	    <br>
+	    </div>	    
 	    <div class="no-print">
 		    <p style="text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ลายสกรีน</p>
 		    <div style="text-align: center;">
