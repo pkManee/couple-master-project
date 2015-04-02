@@ -33,21 +33,6 @@
     <?php      
       include("service/message_service.php");
       include("service/db_connect.php");
-
-      // class Member
-      // {
-      //   public $email;
-      //   public $member_name = "";
-      //   public $address;
-      //   public $province_id;
-      //   public $amphur_id;
-      //   public $district_id;
-      //   public $password;
-      //   public $postcode;
-      //   public $photo;
-      //   public $height_1 = 0;
-      //   public $height_2 = 0;
-      // }
       include("data/Member.class.php");
       //select user profile
       if (isset($_SESSION["email"]) && !empty($_SESSION["email"])){           
@@ -183,18 +168,17 @@
                   
                
                 <?php 
-                  echo "<img class=\"img-thumbnail\" id=\"img-show\" style=\"max-width: 6000px;max-height: 450px;\" src=\"" . $member->photo . "\" alt=\"...\" value=\"" .$member->photo. "\">";
+                  echo "<img class=\"img-thumbnail\" id=\"img-show\" style=\"width: 850px;max-width: 850px;\" src=\"" . $member->photo . "\" alt=\"...\" value=\"" .$member->photo. "\">";
                 ?>
-                
+                <span class="help-block">ขนาดที่แนะนำคือ 850x600 pixel</span>
                 <div class="form-group form-inline">
                   <div class="fileinput fileinput-new" data-provides="fileinput">
                     <span class="btn btn-default btn-file">
                     <span class="fileinput-new">อัพโหลดรูปคู่</span>
                     <span class="fileinput-exists">Change</span>
                     <input type="file" name="..." id="file-upload"></span>
-                    <span class="fileinput-filename" ></span>
-                    
-                  </div>
+                    <span class="fileinput-filename" ></span>                    
+                  </div>                  
                   <button type="button" class="btn btn-warning" id="btn-delete-image">ลบรูป</button>
                 </div>                 
              

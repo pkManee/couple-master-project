@@ -358,12 +358,35 @@
 		      </h4>
 		    </div>
 		    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-		      <div class="panel-body" id="try-it">
-		        <img id="try-it-photo" src="<?php echo $member->photo; ?>" class="hidden">
-		        <canvas id="c"></canvas>
-		        <canvas id="temp-canvas" class="hidden"></canvas>
-		        <img id="shirt-photo-1" src="<?php echo $_POST['shirt_photo_1'] ?>" class="hidden">
-		        <img id="shirt-photo-2" src="<?php echo $_POST['shirt_photo_2'] ?>" class="hidden">
+		    	<div class="panel-body" id="try-it">
+		    		<div class="col-md-12">
+				      	<div class="row">
+				      		<div>				      			
+						        <img id="try-it-photo" src="<?php echo $member->photo; ?>" class="hidden">		        
+						        <canvas id="c"></canvas>
+						        <canvas id="temp-canvas" class="hidden"></canvas>
+						        <img id="shirt-photo-1" src="<?php echo $_POST['shirt_photo_1'] ?>" class="hidden">
+						        <img id="shirt-photo-2" src="<?php echo $_POST['shirt_photo_2'] ?>" class="hidden">							  
+							</div>
+					    </div>
+					    <br>
+				        <div class="row">
+				        	
+				        	<div class="col-md-12">
+					        	<div class="well">
+					        		<div class="container">
+						        		<div class="col-md-2">
+						        			<p class="form-control-static">รูปคู่</p>
+						        		</div>
+						        		<div class="col-md-3">
+						        			<input type="file" id="file" name="file" class="form-control">
+						        		</div>
+						        	</div>
+					        	</div>
+				        	</div>
+					        
+				        </div>
+				    </div>
 		      </div>
 		    </div>
 		  </div>
@@ -519,9 +542,19 @@
 	$('#collapseFour').on('shown.bs.collapse', function () {
 		if (alreadyTryIt) return;
 
-		var photo = new Image();
-		photo.src = document.getElementById('try-it-photo').src;
+		loadImage();		
 
+		alreadyTryIt = true;
+	});	
+
+	function loadImage(src) {
+		var photo = new Image();
+		if (src) {
+			photo.src = src;
+		} else {
+			photo.src = document.getElementById('try-it-photo').src;
+		}
+		canvas.clear();
 		fabric.Image.fromURL(photo.src, function(oImg) {  			
             canvas.add(oImg);
             canvas.sendToBack(oImg);
@@ -529,16 +562,16 @@
         });
 
 		var tmpCanvas = document.getElementById('temp-canvas');
+		var context = tmpCanvas.getContext('2d');
 		
 		//tmpCanvas.className = 'hidden';
 		tmpCanvas.width = ~~(size * photo.width / photo.height);
 		tmpCanvas.height = ~~(size);
+		context.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
 		tmpCanvas.getContext('2d').drawImage(photo, 0, 0, tmpCanvas.width, tmpCanvas.height);
 		detector = new objectdetect.detector(tmpCanvas.width, tmpCanvas.height, 1.2, objectdetect.eye);
-		detectFaces(tmpCanvas);		
-
-		alreadyTryIt = true;
-	});	
+		detectFaces(tmpCanvas);
+	}
 
 	function detectFaces(tmpCanvas) {
 		// Detect faces in the image:			
@@ -568,8 +601,6 @@
 		var x1, x2, y;
 		var shirt_photo_1 = document.getElementById('shirt-photo-1');
 		var shirt_photo_2 = document.getElementById('shirt-photo-2');
-
-		
 
 		fabric.Image.fromURL(shirt_photo_1.src, function(oImg1) {
 
@@ -617,6 +648,17 @@
         });
 
         canvas.renderAll();
+	}
+
+	document.getElementById('file').addEventListener('change', handleFileSelect, false);
+	function handleFileSelect(e) {
+    	var file = e.target.files[0];
+		var reader = new FileReader();
+		
+		reader.onload = function(e) {
+			loadImage(e.target.result);
+		};
+		reader.readAsDataURL(file);
 	}
 	
 	//end of "try it"
