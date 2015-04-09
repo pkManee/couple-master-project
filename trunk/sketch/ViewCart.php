@@ -344,6 +344,19 @@
 		    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 		      <div class="panel-body">
 		        <img id="product-image" src="<?php echo $_POST['product']; ?>" class="img-thumbnail center-block" style="width: 595px; height: 420px;">
+		        <div class="col-md-12">
+		        	<div class="col-md-3">
+		        	</div>
+		        	<div class="col-md-3">
+		        		<p><?php 
+		        			//$heightDiff = abs($member->height_2-$member->height_1);
+		        			//echo ($member->height_2 > $member->height_1)?'สูงกว่า '.$heightDiff. ' ซม.':'ต่ำกว่า '.$heightDiff.' ซม.' ; 
+		        			?>
+		        		</p>
+		        	</div>
+		        	<div class="col-md-6">
+		        	</div>
+		        </div>
 		      </div>
 		    </div>
 		  </div>
