@@ -368,6 +368,8 @@ function getJointColor() {
     var heart = document.createElement('span');
     heart.className = 'icon-heart';
     heart.style.paddingLeft = '10px';
+    heart.title = 'สีที่เหมาะกับทั้งคู่';
+    heart.style.color = 'rgb(255,0,0)';
     divColor.appendChild(heart);
 
     var span = document.createElement('span');    
@@ -469,6 +471,7 @@ function getJointColor() {
     }
 
     $('.span-color').tooltip();
+    $('span.icon-heart').tooltip();
     recommend = undefined;
 }
 
