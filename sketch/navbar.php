@@ -117,7 +117,7 @@ function doLogin(data){
   btnSignin.className = 'btn btn-danger';
   dropdown.style.display = 'block';
 
-  if (txtEmail.value = 'pk.manee@gmail.com') {
+  if (txtEmail.value === 'pk.manee@gmail.com') {
     adminMenu.style.display = 'block';
   }
 

@@ -767,8 +767,8 @@ var shirtArray = [];
 //shirt canvas
 var splitLineScreen = [];
 var finalLineScreen = [];
-var side_1 = {width: 190, height: 315, top: 150, left: 118, offsetTop: 0};
-var side_2 = {width: 190, height: 315, top: 150, left: 545, offsetTop: 0};
+var side_1 = {width: 190, height: 280, top: 150, left: 118, offsetTop: 0};
+var side_2 = {width: 190, height: 280, top: 150, left: 545, offsetTop: 0};
 var side_cal_1 = {
                     width: side_1.width, 
                     height: 0, 
@@ -803,7 +803,7 @@ function loadShirt(type_1, type_2){
     var txtHeight1 = parseInt(document.getElementById('txt-height-1').value);
     var txtHeight2 = parseInt(document.getElementById('txt-height-2').value);
 
-    var offset = Math.abs(txtHeight1 - txtHeight2);
+    var offset = Math.abs(txtHeight1 - txtHeight2) * 4;
     if (txtHeight1 > txtHeight2) {
         //person on the left taller than right
         side_1.offsetTop = 0;        
@@ -926,6 +926,8 @@ function scaleToFit() {
 
         while (!adjustPosition(obj)) {
             console.log('call adjustPosition');
+            obj.goodLeft--;
+            obj.goodTop--;
             adjustPosition(obj);            
         }
 
@@ -989,12 +991,10 @@ function adjustPosition(obj) {
     }
 
     obj.setCoords();
-    // if(!obj.isContainedWithinObject(bounds)){ 
 
     if (!obj.isContainedWithinRect(TL, BR)) {
         obj.set({ scaleX: obj.goodScaleX, scaleY: obj.goodScaleY, left: obj.goodLeft, top: obj.goodTop });
-        return false;
-                         
+        return false;    
     } else {
         obj.goodTop = obj.top;
         obj.goodLeft = obj.left;
