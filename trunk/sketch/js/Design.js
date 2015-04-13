@@ -341,6 +341,7 @@ function designInit() {
 var jointColor;
 $(document).ajaxStop(function () {
     jointColor = [];
+    if (!shirtColor1) return;
     jointColor = shirtColor1.filter(function(val) {
       return shirtColor2.map(function(e) { return e.color_hex; }).indexOf(val.color_hex) != -1; //shirtColor2.indexOf(val) == -1;
     });
