@@ -796,6 +796,22 @@ var poloType = {
             type_w: {uri: './img/shirts/polo-white-front-w02.png'}
             }
 
+function insertSideCal(side_cal) {    
+    var sc1 = new fabric.Rect({
+            width: side_cal.width,
+            height: side_cal.height,
+            top: side_cal.top,
+            left: side_cal.left,
+            strokeWidth: 1,
+            fill: 'red',
+            stroke: 'red',
+            selectable: true
+        });
+    shirtCanvas.add(sc1);
+    shirtCanvas.bringToFront(sc1);
+    shirtCanvas.renderAll();
+}
+
 function loadShirt(type_1, type_2){ 
    
     if (!isShirtMode) return;
@@ -807,15 +823,15 @@ function loadShirt(type_1, type_2){
     if (txtHeight1 > txtHeight2) {
         //person on the left taller than right
         side_1.offsetTop = 0;        
-        side_2.offsetTop = offset
-        side_cal_1.height =  side_1.height - side_2.offsetTop;        
+        side_2.offsetTop = offset;
+        side_cal_1.height =  side_1.height - side_2.offsetTop;
         side_cal_1.top = side_1.top + offset;
 
         side_cal_2.height = side_cal_1.height;
         side_cal_2.top = side_cal_1.top;
     } else if( txtHeight1 < txtHeight2) {
         //person on the right taller left       
-        side_1.offsetTop = offset
+        side_1.offsetTop = offset;
         side_2.offsetTop = 0;
         side_cal_2.height = side_2.height - side_1.offsetTop;
         side_cal_2.top = side_2.top + offset;
@@ -879,6 +895,8 @@ function loadShirt(type_1, type_2){
             shirtCanvas.renderAll();
             finalLineScreen.push(oImg);
         });
+
+        insertSideCal(side_cal_1);
     }
     //shirt 2
     //women
@@ -916,6 +934,7 @@ function loadShirt(type_1, type_2){
             shirtCanvas.renderAll();
             finalLineScreen.push(oImg);
         });
+        insertSideCal(side_cal_2);
     }          
 }
 
@@ -924,10 +943,8 @@ function scaleToFit() {
     finalLineScreen.forEach(function(obj) {
         scaling(obj);       
 
-        while (!adjustPosition(obj)) {
-            console.log('call adjustPosition');
-            obj.goodLeft--;
-            obj.goodTop--;
+        while (!adjustPosition(obj)) {            
+            console.log('call adjustPosition top: ' + obj.top + ' left: ' + obj.left);
             adjustPosition(obj);            
         }
 
@@ -965,14 +982,23 @@ function scaling(obj) {
         maxHeight = side.height;
     }
 
+    if (maxWidth > side.width) {
+        maxWidth = side.width;            
+    }
+    if (maxHeight > side.height) {
+        maxHeight = side.height;
+    }
+
     while ((obj.currentWidth < maxWidth) && (obj.currentHeight < maxHeight)) {
-        obj.set({scaleX: obj.scaleX + scaleFactor, scaleY: obj.scaleY + scaleFactor, left: side.left + 3, top: side.top + 3});
+        //obj.set({scaleX: obj.scaleX + scaleFactor, scaleY: obj.scaleY + scaleFactor, left: side.left + 3, top: side.top + 3});
+        obj.set({scaleX: scaleFactor, scaleY: scaleFactor, left: side.left + 3, top: side.top + 3, fill: 'black'});
         scaleFactor += 0.01;
         obj.setCoords();
     }
+    scaleFactor = 0.01;
     while ((obj.currentWidth > maxWidth) || (obj.currentHeight > maxHeight)) {
-        scaleFactor -= 0.01;
-        obj.set({scaleX: obj.scaleX + scaleFactor, scaleY: obj.scaleY + scaleFactor, left: side.left + 3, top: side.top + 3});
+        scaleFactor += 0.01;
+        obj.set({scaleX: obj.scaleX - scaleFactor, scaleY: obj.scaleY - scaleFactor, left: side.left + 3, top: side.top + 3, fill: 'black'});
         obj.setCoords();
     }
 }
@@ -992,14 +1018,20 @@ function adjustPosition(obj) {
 
     obj.setCoords();
 
+    console.log('top left: '+ TL.x + ', ' + TL.y + ' buttom right: ' + BR.x + ', ' + BR.y);
+    console.log('obj left: ' + obj.left + ' obj top: ' + obj.top);
+
     if (!obj.isContainedWithinRect(TL, BR)) {
-        obj.set({ scaleX: obj.goodScaleX, scaleY: obj.goodScaleY, left: obj.goodLeft, top: obj.goodTop });
+
+        obj.set({ scaleX: obj.goodScaleX, scaleY: obj.goodScaleY, left: obj.goodLeft, top: obj.goodTop, height: side_cal_1.height });
+        obj.setCoords();
         return false;    
     } else {
         obj.goodTop = obj.top;
         obj.goodLeft = obj.left;
         obj.goodScaleX = obj.scaleX;
         obj.goodScaleY = obj.scaleY;
+        obj.setCoords();
         return true;
     }  
 }
