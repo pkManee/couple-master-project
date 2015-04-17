@@ -570,7 +570,7 @@
 		canvas.clear();
 		fabric.Image.fromURL(photo.src, function(oImg) {  			
             canvas.add(oImg);
-            oImg.set({scaleX: canvas.width/oImg/width})
+            oImg.set({scaleX: canvas.width/oImg.width})
             canvas.sendToBack(oImg);
             canvas.renderAll();
         });

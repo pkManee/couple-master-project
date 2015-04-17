@@ -227,28 +227,7 @@
                     message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'
         });//fail
       });//ajax
-  }
-  var txtSizeArea = document.getElementById('txt-size-area');
-  txtSizeArea.onchange = function() {
-
-  }
-  var txtHeight = document.getElementById('txt-height');
-  txtHeight.onchange = function() {
-    cal()
-  }
-  var txtWidth = document.getElementById('txt-width');
-  txtWidth.onchange = function() {
-    cal();
-  }
-  function cal() {
-    if (txtHeight.value >= 0 && txtWidth.value >= 0) {
-      txtSizeArea.value = txtWidth.value * txtHeight.value;
-      txtSizeArea.onchange();
-    } else {
-      txtSizeArea.value = 0;
-      txtSizeArea.onchange();
-    }
-  }
+  } 
   </script>
   </body>
 </html>

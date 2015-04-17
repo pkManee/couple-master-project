@@ -3,11 +3,11 @@
   require("header.php");
 ?>
 <html lang="en">
-	<head>
+	<head>    
+  	<title>Couple T-Shirt Designer</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,user-scalable=no">
-  	<title>Couple T-Shirt Designer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!--bootstrap -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -21,6 +21,9 @@
     <link rel="stylesheet" type="text/css" href="css/Color.Picker.Classic.css">
     <link rel="stylesheet" type="text/css" href="css/iconfont.css">
 
+    <script src="js/Event/_event.js" type="text/javascript"></script> 
+    <script src="js/Event/_proxy.js" type="text/javascript"></script> 
+    <script src="js/Event/drag.js" type="text/javascript"></script> 
   	<script src="js/jquery-2.1.1.min.js"></script>
     <!--bootstrap-->
     <script src="js/bootstrap.js"></script>
@@ -319,8 +322,7 @@
         <button type="button" class="btn btn-success btn-sm" id="btn-select-image">เลือก</button>
         <button type="button" class="btn btn-success btn-sm" id="btn-close-image-picker">ปิด</button>          
     </div>
-  </div>
-  <script src="js/Event.js" type="text/javascript"></script> 
+  </div>  
   <script src="js/Color.Picker.Classic.js" type="text/javascript"></script>
   <script src="js/Color.Space.js" type="text/javascript"></script>
   <script src="js/fabricjs-painter.js" type="text/javascript"></script>
@@ -329,7 +331,7 @@
   <script src="js/app.js" type="text/javascript"></script>
   <script src="js/Design.js" type="text/javascript"></script>
   <script src="js/detect-fonts.js" type="text/javascript"></script>
-
+ 
   <script type="text/javascript">
     //document ready
   $(document).ready(function() {      

@@ -896,7 +896,8 @@ function loadShirt(type_1, type_2){
             finalLineScreen.push(oImg);
         });
 
-        insertSideCal(side_cal_1);
+        //display area afer compare height
+        //insertSideCal(side_cal_1);
     }
     //shirt 2
     //women
@@ -934,7 +935,9 @@ function loadShirt(type_1, type_2){
             shirtCanvas.renderAll();
             finalLineScreen.push(oImg);
         });
-        insertSideCal(side_cal_2);
+
+        //display area afer compare height
+        //insertSideCal(side_cal_2);
     }          
 }
 
