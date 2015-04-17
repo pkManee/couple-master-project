@@ -375,7 +375,7 @@
 		    		<div class="col-md-12">
 				      	<div class="row">
 				      		<div>				      			
-						        <img id="try-it-photo" src="<?php echo $member->photo; ?>" class="hidden">		        
+						        <img id="try-it-photo" src="<?php echo $member->photo; ?>" class="hidden" style="width: 850px;">		        
 						        <canvas id="c"></canvas>
 						        <canvas id="temp-canvas" class="hidden"></canvas>
 						        <img id="shirt-photo-1" src="<?php echo $_POST['shirt_photo_1'] ?>" class="hidden">
