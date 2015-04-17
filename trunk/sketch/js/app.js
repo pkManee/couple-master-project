@@ -994,14 +994,14 @@ function scaling(obj) {
 
     while ((obj.currentWidth < maxWidth) && (obj.currentHeight < maxHeight)) {
         //obj.set({scaleX: obj.scaleX + scaleFactor, scaleY: obj.scaleY + scaleFactor, left: side.left + 3, top: side.top + 3});
-        obj.set({scaleX: scaleFactor, scaleY: scaleFactor, left: side.left + 3, top: side.top + 3, fill: 'black'});
+        obj.set({scaleX: scaleFactor, scaleY: scaleFactor, left: side.left + 3, top: side.top + 3});
         scaleFactor += 0.01;
         obj.setCoords();
     }
     scaleFactor = 0.01;
     while ((obj.currentWidth > maxWidth) || (obj.currentHeight > maxHeight)) {
         scaleFactor += 0.01;
-        obj.set({scaleX: obj.scaleX - scaleFactor, scaleY: obj.scaleY - scaleFactor, left: side.left + 3, top: side.top + 3, fill: 'black'});
+        obj.set({scaleX: obj.scaleX - scaleFactor, scaleY: obj.scaleY - scaleFactor, left: side.left + 3, top: side.top + 3});
         obj.setCoords();
     }
 }
