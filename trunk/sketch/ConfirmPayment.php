@@ -30,8 +30,7 @@
       require("service/message_service.php");
       require("service/db_connect.php");
     ?>
-    <form id="confirm-payment-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
-    <?php echo '<input type="hidden" id="hidden-email" value="' .$_SESSION['email']. '">'; ?>
+    <form id="confirm-payment-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >    
     <div class="container">
     <div class="col-xs-6 col-md-4">    
       <div class="form-group">        
@@ -42,7 +41,7 @@
       <div class="form-group">
         <label class="control-label" for="txt-paid-date">วันที่โอน</label>        
         <input type="date" class="form-control" id="txt-member-name" placeholder="วันที่โอน" name="txtPaidDate" >
-        <span class="help-block">ข้าบัญชี 999-9-999999</span>
+        <span class="help-block">เข้าบัญชี 999-9-999999</span>
         <span class="help-block"> ธนาคารไทยวาณิชย์ ชื่อบัญชี นายภาสกร มณี</span>
       </div>      
       <div class="form-group">
@@ -83,7 +82,7 @@
                               data: function(validator) {
                                 return {
                                         method: 'checkExistingOrder', 
-                                        email: document.getElementById('hidden-email').value,
+                                        email: $('#lbl1').attr('hidden-email'),
                                         order_id: validator.getFieldElements('txtOrderId').val(),
                                         amount: 0
                                       };

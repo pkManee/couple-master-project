@@ -111,6 +111,7 @@
         </div>
         <div class="upper-shelf">
           <button id="btn-download" title="Download" class="geo-button icon-download" data-toggle="tooltip" data-placement="bottom"></button>
+          <button class="geo-button icon-exit" data-toggle="tooltip" data-placement="bottom" title="Home" onclick="window.location='index.php'"></button>
         </div>
       </div>
     </div>
