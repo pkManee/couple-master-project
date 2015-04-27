@@ -393,10 +393,10 @@ function getJointColor() {
                     continue;
                 }
                 if (!existingColor) { 
-                        existingColor = nearestColor;
-                    } else {
-                        if (existingColor === nearestColor) break;
-                    }
+                    existingColor = nearestColor;
+                } else {
+                    if (existingColor === nearestColor) break;
+                }
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
@@ -412,7 +412,7 @@ function getJointColor() {
             recommend = tinycolor.triad(dominantColor);            
             
             var temp = [recommend[1].toHexString(), recommend[2].toHexString()];
-            var recommend_1 = findColor(temp, shirtColor2, dominantColor, 'shirt1');
+            var recommend_1 = findColor(temp, jointColor, dominantColor, 'center');
             var existingColor = undefined;
 
             for (var i = 0; i < recommend_1.length; i++) { 
@@ -421,10 +421,10 @@ function getJointColor() {
                     continue;
                 }
                 if (!existingColor) { 
-                        existingColor = nearestColor;
-                    } else {
-                        if (existingColor === nearestColor) break;
-                    }
+                    existingColor = nearestColor;
+                } else {
+                    if (existingColor === nearestColor) break;
+                }
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
@@ -440,7 +440,7 @@ function getJointColor() {
             recommend = tinycolor.complement(dominantColor);           
 
             var temp = [recommend.toHexString()];
-            var recommend_1 = findColor(temp, shirtColor2, dominantColor, 'shirt1');
+            var recommend_1 = findColor(temp, jointColor, dominantColor, 'center');
             var existingColor = undefined;
 
             for (var i = 0; i < recommend_1.length; i++) { 
@@ -531,10 +531,10 @@ cboColorStyle_1.onchange = function() {
                     continue;
                 }
                 if (!existingColor) { 
-                        existingColor = nearestColor;
-                    } else {
-                        if (existingColor === nearestColor) break;
-                    }
+                    existingColor = nearestColor;
+                } else {
+                    if (existingColor === nearestColor) break;
+                }
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
@@ -563,10 +563,10 @@ cboColorStyle_1.onchange = function() {
                     continue;
                 }
                 if (!existingColor) { 
-                        existingColor = nearestColor;
-                    } else {
-                        if (existingColor === nearestColor) break;
-                    }
+                    existingColor = nearestColor;
+                } else {
+                    if (existingColor === nearestColor) break;
+                }
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
