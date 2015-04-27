@@ -422,34 +422,36 @@
 		pri.document.close();
 		pri.focus();
 		pri.print();
+
+	//	//send Email
 		// $.ajax({
 		// 	type: "POST",
-	 //        dataType: "json",
-	 //        url: "SendMail.php",
-	 //        data: {email_body: body}
-	 //    })
-	 //    .done(function(data) {
-	 //    	if (data.result === 'success') {
-	 //    		$btn.button('reset');
-	 //    		$btnHome.button('reset');
-	 //    		window.location = 'index.php';
-	 //    	} else {
-	 //    		bootbox.dialog({
+	//        dataType: "json",
+	//        url: "SendMail.php",
+	//        data: {email_body: body}
+	//    })
+	//    .done(function(data) {
+	//    	if (data.result === 'success') {
+	//    		$btn.button('reset');
+	//    		$btnHome.button('reset');
+	//    		window.location = 'index.php';
+	//    	} else {
+	//    		bootbox.dialog({
 		//                 title: 'การส่งอีเมล์ผิดพลาด',
 		//                 message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ อีเมล์ของท่านอาจมีปัญหา!!!</strong></div>'
 		//         });//bootbox
 		//         $btn.button('reset');
 		//         $btnHome.button('reset');
-	 //    	}
-	 //    })
-	 //    .fail(function(data) {
-	 //    	bootbox.dialog({
-	 //                title: 'Fatal Error',
-	 //                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ !!!</strong></div>'
-	 //        });//bootbox
-	 //        $btn.button('reset');
-	 //        $btnHome.button('reset');
-	 //    });
+	//    	}
+	//    })
+	//    .fail(function(data) {
+	//    	bootbox.dialog({
+	//                title: 'Fatal Error',
+	//                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ !!!</strong></div>'
+	//        });//bootbox
+	//        $btn.button('reset');
+	//        $btnHome.button('reset');
+	//    });
 
 	$btn.button('reset');
 	$btnHome.button('reset');
