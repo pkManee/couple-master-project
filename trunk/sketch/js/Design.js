@@ -759,9 +759,9 @@ function selectColor2() {
 
 function findColor(recommendColor, colorInStore, dominantColor, side) {
     
-    var rtn = new Array();
+    var rtn = [];
     recommendColor.forEach(function(rec) {
-        var reccomend = new Array();
+        var reccomend = [];
 
         colorInStore.forEach(function(current) {
             var distance = compareColor(rec, current.color_hex);
