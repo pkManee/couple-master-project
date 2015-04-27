@@ -124,7 +124,7 @@
                               data: function(validator) {
                                 return {
                                         method: 'checkExistingOrder', 
-                                        email: document.getElementById('hidden-email').value,
+                                        email: $('#lbl1').attr('hidden-email'),
                                         order_id: validator.getFieldElements('txtOrderId').val(),
                                         amount: validator.getFieldElements('txtAmt').val()
                                       };

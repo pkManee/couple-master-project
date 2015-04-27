@@ -19,7 +19,7 @@ body {
   display: inline-block;
   cursor: default;  
   overflow: hidden;
-  background: #FFF;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAR0lEQVRIS+3UMQoAMAwCQPOZ/P875jN27SZZWzMLwiEpScLiZmaRBioFzitETigrskIvEJFc/aLu9i5XolLgvELkhBCiD4gOgwR+YVBajOUAAAAASUVORK5CYIIA');
   width: 850px;
   height: 600px;
 }
@@ -31,7 +31,7 @@ body {
   width: 425px;
   height: 600px;
   border-style: solid;
-  border-color: #e2e2e2;
+  border-color: #C4BFBF;
   border-width: 1px;
 }
 
