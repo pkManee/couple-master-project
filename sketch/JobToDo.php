@@ -37,7 +37,7 @@
 		  die();
 		}
 		
-		$sql = 'select o.order_id, o.line_screen_price_1, o.line_screen_price_2, o.qty_1, o.qty_2, o.amt, o.order_date, ';
+		$sql = 'select o.order_id, o.email, o.line_screen_price_1, o.line_screen_price_2, o.qty_1, o.qty_2, o.amt, o.order_date, ';
 		$sql .= 'o.paid_date, o.deliver_date, o.cancel_date, o.cancel_remark, o.tracking_id, ';
 		$sql .= 'o.confirm_paid_date, o.slip, o.paid_time, ';
 		$sql .= 'o.screen_width_1, o.screen_height_1, o.screen_width_2, o.screen_height_2, o.color_area_1, o.color_area_2, ';
@@ -53,10 +53,9 @@
 		$sql .= 'inner join member m on o.email = m.email ';
 		$sql .= 'inner join shirt_color c1 on s1.color_hex = c1.color_hex ';
 		$sql .= 'inner join shirt_color c2 on s2.color_hex = c2.color_hex ';
-		$sql .= 'where o.email = :email and o.order_id = :order_id ';
+		$sql .= 'where o.order_id = :order_id ';
 
 		$stmt = $dbh->prepare($sql);
-		$stmt->bindValue(':email', $_SESSION['email']);
 		$stmt->bindValue(':order_id', $_GET['order_id']);
 
 		if ($stmt->execute()){			
@@ -126,7 +125,7 @@
 		    </div>
 		    <div style="display: inline-table; margin-left: 40px;">
 		    	<label>อีเมล์</label>        	
-		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $_SESSION['email']; ?></p>
+		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['email']; ?></p>
 		    </div>
 		    <div>
 		    	<label>ที่อยู่</label>	    	
@@ -306,7 +305,7 @@
 		    <div class="form-group">
 		    	<label class="col-xs-3 control-label">อีเมล์</label>
 	        	<div class="col-xs-9">
-	        		<p><?php echo $_SESSION['email']; ?></p>
+	        		<p><?php echo $result['email']; ?></p>
 	        	</div>
 		    </div>
 		    <div class="form-group">
