@@ -127,6 +127,7 @@ function doLogin(data){
   }
 
   $.post("member_session.php", {email: obj.email, member_name: obj.member_name});
+  $('a[href="design.php"]').removeClass('hidden');
 }
 
 var Toast = (function() {
@@ -150,16 +151,16 @@ var Toast = (function() {
     return that;
 }());
 
-function init(){
+$(window).load(function(){
   //member signed in
   if (lbl.innerHTML !== lblText){
     txtEmail.value = lbl.getAttribute('hidden-email');
     txtEmail.disabled = true;
     txtPassword.disabled =true;
     btnSignin.innerHTML = btnSignoutText;
-    btnSignin.className = 'btn btn-danger';
-    //dropdown.style.display = 'block';
+    btnSignin.className = 'btn btn-danger';    
     $(dropdown).removeClass('hidden');
+    $('a[href="design.php"]').removeClass('hidden');
 
     if (txtEmail.value === 'pk.manee@gmail.com') {
       //adminMenu.style.display = 'block';
@@ -167,7 +168,7 @@ function init(){
     } else {
       //adminMenu.style.display =  'none';
       $(adminMenu).addClass('hidden');
-    }
+    }    
   }
   //member not signed in
   else{
@@ -176,7 +177,6 @@ function init(){
     $(dropdown).addClass('hidden');
     $(adminMenu).addClass('hidden');
   }
-}
-init();
+});
 
 </script>

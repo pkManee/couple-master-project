@@ -350,10 +350,11 @@ function filterLoading() {
         return false;
     }
 
-    bootbox.dialog({
-                        title: 'Pleas wait',
-                        message : '<div class="alert alert-info" role="alert">Calculating ...</div>'
-                    });
+    waitingDialog.show('กำลังคำนวณ ...', {dialogSize: 'sm', progressType: 'info'});
+    // bootbox.dialog({
+    //                     title: 'Pleas wait',
+    //                     message : '<div class="alert alert-info" role="alert">Calculating ...</div>'
+    //                 });
     return true;
 }
 var btnBlur = document.getElementById('blur');
@@ -368,7 +369,7 @@ btnBlur.onchange = function() {
                                 });       
     filter = this.checked && filter;    
     setTimeout(function() { applyFilter(0, filter); }, 500);
-    setTimeout(function() { bootbox.hideAll(); }, 500);
+    setTimeout(function() { waitingDialog.hide(); }, 500);
 }
 var btnSharpen = document.getElementById('sharpen');
 btnSharpen.onchange = function() {
@@ -382,7 +383,7 @@ btnSharpen.onchange = function() {
                                 });
     filter = this.checked && filter;
     setTimeout(function() { applyFilter(1, filter); }, 500);
-    setTimeout(function() { bootbox.hideAll(); }, 500);
+    setTimeout(function() { waitingDialog.hide(); }, 500);
 }
 var btnEmboss = document.getElementById('emboss');
 btnEmboss.onchange = function() {
@@ -396,7 +397,7 @@ btnEmboss.onchange = function() {
                                 });
     filter = this.checked && filter;
     setTimeout(function() { applyFilter(2, filter); }, 500);
-    setTimeout(function() { bootbox.hideAll(); }, 500);
+    setTimeout(function() { waitingDialog.hide(); }, 500);
 }
 var btnGrascale = document.getElementById('grayscale');
 btnGrascale.onchange = function() {
@@ -405,7 +406,7 @@ btnGrascale.onchange = function() {
     var filter = new f.Grayscale();
     filter = this.checked && filter;
     setTimeout(function() { applyFilter(3, filter); }, 500);
-    setTimeout(function() { bootbox.hideAll(); }, 500);  
+    setTimeout(function() { waitingDialog.hide(); }, 500);
 }
 
 function applyFilter(index, filter) {
@@ -465,6 +466,7 @@ var crop = false;
 var btnCrop = document.getElementById('btn-crop');
 btnCrop.onclick = function(){  
 
+    btnSelect.onclick();
     //start crop
     if (!crop){
         canvas.remove(el);        
@@ -571,7 +573,6 @@ btnPicker.onclick = function() {
 var btnSnn = document.getElementById('btn-snn');
 btnSnn.onclick = function() {
     if (!filterLoading()) return;
-
     var obj = canvas.getActiveObject();
 
     var box = obj, //this is rect object
@@ -582,10 +583,32 @@ btnSnn.onclick = function() {
 
     var dataURL = obj.toDataURL();
     var img = new Image();
-    img.src = dataURL;    
+    img.src = dataURL;
     
-    setTimeout(function() { 
-        var convertedURL = snn(img, 3);
+     // object for worker
+    var _ctx = document.createElement('canvas').getContext('2d');
+    var ctx = document.createElement('canvas').getContext('2d');
+    ctx.canvas.width = img.width;
+    ctx.canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    var imgData = ctx.getImageData(0, 0, img.width, img.height);
+    var dstImg = _ctx.createImageData(imgData.width, imgData.height);
+    ///
+  
+    var convertedURL = '';
+
+    //use webworker
+    var worker = new Worker('js/snn.js');
+    
+    worker.onmessage = function(e) {
+      
+        var c = document.createElement('canvas');
+        c.width = img.width;
+        c.height = img.height;
+        c.getContext('2d').putImageData(e.data.dstimg, 0, 0);
+       
+        convertedURL = c.toDataURL();
+
         fabric.Image.fromURL(convertedURL, function(oImg) {
             //canvas.clear();
             canvas.remove(obj);
@@ -596,10 +619,17 @@ btnSnn.onclick = function() {
         });
      
         canvas.renderAll();
-    },
-    500);
 
-    setTimeout(function() { bootbox.hideAll(); }, 500);
+        setTimeout(function() { waitingDialog.hide(); }, 500);
+    };
+
+    worker.onerror = function(e) {
+      console.log('Error: Line ' + e.lineno + ' in ' + e.filename + ': ' + e.message);
+    };
+
+    var ab = new ArrayBuffer();
+    //start the worker
+    worker.postMessage({'radius': 3, 'dstimg': dstImg, 'imgdata': imgData}, [ab]); 
 }
 
 //button bring to front
@@ -1319,89 +1349,89 @@ function init() {
 }//init
 init();
 
-function snn(img, radius) {
-var _ctx = document.createElement('canvas').getContext('2d');
-var ctx = document.createElement('canvas').getContext('2d');
-var imgdata;
+// function snn(img, radius) {
+// var _ctx = document.createElement('canvas').getContext('2d');
+// var ctx = document.createElement('canvas').getContext('2d');
+// var imgdata;
 
-ctx.canvas.width = img.width;
-ctx.canvas.height = img.height;
-ctx.drawImage(img, 0, 0);
-imgdata = ctx.getImageData(0, 0, img.width, img.height);
+// ctx.canvas.width = img.width;
+// ctx.canvas.height = img.height;
+// ctx.drawImage(img, 0, 0);
+// imgdata = ctx.getImageData(0, 0, img.width, img.height);
 
-var data = imgdata;
-var srcimg = data,
-    w = srcimg.width,
-    h = srcimg.height,
-    r = parseInt(radius),
-    div = 1.0/((2*r + 1)*(2*r + 1)),
-    srcdata = srcimg.data,
-    dstimg = _ctx.createImageData(w, h),
-    dstdata = dstimg.data,
-    sumr, sumg, sumb,
-    rc, gc, bc, r1, g1, b1, r2, g2, b2,
-    pv, pu, xystep, uvstep, delta1, delta2,
-    i, j;
+// var data = imgdata;
+// var srcimg = data,
+//     w = srcimg.width,
+//     h = srcimg.height,
+//     r = parseInt(radius),
+//     div = 1.0/((2*r + 1)*(2*r + 1)),
+//     srcdata = srcimg.data,
+//     dstimg = _ctx.createImageData(w, h),
+//     dstdata = dstimg.data,
+//     sumr, sumg, sumb,
+//     rc, gc, bc, r1, g1, b1, r2, g2, b2,
+//     pv, pu, xystep, uvstep, delta1, delta2,
+//     i, j;
 
-for(var y=0; y<h; y++) {
-    xystep = y*w;
-    for(var x=0; x<w; x++) {
-      i = (xystep + x) << 2;
-      sumr = 0, sumg = 0, sumb = 0;
-      rc = srcdata[i];
-      gc = srcdata[i + 1];
-      bc = srcdata[i + 2];
-      for(var v=-r; v<=r; v++) {
-        uvstep = w*v;
-        for(var u=-r; u<=r; u++) {
-          j = (uvstep + u) << 2;
-          if(srcdata[i + j]) {
-            r1 = srcdata[i + j];
-            g1 = srcdata[i + j + 1];
-            b1 = srcdata[i + j + 2];
-          } else {
-            r1 = srcdata[i];
-            g1 = srcdata[i + 1];
-            b1 = srcdata[i + 2];
-          }
-          if(srcdata[i - j]) {
-            r2 = srcdata[i - j];
-            g2 = srcdata[i - j + 1];
-            b2 = srcdata[i - j + 2];
-          } else {
-            r2 = srcdata[i];
-            g2 = srcdata[i + 1];
-            b2 = srcdata[i + 2];
-          }
-          delta1 = Math.sqrt((rc - r1)*(rc - r1) +
-                             (gc - g1)*(gc - g1) +
-                             (bc - b1)*(bc - b1));
-          delta2 = Math.sqrt((rc - r2)*(rc - r2) +
-                             (gc - g2)*(gc - g2) +
-                             (bc - b2)*(bc - b2));
-          if(delta1 < delta2) {
-            sumr += r1;
-            sumg += g1;
-            sumb += b1;
-          } else {
-            sumr += r2;
-            sumg += g2;
-            sumb += b2;
-          }
-        }
-      }
-      dstdata[i] = sumr*div;
-      dstdata[i + 1] = sumg*div;
-      dstdata[i + 2] = sumb*div;
-      dstdata[i + 3] = 255;
-    }
-}
-    //return dstimg;
+// for(var y=0; y<h; y++) {
+//     xystep = y*w;
+//     for(var x=0; x<w; x++) {
+//       i = (xystep + x) << 2;
+//       sumr = 0, sumg = 0, sumb = 0;
+//       rc = srcdata[i];
+//       gc = srcdata[i + 1];
+//       bc = srcdata[i + 2];
+//       for(var v=-r; v<=r; v++) {
+//         uvstep = w*v;
+//         for(var u=-r; u<=r; u++) {
+//           j = (uvstep + u) << 2;
+//           if(srcdata[i + j]) {
+//             r1 = srcdata[i + j];
+//             g1 = srcdata[i + j + 1];
+//             b1 = srcdata[i + j + 2];
+//           } else {
+//             r1 = srcdata[i];
+//             g1 = srcdata[i + 1];
+//             b1 = srcdata[i + 2];
+//           }
+//           if(srcdata[i - j]) {
+//             r2 = srcdata[i - j];
+//             g2 = srcdata[i - j + 1];
+//             b2 = srcdata[i - j + 2];
+//           } else {
+//             r2 = srcdata[i];
+//             g2 = srcdata[i + 1];
+//             b2 = srcdata[i + 2];
+//           }
+//           delta1 = Math.sqrt((rc - r1)*(rc - r1) +
+//                              (gc - g1)*(gc - g1) +
+//                              (bc - b1)*(bc - b1));
+//           delta2 = Math.sqrt((rc - r2)*(rc - r2) +
+//                              (gc - g2)*(gc - g2) +
+//                              (bc - b2)*(bc - b2));
+//           if(delta1 < delta2) {
+//             sumr += r1;
+//             sumg += g1;
+//             sumb += b1;
+//           } else {
+//             sumr += r2;
+//             sumg += g2;
+//             sumb += b2;
+//           }
+//         }
+//       }
+//       dstdata[i] = sumr*div;
+//       dstdata[i + 1] = sumg*div;
+//       dstdata[i + 2] = sumb*div;
+//       dstdata[i + 3] = 255;
+//     }
+// }
+//     //return dstimg;
 
-    var c = document.createElement('canvas');
-    c.width = img.width;
-    c.height = img.height;
-    c.getContext('2d').putImageData(dstimg, 0, 0);
+//     var c = document.createElement('canvas');
+//     c.width = img.width;
+//     c.height = img.height;
+//     c.getContext('2d').putImageData(dstimg, 0, 0);
    
-    return c.toDataURL();
-}
+//     return c.toDataURL();
+// }

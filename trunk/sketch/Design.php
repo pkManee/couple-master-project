@@ -32,6 +32,7 @@
     <script src="js/bootstrapValidator.js"></script>
     <script src="js/image-picker.js"></script>
     <script src="js/bootstrap-dialog.js"></script>
+    <script src="js/bootstrap-waitingfor.js"></script>
     <!--sketch-->
     <script src="TinyColor/tinycolor.js"></script>
     <script src="HSBRect/HSBRect.js"></script>
