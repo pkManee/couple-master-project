@@ -258,10 +258,10 @@ class MyService extends  REST {
 		$stmt->bindValue(":password", $this->_request["txtPassword"]);
 		$stmt->bindValue(":province_id", doExplode($this->_request["cboProvince"])[0]);
 		$stmt->bindValue(":province_name", doExplode($this->_request["cboProvince"])[1]);
-		$stmt->bindValue(":amphur_id", doExplode($this->_request["cboAmphur"])[0]);
-		$stmt->bindValue(":amphur_name", doExplode($this->_request["cboAmphur"])[1]);
-		$stmt->bindValue(":district_id", doExplode($this->_request["cboDistrict"])[0]);
-		$stmt->bindValue(":district_name", doExplode($this->_request["cboDistrict"])[1]);
+		$stmt->bindValue(":amphur_id", empty($_POST['cboAmphur']) ? null : doExplode($this->_request["cboAmphur"])[0]);
+		$stmt->bindValue(":amphur_name", empty($_POST['cboAmphur']) ? null : doExplode($this->_request["cboAmphur"])[1]);
+		$stmt->bindValue(":district_id", empty($_POST['cboDistrict']) ? null : doExplode($this->_request["cboDistrict"])[0]);
+		$stmt->bindValue(":district_name", empty($_POST['cboDistrict']) ? null : doExplode($this->_request["cboDistrict"])[1]);
 		$stmt->bindValue(":postcode", $this->_request["txtPostCode"]);
 		$stmt->bindValue(":photo", $photo);
 		$stmt->bindValue(":height_1", $this->_request["txtHeight_1"]);

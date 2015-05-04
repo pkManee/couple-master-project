@@ -65,7 +65,18 @@ var lblText = 'สมาชิก ล็อกอิน';
 var btnSigninText = 'ล็อกอิน';
 var btnSignoutText= 'ล็อกเอาท์';
 
-btnSignin.onclick = function(){
+btnSignin.onclick = function(event, data){
+
+  var email = '', password = '', redirectPage = '';
+
+  if (typeof data != 'undefined') {
+    email = data.email;
+    password = data.password;
+    redirectPage = data.redirectPage;
+  } else {
+    email = txtEmail.value;
+    password = txtPassword.value;
+  }
 
   //sign in
   if (btnSignin.innerHTML === btnSigninText){
@@ -73,7 +84,7 @@ btnSignin.onclick = function(){
       type: "POST",
       dataType: "json",
       url: "service/servie",
-      data: {method: "memberLogin", email: txtEmail.value, password: txtPassword.value},
+      data: {method: "memberLogin", email: email, password: password},
       success: function(data){
         doLogin(data);
       }
@@ -91,6 +102,12 @@ btnSignin.onclick = function(){
                     }
                   }
     }); 
+  }
+
+  if (redirectPage != '') {
+    setTimeout(function() {
+      window.location = redirectPage;
+    }, 500);
   }
 }
 

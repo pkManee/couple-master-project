@@ -50,7 +50,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-xs-6">
           <div class="form-group">
             <label class="control-label" for="cbo-province">จังหวัด</label>
             <select id="cbo-province" class="form-control" name="cboProvince">
@@ -71,20 +71,25 @@
                 foreach($result as $row) {
                   $province_name = trim($row["province_name"]);
                   $province_id = $row["province_id"];
-                  echo "<option value=\"" .$province_id. "|" .$province_name. "\">" .$province_name. "</option>";
+                  $isSelected = ($province_id == '1') ? 'selected' : '';
+                  echo "<option value=\"" .$province_id. "|" .$province_name. "\" ".$isSelected.">" .$province_name. "</option>";
                 }
               }
               ?> 
             </select>         
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-xs-6 form-group">
+          <label class="control-label" for="txt-post-code">รหัสไปรษณีย์</label>
+          <input type="text" class="form-control" id="txt-post-code" placeholder="รหัสไปรษณีย์" name="txtPostCode" >          
+        </div>
+        <div class="col-md-4 hidden">
           <label class="control-label" for="cbo-amphur">อำเภอ/เขต</label>
           <select id="cbo-amphur" class="form-control" name="cboAmphur" disabled>
             <option>อำเภอ</option>
           </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 hidden">
           <label class="control-label" for="cbo-district">ตำบล/แขวง</label>
           <select id="cbo-district" class="form-control" name="cboDistric" disabled>
             <option>ตำบล</option>
@@ -92,10 +97,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 form-group">
-          <label class="control-label" for="txt-post-code">รหัสไปรษณีย์</label>
-          <input type="text" class="form-control" id="txt-post-code" placeholder="รหัสไปรษณีย์" name="txtPostCode" >          
-        </div>
+        
       </div>
       <div class="row">
         <div class="col-xs-6 form-group">
@@ -209,7 +211,14 @@
                 "selector": ".alert-success"
             });
             Toast.show("<strong>Save completed!!!</strong> redirecting ...<br/>Please <strong>sign in</strong> with your email");
-            setTimeout(function(){ window.location = "index.php" }, 3000);
+            setTimeout(function() {
+              var btnSignin = document.getElementById('btn-sign-in');
+              var email = document.getElementById('txt-form-email').value;
+              var password = document.getElementById('txt-password-signup').value;
+              btnSignin.onclick(null, {'email': email, 'password': password, 'redirectPage': 'EditProfile.php'});              
+            }, 
+            2000);
+
           }else{
             Toast.init({
               "selector": ".alert-danger"
@@ -217,7 +226,7 @@
             Toast.show("<strong>Error on saving!!!<strong> " + data);
           }
         })//done
-        .fail(function() {
+        .fail(function(data) {
           bootbox.dialog({
                       title: 'Fatal Error',
                       message : '<div class="alert alert-danger" role="alert"><strong>Error in connection !!!</strong></div>'

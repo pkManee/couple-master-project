@@ -88,7 +88,7 @@
               <textarea class="form-control" id="txt-address" placeholder="ที่อยู่" rows="4" name="txtAddress"><?php echo htmlentities($member->address); ?></textarea> 
             </div>
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-xs-6">
                 <div class="form-group">
                   <label for="cbo-province">จังหวัด</label>
                   <select id="cbo-province" class="form-control" name="cboProvince">
@@ -111,8 +111,7 @@
                       foreach($result as $row) {
                         $province_name = $row["province_name"];
                         $province_id = $row["province_id"];                  
-                        if ($province_id == $member->province_id){
-                          print_r("this is --> " .$member->province_id);
+                        if ($province_id == $member->province_id){                          
                           echo "<option value=\"" .$province_id. "|" .$province_name. "\" selected>" .$province_name. "</option>";
                         }else{
                           echo "<option value=\"" .$province_id. "|" .$province_name. "\">" .$province_name. "</option>";
@@ -123,25 +122,25 @@
                   </select>         
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-xs-6 form-group">
+                <label class="control-label" for="txt-post-code">รหัสไปรษณีย์</label>
+                <input type="text" class="form-control" id="txt-post-code" placeholder="รหัสไปรษณีย์" name="txtPostCode"
+                      value="<?php echo $member->postcode; ?>">          
+              </div>
+              <div class="col-md-4 hidden">
                 <label class="control-label" for="cbo-amphur">อำเภอ/เขต</label>
                 <select id="cbo-amphur" class="form-control" name="cboAmphur" disabled >
                   <option>อำเภอ</option>
                 </select>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 hidden">
                 <label class="control-label" for="cbo-district">ตำบล/แขวง</label>
                 <select id="cbo-district" class="form-control" name="cboDistrict" disabled>
                   <option>ตำบล</option>
                 </select>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-4 form-group">
-                <label class="control-label" for="txt-post-code">รหัสไปรษณีย์</label>
-                <input type="text" class="form-control" id="txt-post-code" placeholder="รหัสไปรษณีย์" name="txtPostCode"
-                      value="<?php echo $member->postcode; ?>">          
-              </div>
+            <div class="row">              
             </div>
             <div class="row">
               <div class="col-xs-6 form-group">
