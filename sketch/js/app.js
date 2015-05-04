@@ -1,6 +1,7 @@
 var areaWidth = 850;
 var areaHeight = 600;
 var DPI = 300;
+var LOOP_COUNT = 0, LOOP_MAX = 1000;
 var A3 = {
             cmWidth: 29.7, 
             cmHeight: 42, 
@@ -826,7 +827,9 @@ var poloType = {
             type_w: {uri: './img/shirts/polo-white-front-w02.png'}
             }
 
-function insertSideCal(side_cal) {    
+function insertSideCal(side_cal) {
+    return;
+    
     var sc1 = new fabric.Rect({
             width: side_cal.width,
             height: side_cal.height,
@@ -927,7 +930,7 @@ function loadShirt(type_1, type_2){
         });
 
         //display area afer compare height
-        //insertSideCal(side_cal_1);
+        insertSideCal(side_cal_1);
     }
     //shirt 2
     //women
@@ -967,18 +970,23 @@ function loadShirt(type_1, type_2){
         });
 
         //display area afer compare height
-        //insertSideCal(side_cal_2);
+        insertSideCal(side_cal_2);
     }          
 }
 
 function scaleToFit() {    
-    
+
+    LOOP_COUNT = 0;
     finalLineScreen.forEach(function(obj) {
         scaling(obj);       
 
         while (!adjustPosition(obj)) {            
             console.log('call adjustPosition top: ' + obj.top + ' left: ' + obj.left);
-            adjustPosition(obj);            
+            adjustPosition(obj);
+
+            if (LOOP_COUNT >= LOOP_MAX) return;
+
+            LOOP_COUNT ++;
         }
 
         //snap to the righ side
@@ -996,6 +1004,7 @@ function scaleToFit() {
 }
 
 function scaling(obj) {
+    console.log('scaling ...');
     var side = undefined;    
 
     if (obj.sideOfCanvas === 'left') {
@@ -1022,9 +1031,17 @@ function scaling(obj) {
         maxHeight = side.height;
     }
 
+    // obj.set({scaleX: 0.05, scaleY: 0.05, left: side.left + 3, top:side.top + 3});
+    // obj.setCoords();
+
     while ((obj.currentWidth < maxWidth) && (obj.currentHeight < maxHeight)) {
         //obj.set({scaleX: obj.scaleX + scaleFactor, scaleY: obj.scaleY + scaleFactor, left: side.left + 3, top: side.top + 3});
         obj.set({scaleX: scaleFactor, scaleY: scaleFactor, left: side.left + 3, top: side.top + 3});
+        obj.goodTop = obj.top;
+        obj.goodLeft = obj.left;
+        obj.goodScaleX = obj.scaleX;
+        obj.goodScaleY = obj.scaleY;
+
         scaleFactor += 0.01;
         obj.setCoords();
     }
@@ -1032,6 +1049,11 @@ function scaling(obj) {
     while ((obj.currentWidth > maxWidth) || (obj.currentHeight > maxHeight)) {
         scaleFactor += 0.01;
         obj.set({scaleX: obj.scaleX - scaleFactor, scaleY: obj.scaleY - scaleFactor, left: side.left + 3, top: side.top + 3});
+        obj.goodTop = obj.top;
+        obj.goodLeft = obj.left;
+        obj.goodScaleX = obj.scaleX;
+        obj.goodScaleY = obj.scaleY;
+
         obj.setCoords();
     }
 }
@@ -1051,7 +1073,7 @@ function adjustPosition(obj) {
 
     obj.setCoords();
 
-    console.log('top left: '+ TL.x + ', ' + TL.y + ' buttom right: ' + BR.x + ', ' + BR.y);
+    console.log('border top left: '+ TL.x + ', ' + TL.y + ' buttom right: ' + BR.x + ', ' + BR.y);
     console.log('obj left: ' + obj.left + ' obj top: ' + obj.top);
 
     if (!obj.isContainedWithinRect(TL, BR)) {
@@ -1168,6 +1190,20 @@ btnSelectImagePicker.onclick = function() {
 var btnCloseImagePicker = document.getElementById('btn-close-image-picker');
 btnCloseImagePicker.onclick = function() {
     divImagePicker.className = 'hidden';
+}
+
+var btnHome = document.getElementById('btn-home');
+btnHome.onclick = function() {
+    bootbox.confirm({
+                  title: 'ยืนยันกลับสู่หน้าแรก', 
+                  message: '<div class="alert alert-info" role="alert">ท่านต้องการกลับสู่หน้าแรกหรือไม่ ?</div>',
+                  callback: function(result) {                   
+                    if (result) {
+                       //sign out                      
+                      window.location = "index.php";
+                    }
+                  }
+    }); 
 }
 
 //=======================================================================================================================

@@ -44,10 +44,10 @@ function signup() {
   $stmt->bindValue(":password", $_POST["txtPassword"]);
   $stmt->bindValue(":province_id", doExplode($_POST["cboProvince"])[0]);
   $stmt->bindValue(":province_name", doExplode($_POST["cboProvince"])[1]);
-  $stmt->bindValue(":amphur_id", doExplode($_POST["cboAmphur"])[0]);
-  $stmt->bindValue(":amphur_name", doExplode($_POST["cboAmphur"])[1]);
-  $stmt->bindValue(":district_id", doExplode($_POST["cboDistric"])[0]);
-  $stmt->bindValue(":district_name", doExplode($_POST["cboDistric"])[1]);
+  $stmt->bindValue(":amphur_id", empty($_POST['cboAmphur']) ? null : doExplode($_POST["cboAmphur"])[0]);
+  $stmt->bindValue(":amphur_name", empty($_POST['cboAmphur']) ? null : doExplode($_POST["cboAmphur"])[1]);
+  $stmt->bindValue(":district_id", empty($_POST['cboDistric']) ? null : doExplode($_POST["cboDistric"])[0]);
+  $stmt->bindValue(":district_name", empty($_POST['cboDistric']) ? null : doExplode($_POST["cboDistric"])[1]);
   $stmt->bindValue(":postcode", $_POST["txtPostCode"]);
 
   if ($stmt->execute()){

@@ -3,6 +3,9 @@ var cboAmphur = document.getElementById('cbo-amphur');
 var cboDistrict = document.getElementById('cbo-district');
 
 cboProvince.onchange = function(){
+
+  return;
+  
   var att1 = document.createAttribute('disabled');
   cboDistrict.setAttributeNode(att1);
 

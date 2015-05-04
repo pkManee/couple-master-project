@@ -110,7 +110,7 @@ if (!isset($_SESSION['email'])){
     <div class="row featurette">
       <div class="col-md-7">
         <h2 class="featurette-heading">เลือกสีเสื้อให้เหมาะกับลายที่ออกแบบ<span class="text-muted"> จะเด่นเป็นคู่ หรือกลมกลืน ก็มีให้เลือก</span></h2>
-        <p class="lead">3. แสดงภาพลายสกรีนกับสีเสื้อที่เลือกไว้</p>
+        <p class="lead">3. แสดงภาพลายสกรีนกับสีเสื้อที่เลือกไว้ ถึงผู้สวมใส่จะมีความสูงที่แตกต่างกัน ก็สามารถปรับให้ลายมีการต่อกันได้เป็นคู่</p>
       </div>
       <div class="col-md-5">
         <img class="featurette-image img-responsive center-block" src="img/03.png">
