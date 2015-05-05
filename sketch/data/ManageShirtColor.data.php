@@ -103,9 +103,9 @@ function deleteColor() {
       die();
   }
 
-  $sql = "delete from shirt_color where color = :color ";
+  $sql = "delete from shirt_color where color_hex = :color_hex ";
   $stmt = $dbh->prepare($sql);
-  $stmt->bindValue(":color", $_POST["isDelete"]);
+  $stmt->bindValue(":color_hex", $_POST["isDelete"]);
 
   if ($stmt->execute()){        
     header("Content-Type: application/json");
@@ -127,7 +127,7 @@ function insertColor(){
   
   $sql = "insert into shirt_color (color, color_hex) values ";
   $sql .= "(:color, :color_hex) ";
-  $sql .= "on duplicate key update color_hex = :color_hex ";
+  $sql .= "on duplicate key update color = :color ";
 
   $stmt = $dbh->prepare($sql);
 
