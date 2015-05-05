@@ -28,8 +28,7 @@
     </div>
     <div class="alert alert-danger" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
       <span></span>
-    </div>
-    <input type="hidden" id="hidden-color" name="isDelete" value="<?php echo $_GET["color"]; ?>">
+    </div>    
 
     <?php
       require("navbar.php");
@@ -62,8 +61,12 @@
           }else{
             echo "error -> " .$stmt->errorInfo()[2];
           }
+          echo '<input type="hidden" value="update" id="form-method">';
+          echo '<input type="hidden" value="'.$color->color_hex.'" id="hidden-color-hex">';
       }else{
       	$color = new Color();
+        echo '<input type="hidden" value="insert" id="form-method">';
+        echo '<input type="hidden" value="" id="hidden-color-hex">';
       }
     ?>
     <form id="manage-shirt-color-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
@@ -72,12 +75,12 @@
     
       <div class="form-group">        
         <label class="control-label" for="txt-color">สี</label>
-        <input type="text" class="form-control" id="txt-material-type" name="txtColor" placeholder="สี" 
+        <input type="text" class="form-control" id="txt-color" name="txtColor" placeholder="สี" 
                value="<?php echo $color->color; ?>" aria-describedby="basic-addon2" >
       </div>
       <div class="form-group">
         <div class="input-group" id="color-pick">
-          <input type="text" class="form-control" id="txt-material-type" name="txtColorHex" placeholder="#000000" 
+          <input type="text" class="form-control" id="txt-color-hex" name="txtColorHex" placeholder="#000000" 
         	     value="<?php echo $color->color_hex; ?>" >
           <span class="input-group-addon"><i></i></span>
         </div>
@@ -109,26 +112,26 @@
                       validators: {
                           notEmpty: {
                               message: 'กรุณาระบุสี'
-                          },
-                          remote: {
-                            url: 'data/ManageShirtColor.data.php',
-                            data: { method: 'checkColor' },
-                            message: 'สีนี้มีในระบบแล้ว',
-                            type: 'POST'
                           }
+                          // ,remote: {
+                          //   url: 'data/ManageShirtColor.data.php',
+                          //   data: { method: 'checkColor', color: document.getElementById('txt-color').value, formMethod: document.getElementById('form-method').value },
+                          //   message: 'สีนี้มีในระบบแล้ว',
+                          //   type: 'POST'
+                          // }
                       }
                   },
                   txtColorHex: {
                       validators: {
                           notEmpty: {
                               message: 'กรุณาเลือกสี'
-                          },
-                          remote: {
-                            url: 'data/ManageShirtColor.data.php',
-                            data: { method: 'checkColorHex' },
-                            message: 'รหัสนี้มีในระบบแล้ว',
-                            type: 'POST'
                           }
+                          // ,remote: {
+                          //   url: 'data/ManageShirtColor.data.php',
+                          //   data: { method: 'checkColorHex', colorHex: document.getElementById('txt-color-hex').value, formMethod: document.getElementById('form-method').value },
+                          //   message: 'รหัสนี้มีในระบบแล้ว',
+                          //   type: 'POST'
+                          // }
                       }
                   }
               }
@@ -176,7 +179,7 @@
   }
 
    var btnDelete = document.getElementById('btn-delete');
-   var isDelete = document.getElementById('hidden-color');
+   var isDelete = document.getElementById('hidden-color-hex');
    btnDelete.onclick = function(){     	
    	event.preventDefault();
     if (!isDelete.value) return false;

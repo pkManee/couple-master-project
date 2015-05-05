@@ -827,7 +827,7 @@ var poloType = {
             type_w: {uri: './img/shirts/polo-white-front-w02.png'}
             }
 
-function insertSideCal(side_cal) {
+function displayScreenArea(side_cal) {
     return;
     
     var sc1 = new fabric.Rect({
@@ -930,7 +930,7 @@ function loadShirt(type_1, type_2){
         });
 
         //display area afer compare height
-        insertSideCal(side_cal_1);
+        displayScreenArea(side_cal_1);
     }
     //shirt 2
     //women
@@ -970,7 +970,7 @@ function loadShirt(type_1, type_2){
         });
 
         //display area afer compare height
-        insertSideCal(side_cal_2);
+        displayScreenArea(side_cal_2);
     }          
 }
 
@@ -978,16 +978,30 @@ function scaleToFit() {
 
     LOOP_COUNT = 0;
     finalLineScreen.forEach(function(obj) {
-        scaling(obj);       
+        var side = undefined;    
+
+        if (obj.sideOfCanvas === 'left') {
+            side = side_cal_1;
+        } else {
+            side = side_cal_2;
+        }
+        obj.set({scaleX: 0.05, scaleY: 0.05, left: side.left + 3, top:side.top + 3});
+        obj.setCoords();              
 
         while (!adjustPosition(obj)) {            
             console.log('call adjustPosition top: ' + obj.top + ' left: ' + obj.left);
             adjustPosition(obj);
 
-            if (LOOP_COUNT >= LOOP_MAX) return;
+            if (LOOP_COUNT >= LOOP_MAX) {
+                obj.setCoords();
+                shirtCanvas.renderAll();
+                break;
+            }
 
             LOOP_COUNT ++;
         }
+
+        scaling(obj);
 
         //snap to the righ side
         if (obj.sideOfCanvas === 'left') {
@@ -997,7 +1011,6 @@ function scaleToFit() {
         } else {
             //do nothing
         }
-        
     });
 
     shirtCanvas.renderAll();
@@ -1034,9 +1047,11 @@ function scaling(obj) {
     // obj.set({scaleX: 0.05, scaleY: 0.05, left: side.left + 3, top:side.top + 3});
     // obj.setCoords();
 
-    while ((obj.currentWidth < maxWidth) && (obj.currentHeight < maxHeight)) {
-        //obj.set({scaleX: obj.scaleX + scaleFactor, scaleY: obj.scaleY + scaleFactor, left: side.left + 3, top: side.top + 3});
-        obj.set({scaleX: scaleFactor, scaleY: scaleFactor, left: side.left + 3, top: side.top + 3});
+    while ((obj.currentWidth < maxWidth) && (obj.currentHeight < maxHeight)) {        
+        obj.set({left: side.left + 3, top: side.top + 3});
+        obj.scaleX = obj.scaleX + 0.01;
+        obj.scaleY = obj.scaleY + 0.01;
+
         obj.goodTop = obj.top;
         obj.goodLeft = obj.left;
         obj.goodScaleX = obj.scaleX;
@@ -1056,6 +1071,8 @@ function scaling(obj) {
 
         obj.setCoords();
     }
+
+    shirtCanvas.renderAll();
 }
 
 function adjustPosition(obj) {   
@@ -1073,8 +1090,8 @@ function adjustPosition(obj) {
 
     obj.setCoords();
 
-    console.log('border top left: '+ TL.x + ', ' + TL.y + ' buttom right: ' + BR.x + ', ' + BR.y);
-    console.log('obj left: ' + obj.left + ' obj top: ' + obj.top);
+    //console.log('border top left: '+ TL.x + ', ' + TL.y + ' buttom right: ' + BR.x + ', ' + BR.y);
+    //console.log('obj left: ' + obj.left + ' obj top: ' + obj.top);
 
     if (!obj.isContainedWithinRect(TL, BR)) {
 
