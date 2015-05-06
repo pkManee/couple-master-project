@@ -389,10 +389,19 @@
 
           // Get the form instance
           var $form = $(e.target);
+
+          bootbox.confirm({
+                  title: 'ยืนยัน', 
+                  message: '<div class="alert alert-info" role="alert">ท่านต้องการสั่งซื้อหรือไม่ ? <br>เมื่อสั่งซื้อแล้วจะไม่สามารถย้อนกลับมาแก้ไขได้</div>',
+                  callback: function(result) {                   
+                    if (result) {
+                      //go process here
+                      //code in Design.js
+                      goSave();
+                    }
+                  }
+          });           
           
-          //go process here
-          //code in Design.js
-          goSave();
       });//on success.form.bv
 
   });//document.ready 
