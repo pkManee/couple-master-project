@@ -400,8 +400,7 @@
                       goSave();
                     }
                   }
-          });           
-          
+          });
       });//on success.form.bv
 
   });//document.ready 
