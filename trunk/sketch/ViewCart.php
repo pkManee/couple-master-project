@@ -315,13 +315,13 @@
 		    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 		      <div class="panel-body">
 		      	<div style="text-align: center; !important">
-		      		<div style="display: inline-block;">
+		      		<div style="display: inline-block; cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Click to download">
 				  		<img src="<?php echo $_POST['screen1']; ?>" id="img-screen-1" class="img-thumbnail">
 				  		<div style="text-align: left;">
 				  			<p id="screen-size-1">size 1</p>
 				  		</div>
 				  	</div>
-				  	<div style="display: inline-block;">
+				  	<div style="display: inline-block; cursor: pointer;" data-toggle="tooltip" data-placement="right" title="Click to download">
 			   			<img src="<?php echo $_POST['screen2']; ?>" id="img-screen-2" class="img-thumbnail">
 			   			<div style="text-align: left;">
 				  			<p id="screen-size-2">size 2</p>
@@ -513,7 +513,7 @@
 	}
 
 	$(document).ready(function() {
-
+		$('[data-toggle="tooltip"]').tooltip();
 		$('#qty-1').TouchSpin({
                 min: 1,
                 max: 100,
@@ -844,6 +844,13 @@
 	                message : '<div class="alert alert-danger" role="alert"><strong>Error in Confirm !!!</strong></div>'
 	        });//bootbox
 	    });//fail
+	}
+
+	line_screen_1.onclick = function() {
+		$('<a>').attr({href: line_screen_1.src, download: 'screen01.png'})[0].click();
+	}
+	line_screen_2.onclick = function() {
+		$('<a>').attr({href: line_screen_2.src, download: 'screen02.png'})[0].click();
 	}
     </script>
   </body>
