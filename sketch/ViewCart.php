@@ -327,8 +327,7 @@
 				  			<p id="screen-size-2">size 2</p>
 				  		</div>
 			   		</div>
-		   		</div>
-		   		   		
+		   		</div>		   		   		
 		      </div>
 		    </div>
 		  </div>
