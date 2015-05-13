@@ -98,11 +98,11 @@
    	<div id="print-area">
    	<style type="text/css">
     	@media print {
-        .no-print { display:none; }
+        .no-print { display: none !important; }
         .small-print { width: 98% !important; }
     	}
     </style>
-   		<div class="small-print" style="width: 100%; border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px; display: inline-block; padding: 10px 10px 10px 10px;">
+   		<div class="no-print" style="width: 100%; border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px; display: inline-block; padding: 10px 10px 10px 10px;">
 	   		<div style="float: left; display: inline-block;">
 				<img src="img/logo-1.png" style="width: 40px;">
 				<b style="display: inline-block; font-size: 20px;"><p>ร้านขายเสื้อคู่</p></b>
@@ -118,7 +118,7 @@
 				</div>
 			</div>
 		</div>
-   		<div style="width: 70%; font-size: 12px;">
+   		<div class="no-print" style="width: 70%; font-size: 12px;">
 	   		<div style="display: inline-table;">
 		    	<label>ชื่อ-นามสกุล</label>        	
 		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
@@ -132,7 +132,7 @@
 		    	<p style="display: inline-table; margin-left: 20px;"><?php echo nl2br($result['address']); ?></p>
 		    </div>
 		</div>
-		<div style="font: normal 12px/150% Arial, Helvetica, sans-serif;background: #fff;overflow: hidden;border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;">
+		<div class="no-print" style="font: normal 12px/150% Arial, Helvetica, sans-serif;background: #fff;overflow: hidden;border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;">
 	        <table style="border-collapse: collapse;text-align: left;width: 100%">
 	            <thead>
 	                <tr>
@@ -251,19 +251,20 @@
 	                </tr>
 	            </tfoot>
 	        </table>
-	    </div>	    
-	    <div class="no-print">
-		    <p style="text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ลายสกรีน</p>
+	    </div>	 
+	    <hr>   
+	    <div>
+		    <p style="text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8"><?php echo 'เลขที่คำสั่งซื้อ: '.$result['order_id'];  ?></p>
 		    <div style="text-align: center;">
 		    	<div style="text-align: center; !important">
-		      		<div style="display: inline-block;">
-				  		<img style="width: 300px;" src="<?php echo 'uploads/' .$result['order_id']. '/01.png' ?>">
+		      		<div style="display: inline-block; cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Click to download">
+				  		<img id="img-screen-1" class="img-thumbnail" style="width: 300px;" src="<?php echo 'uploads/' .$result['order_id']. '/01.png' ?>">
 				  		<div style="text-align: left;">
 				  			<p><?php echo 'กว้าง x ยาว (ซม.): ' .$result['screen_width_1']. ' x ' .$result['screen_height_1']; ?></p>
 				  		</div>
 				  	</div>
-				  	<div style="display: inline-block;">
-			   			<img style="width: 300px;" src="<?php echo 'uploads/' .$result['order_id']. '/02.png' ?>">
+				  	<div style="display: inline-block; cursor: pointer;" data-toggle="tooltip" data-placement="right" title="Click to download">
+			   			<img id="img-screen-2" class="img-thumbnail" style="width: 300px;" src="<?php echo 'uploads/' .$result['order_id']. '/02.png' ?>">
 			   			<div style="text-align: left;">
 				  			<p><?php echo 'กว้าง x ยาว (ซม.): ' .$result['screen_width_2']. ' x ' .$result['screen_height_2']; ?></p>
 				  		</div>
@@ -777,6 +778,19 @@
 	        });//bootbox
 	    });//fail
     }
+
+    var line_screen_1 = document.getElementById('img-screen-1');
+	var line_screen_2 = document.getElementById('img-screen-2');
+	line_screen_1.onclick = function() {
+		$('<a>').attr({href: line_screen_1.src, download: 'screen01.png'})[0].click();
+	}
+	line_screen_2.onclick = function() {
+		$('<a>').attr({href: line_screen_2.src, download: 'screen02.png'})[0].click();
+	}
+
+	$(document).ready(function() {
+		$('[data-toggle="tooltip"]').tooltip();
+	});
     </script>
   </body>
 </html>
