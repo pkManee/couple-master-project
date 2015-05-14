@@ -62,7 +62,7 @@
       </div>
 
       <div class="form-group">
-        <label class="control-label" for="txt-vat-rate">VAT(%)</label>
+        <label class="control-label" for="txt-vat-rate">VAT (%)</label>
         <input type="text" class="form-control" placeholder="0.00" name="txtVatRate" id="txt-vat-rate" value="<?php echo $result['vat_rate']; ?>">
       </div>      
      
