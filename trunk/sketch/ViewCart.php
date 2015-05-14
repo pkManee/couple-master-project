@@ -632,7 +632,7 @@
             canvas.add(oImg1);
             canvas.bringToFront(oImg1);           
             // oImg1.set({ lockUniScaling: true, selectable: true, left: parseInt(((x1+x2)/2) - (oImg1.width/2)), top: y });
-            oImg1.set({ lockUniScaling: true, selectable: true, left: 0, top: 0, scaleX: 0.5, scaleY: 0.5 });
+            oImg1.set({ hasRotatingPoint: false, lockUniScaling: true, selectable: true, left: 0, top: 0, scaleX: 0.5, scaleY: 0.5 });
             oImg1.setCoords();
             canvas.renderAll();          
         });
@@ -657,7 +657,7 @@
             canvas.add(oImg2);
             canvas.bringToFront(oImg2);
             // oImg2.set({ lockUniScaling: true, selectable: true, left: parseInt(((x1+x2)/2) - (oImg2.width/2)), top: y });
-            oImg2.set({ lockUniScaling: true, selectable: true, left: 640, top: 0, scaleX: 0.5, scaleY: 0.5 });
+            oImg2.set({ hasRotatingPoint: false, lockUniScaling: true, selectable: true, left: 640, top: 0, scaleX: 0.5, scaleY: 0.5 });
             oImg2.setCoords();
             canvas.renderAll();          
         });
