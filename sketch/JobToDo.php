@@ -95,166 +95,179 @@
     ?>
     
     <div class="container">
-   	<div id="print-area">
+   	<div id="print-area">   	
    	<style type="text/css">
     	@media print {
         .no-print { display: none !important; }
         .small-print { width: 98% !important; }
     	}
     </style>
-   		<div class="no-print" style="width: 100%; border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px; display: inline-block; padding: 10px 10px 10px 10px;">
-	   		<div style="float: left; display: inline-block;">
-				<img src="img/logo-1.png" style="width: 40px;">
-				<b style="display: inline-block; font-size: 20px;"><p>ร้านขายเสื้อคู่</p></b>
-				<p>28/1 ซ.กิจการ ถ.รัชดาภิเษก</p>
-				<p>แขวนดินแดง เขตดินแดง กรุงเทพฯ</p>
-				<p>โทร. 02-247-8897</p>				
-			</div>
-			<div style="float: right; width: 50%; display: inline-block; text-align: right;">
-				<div>
-					<p>เลขที่คำสั่งซื้อ</p>
-					<b><P style="font-size: 20px;"><?php echo $result['order_id'] ?></P></b>
-					<p><?php echo 'วันที่ ' . $orderDate; ?></p>					
+    <div id="receipt" class="no-print hidden">
+    <style type="text/css">
+    	@media print {       
+        .small-print { width: 90% !important; }
+    	}
+
+    	.small-print { width: 90% !important; }
+    </style>
+    	<div id="receipt-area" class="small-print">
+	   		<div style="width: 100%; border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px; display: inline-block; padding: 10px 10px 10px 10px;">
+		   		<div style="float: left; display: inline-block;">
+					<img src="img/logo-1.png" style="width: 40px;">
+					<b style="display: inline-block; font-size: 20px;"><p>ร้านขายเสื้อคู่</p></b>
+					<p>28/1 ซ.กิจการ ถ.รัชดาภิเษก</p>
+					<p>แขวนดินแดง เขตดินแดง กรุงเทพฯ</p>
+					<p>โทร. 02-247-8897</p>				
+				</div>
+				<div style="float: right; width: 50%; display: inline-block; text-align: right;">
+					<div>
+						<p>ใบเสร็จรับเงิน</p>
+						<P style="font-size: 20px;"><span>เลขที่ </span><?php echo $result['order_id'] ?></P>
+						<p id="receipt-date"></p>					
+					</div>
 				</div>
 			</div>
-		</div>
-   		<div class="no-print" style="width: 70%; font-size: 12px;">
-	   		<div style="display: inline-table;">
-		    	<label>ชื่อ-นามสกุล</label>        	
-		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
-		    </div>
-		    <div style="display: inline-table; margin-left: 40px;">
-		    	<label>อีเมล์</label>        	
-		    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['email']; ?></p>
-		    </div>
-		    <div>
-		    	<label>ที่อยู่</label>	    	
-		    	<p style="display: inline-table; margin-left: 20px;"><?php echo nl2br($result['address']); ?></p>
-		    </div>
-		</div>
-		<div class="no-print" style="font: normal 12px/150% Arial, Helvetica, sans-serif;background: #fff;overflow: hidden;border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;">
-	        <table style="border-collapse: collapse;text-align: left;width: 100%">
-	            <thead>
-	                <tr>
-	                    <th style="text-align: center;width: 20px;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ลำดับ</th>
-	                    <th style="padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">รายการสั่งซื้อ <?php echo '<b>#' . $_GET['order_id'] . '</b> (' .$orderDate.')' ?></th>
-	                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ราคา (บาท)</th>
-	                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">จำนวน</th>
-	                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">รวม (บาท)</th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	                <tr>
-	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">1</td>
-	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo $shirt1; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo $result[ 'shirt_price_1']; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo $result[ 'qty_1']; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo number_format($result['shirt_price_1'] * $result[ 'qty_1'], 2) ?>
-	                    </td>
-	                </tr>
-	                <tr class="alt">
-	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">2</td>
-	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">ลายสกรีน ขนาด
-	                        <?php echo $result[ 'screen_width_1'] . 'x' .$result[ 'screen_height_1'] . ' ซม.'; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
-	                        <?php echo $result[ 'line_screen_price_1']; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
-	                        <?php echo $result[ 'qty_1']; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
-	                        <?php echo number_format($result[ 'line_screen_price_1'] * $result[ 'qty_1'], 2) ?>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">3</td>
-	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo $shirt2; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo $result[ 'shirt_price_2']; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo $result[ 'qty_2']; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
-	                        <?php echo number_format($result[ 'shirt_price_2'] * $result[ 'qty_2'], 2) ?>
-	                    </td>
-	                </tr>
-	                <tr class="alt">
-	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">4</td>
-	                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">ลายสกรีน ขนาด
-	                        <?php echo $result[ 'screen_width_2'] . 'x' .$result[ 'screen_height_2'] . ' ซม.'; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
-	                        <?php echo $result[ 'line_screen_price_2']; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
-	                        <?php echo $result[ 'qty_2']; ?>
-	                    </td>
-	                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
-	                        <?php echo number_format($result[ 'line_screen_price_2'] * $result[ 'qty_2'], 2) ?>
-	                    </td>
-	                </tr>
-	            </tbody>
-	            <tfoot style="min-height: 25px !important;">
-	                <tr>
-	                    <td colspan="4" style="padding: 0;font-size: 12px">
-	                        <div style="text-align: center;font-size: 10px;min-height: 25px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
-	                            
-	                            <?php	        
-	                            //echo !!empty($paidDate);//(!empty($paidDate) && empty($deliverDate) && empty($cancelDate));	                             
-	                            if (!empty($paidDate)) echo ' แจ้งชำระเงินแล้ว: ' .$paidDate. ' เวลา: ' .$paidTime;
-	                            if (!empty($confirmPaidDate)) echo ' ยืนยันชำระเงินแล้ว: ' .$confirmPaidDate;
-	                            if (!empty($deliverDate)) echo ' ส่งสินค้าแล้ว: ' .$deliverDate;
-	                            if (!empty($trackingId)) echo ' หมายเลขสิ่งของ: ' .$trackingId;
-	                            if (!empty($cancelDate)) echo ' ยกเลิกแล้ว: ' .$cancelDate. ' สาเหตุ: ' .nl2br($cancelRemark);
-	                            ?>
-	                            
-	                            <b style="padding-left: 40px; font-size: 14px;">รวม</b>
-	                        </div>
-	                    </td>
-	                    <td style="text-align: right;padding: 0;font-size: 14px">
-	                        <div style="min-height: 25px;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
-	                            <b style="padding-right: 8px;"><?php echo number_format($result['amt'], 2); ?></b>
-	                        </div>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td colspan="4" style="padding: 0;font-size: 10px">
-	                        <div style="text-align: right;font-size: 10px;min-height: 20px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
-	                            <?php echo 'VAT('.$printer['vat_rate']. '%) included'  ?>	                            
-	                        </div>
-	                    </td>
-	                    <td style="text-align: right;padding: 0;font-size: 10px">
-	                        <div style="min-height: 20px;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
-	                            <span style="padding-right: 8px;">
-	                            	<?php
-		                            	$vatRate = $printer['vat_rate'];
-		                            	$beforeVat = round(($result['amt'] * 100 / (100 + $vatRate)), 2);
-		                            	$vatAmt = round($beforeVat * $vatRate / 100, 2);
-		                            	$diff = abs(($beforeVat + $vatAmt) - $result['amt']);
-		                            	$vatAmt = $vatAmt + $diff;
-		                            	echo number_format($vatAmt, 2);
-		                            ?>
-	                            </span>
-	                        </div>
-	                    </td>
-	                </tr>
-	            </tfoot>
-	        </table>
-	    </div>	 
-	    <hr>   
+	   		<div style="width: 70%; font-size: 12px;">
+		   		<div style="display: inline-table;">
+			    	<label>ชื่อ-นามสกุล</label>        	
+			    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['member_name']; ?></p>
+			    </div>
+			    <div style="display: inline-table; margin-left: 40px;">
+			    	<label>อีเมล์</label>        	
+			    	<p style="display: inline-block; margin-left: 20px;"><?php echo $result['email']; ?></p>
+			    </div>
+			    <div>
+			    	<label>ที่อยู่</label>	    	
+			    	<p style="display: inline-table; margin-left: 20px;"><?php echo nl2br($result['address']); ?></p>
+			    </div>
+			</div>
+			<div style="font: normal 12px/150% Arial, Helvetica, sans-serif;background: #fff;overflow: hidden;border: 1px solid #069;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;">
+		        <table style="border-collapse: collapse;text-align: left;width: 100%">
+		            <thead>
+		                <tr>
+		                    <th style="text-align: center;width: 20px;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ลำดับ</th>
+		                    <th style="padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8"></th>
+		                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">ราคา (บาท)</th>
+		                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">จำนวน</th>
+		                    <th style="text-align: center;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">รวม (บาท)</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                <tr>
+		                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">1</td>
+		                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+		                        <?php echo $shirt1; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+		                        <?php echo $result[ 'shirt_price_1']; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+		                        <?php echo $result[ 'qty_1']; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+		                        <?php echo number_format($result['shirt_price_1'] * $result[ 'qty_1'], 2) ?>
+		                    </td>
+		                </tr>
+		                <tr class="alt">
+		                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">2</td>
+		                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">ลายสกรีน ขนาด
+		                        <?php echo $result[ 'screen_width_1'] . 'x' .$result[ 'screen_height_1'] . ' ซม.'; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
+		                        <?php echo $result[ 'line_screen_price_1']; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
+		                        <?php echo $result[ 'qty_1']; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
+		                        <?php echo number_format($result[ 'line_screen_price_1'] * $result[ 'qty_1'], 2) ?>
+		                    </td>
+		                </tr>
+		                <tr>
+		                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">3</td>
+		                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+		                        <?php echo $shirt2; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+		                        <?php echo $result[ 'shirt_price_2']; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+		                        <?php echo $result[ 'qty_2']; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal">
+		                        <?php echo number_format($result[ 'shirt_price_2'] * $result[ 'qty_2'], 2) ?>
+		                    </td>
+		                </tr>
+		                <tr class="alt">
+		                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">4</td>
+		                    <td style="padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">ลายสกรีน ขนาด
+		                        <?php echo $result[ 'screen_width_2'] . 'x' .$result[ 'screen_height_2'] . ' ซม.'; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
+		                        <?php echo $result[ 'line_screen_price_2']; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
+		                        <?php echo $result[ 'qty_2']; ?>
+		                    </td>
+		                    <td style="text-align: right;padding: 3px 10px;color: #00496B;border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: normal;background: #E1EEF4">
+		                        <?php echo number_format($result[ 'line_screen_price_2'] * $result[ 'qty_2'], 2) ?>
+		                    </td>
+		                </tr>
+		            </tbody>
+		            <tfoot style="min-height: 25px !important;">
+		                <tr>
+		                    <td colspan="4" style="padding: 0;font-size: 12px">
+		                        <div style="text-align: center;font-size: 10px;min-height: 25px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
+		                            
+		                            <b style="padding-left: 40px; font-size: 14px;">รวม</b>
+		                        </div>
+		                    </td>
+		                    <td style="text-align: right;padding: 0;font-size: 14px">
+		                        <div style="min-height: 25px;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
+		                            <b style="padding-right: 8px;"><?php echo number_format($result['amt'], 2); ?></b>
+		                        </div>
+		                    </td>
+		                </tr>
+		                <tr>
+		                    <td colspan="4" style="padding: 0;font-size: 10px">
+		                        <div style="text-align: right;font-size: 10px;min-height: 20px !important;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
+		                            <?php echo 'VAT('.$printer['vat_rate']. '%) included'  ?>	                            
+		                        </div>
+		                    </td>
+		                    <td style="text-align: right;padding: 0;font-size: 10px">
+		                        <div style="min-height: 20px;border-top: 1px solid #069;background: #E1EEF4;padding: 2px">
+		                            <span style="padding-right: 8px;">
+		                            	<?php
+			                            	$vatRate = $printer['vat_rate'];
+			                            	$beforeVat = round(($result['amt'] * 100 / (100 + $vatRate)), 2);
+			                            	$vatAmt = round($beforeVat * $vatRate / 100, 2);
+			                            	$diff = abs(($beforeVat + $vatAmt) - $result['amt']);
+			                            	$vatAmt = $vatAmt + $diff;
+			                            	echo number_format($vatAmt, 2);
+			                            ?>
+		                            </span>
+		                        </div>
+		                    </td>
+		                </tr>
+		            </tfoot>
+		        </table>
+		    </div>	
+	    </div>
+	</div>
+
+	    <hr>
+
 	    <div>
-		    <p style="text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8"><?php echo 'เลขที่คำสั่งซื้อ: '.$result['order_id'];  ?></p>
+		    <p style="text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">
+		    	<?php 
+			    	echo 'เลขที่คำสั่งซื้อ: '.$result['order_id'];
+	                if (!empty($paidDate)) echo ' แจ้งชำระเงินแล้ว: ' .$paidDate. ' เวลา: ' .$paidTime;
+	                if (!empty($confirmPaidDate)) echo ' ยืนยันชำระเงินแล้ว: ' .$confirmPaidDate;
+	                if (!empty($deliverDate)) echo ' ส่งสินค้าแล้ว: ' .$deliverDate;
+	                if (!empty($trackingId)) echo ' หมายเลขสิ่งของ: ' .$trackingId;
+	                if (!empty($cancelDate)) echo ' ยกเลิกแล้ว: ' .$cancelDate. ' สาเหตุ: ' .nl2br($cancelRemark);
+                ?>
+		    </p>
 		    <div style="text-align: center;">
 		    	<div style="text-align: center; !important">
 		      		<div style="display: inline-block; cursor: pointer;" data-toggle="tooltip" data-placement="left" title="Click to download">
@@ -473,6 +486,10 @@
     var btnPrint = document.getElementById('btn-print');
     btnPrint.onclick = function() {    	
     	var content = document.getElementById('print-area');
+		toPrint(content);
+    }
+
+    function toPrint(content) {    	
 		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
 		var myStyle = '<html><div style="font-size: 16px; font-family: tahoma ">';		
 
@@ -481,7 +498,7 @@
 		pri.document.write(body);
 		pri.document.close();
 		pri.focus();
-		pri.print();		
+		pri.print();	
     }
 
     var totalPrice = document.getElementById('total-price').innerHTML;
@@ -534,7 +551,7 @@
 	                message : '<div class="alert alert-warning" role="alert"><strong>กรุราระบุวันที่ !!!</strong></div>'
 	        });//bootbox
 	        return false;
-    	}
+    	}    	
 
     	var orderId = document.getElementById('order-id').value;
     	$.ajax({
@@ -545,6 +562,14 @@
 	    })
 	    .done(function(data) {
 	        if (data.result === "success") {
+
+	        	var date = new Date(confirmPaidDate);
+		    	var day = pad(date.getDate(), 2);
+		    	var month = pad(date.getMonth()+1, 2);
+		    	var year = date.getFullYear();
+		    	$('#receipt-date').html('วันที่ ' + day + '-' + month + '-' + year);
+	        	printReceipt();
+	        	//sendEmailReceipt();
 
 	        	var rtnUrl = document.getElementById('return-url').value;
 	        	window.scrollTo(0, 0);
@@ -791,6 +816,51 @@
 	$(document).ready(function() {
 		$('[data-toggle="tooltip"]').tooltip();
 	});
+
+	function printReceipt() {
+		var content = document.getElementById('receipt');
+		toPrint(content);
+	}
+	function sendEmailReceipt() {
+		var content = document.getElementById('receipt');
+		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
+		var myStyle = '<html><div style="font-size: 16px; width: 80% !important;">';
+		var body = myStyle + content.innerHTML + '</div></html>';
+		//send Email
+		$.ajax({
+			type: "POST",
+	       dataType: "json",
+	       url: "SendMail.php",
+	       data: {email_body: body, subject: 'ใบเสร็จรับเงิน ร้านขายเสื้อคู่'}
+	   	})
+	   	.done(function(data) {
+		   	if (data.result === 'success') {
+		   		$btn.button('reset');
+		   		$btnHome.button('reset');
+		   		window.location = 'index.php';
+		   	} else {
+		   		bootbox.dialog({
+			                title: 'การส่งอีเมล์ผิดพลาด',
+			                message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ อีเมล์ของท่านอาจมีปัญหา!!!</strong></div>'
+			        });//bootbox
+			        $btn.button('reset');
+			        $btnHome.button('reset');
+		   	}
+	   	})
+	   .fail(function(data) {
+		   	bootbox.dialog({
+		               title: 'Fatal Error',
+		               message : '<div class="alert alert-danger" role="alert"><strong>ไม่สามารถส่งอีเมล์ยืนยันคำสั่งซื้อได้ !!!</strong></div>'
+		       });//bootbox
+		       $btn.button('reset');
+		       $btnHome.button('reset');
+	   });
+	}
+	function pad(n, width, z) {
+		z = z || '0';
+		n = n + '';
+		return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+	}
     </script>
   </body>
 </html>

@@ -157,7 +157,7 @@ function confirmPaid() {
   }
   
   $sql = 'update shirt_order ';
-  $sql .= 'set confirm_paid_date = :confirm_paid_date ';
+  $sql .= 'set confirm_paid_date = :confirm_paid_date, receipt_date = :confirm_paid_date ';
   $sql .= 'where order_id = :order_id and confirm_paid_date is null ';
 
   $stmt = $dbh->prepare($sql);

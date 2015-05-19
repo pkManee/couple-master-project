@@ -428,7 +428,7 @@
 		// 	type: "POST",
 	//        dataType: "json",
 	//        url: "SendMail.php",
-	//        data: {email_body: body}
+	//        data: {email_body: body, subject: 'รายการสั่งซื้อ ร้านขายเสื้อคู่'}
 	//    })
 	//    .done(function(data) {
 	//    	if (data.result === 'success') {
