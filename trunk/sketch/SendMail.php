@@ -13,7 +13,7 @@ $mail->IsHTML(true);
 $mail->Username = "pk.manee@gmail.com";
 $mail->Password = "1go2go3go";
 $mail->SetFrom("pk.manee@gmail.com");
-$mail->Subject = 'ยืนยันการสั่งซื้อ';
+$mail->Subject = $_POST['subject'];
 $mail->Body = $_POST['email_body'];
 $mail->AddAddress($_SESSION['email']);
 

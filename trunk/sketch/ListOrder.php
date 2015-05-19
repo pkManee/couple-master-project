@@ -146,7 +146,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>สมาชิก</th>
         <th>อีเมล์สมาชิก</th>
         <th>วันที่สั่งซื้อ</th>       
-        <th>วันที่รับชำระเงิน</th>       
+        <th>วันที่แจ้งชำระเงิน</th>       
         <th>วันที่ส่งของ</th>
         <th>หมายเลขสิ่งของ</th>
         <th style="width: 150px; text-align: right;">ยอดสั่งซื้อ (บาท)</th>
