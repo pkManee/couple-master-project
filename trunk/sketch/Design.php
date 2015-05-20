@@ -352,15 +352,10 @@
                     numeric: {
                     message: 'กรุณาระบุเป็นตัวเลข'
                   },
-                  greaterThan: {
-                    value: 75,
-                    inclusive: false,
-                    message: 'กรุณาระบุตัวเลขที่มากกว่า 75 ซม.'
-                  },
-                  lessThan: {
-                    value: 220,
-                    inclusive: true,
-                    message: 'ส่วนสูงต้องไม่เกิน 220 ซม.'
+                  between: {
+                    min: 130,
+                    max: 200,
+                    message: 'กรุณาระบุตัวเลขระหว่าง 130 - 200'
                   }
               }
             },
@@ -369,15 +364,10 @@
                     numeric: {
                     message: 'กรุณาระบุเป็นตัวเลข'
                   },
-                  greaterThan: {
-                    value: 75,
-                    inclusive: false,
-                    message: 'กรุณาระบุตัวเลขที่มากกว่า 75 ซม.'
-                  },
-                  lessThan: {
-                    value: 220,
-                    inclusive: true,
-                    message: 'ส่วนสูงต้องไม่เกิน 220 ซม.'
+                  between: {
+                    min: 130,
+                    max: 200,
+                    message: 'กรุณาระบุตัวเลขระหว่าง 130 - 200'
                   }
               }
             }

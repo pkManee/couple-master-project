@@ -262,10 +262,10 @@
                       numeric: {
                       message: 'กรุณาระบุเป็นตัวเลข'
                     },
-                    greaterThan: {
-                      value: 0,
-                      inclusive: false,
-                      message: 'กรุณาระบุตัวเลขที่มากกว่าศูนย์'
+                    between: {
+                      min: 130,
+                      max: 200,
+                      message: 'กรุณาระบุตัวเลขระหว่าง 130 - 200'
                     }
                 }
               },
@@ -274,10 +274,10 @@
                       numeric: {
                       message: 'กรุณาระบุเป็นตัวเลข'
                     },
-                    greaterThan: {
-                      value: 0,
-                      inclusive: false,
-                      message: 'กรุณาระบุตัวเลขที่มากกว่าศูนย์'
+                    between: {
+                      min: 130,
+                      max: 200,
+                      message: 'กรุณาระบุตัวเลขระหว่าง 130 - 200'
                     }
                 }
               }
