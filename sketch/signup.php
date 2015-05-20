@@ -150,7 +150,6 @@
                       }
                   },
                   txtPostCode: {
-                      message: 'รหัสไปรษณ๊ย์ไม่ถูกต้อง',
                       validators: {
                           notEmpty: {
                               message: 'กรุณาระบุรหัสไปรษณีย์'

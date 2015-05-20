@@ -71,12 +71,15 @@
 
 		$orderDate = (empty($result['order_date']))?'':date('d-m-Y', strtotime($result['order_date']));
         $paidDate = (empty($result['paid_date']))?'':date('d-m-Y', strtotime($result['paid_date']));
+        $paidDateCompare = (empty($result['paid_date']))?'':date('Y-m-d', strtotime($result['paid_date']));
         $confirmPaidDate = (empty($result['confirm_paid_date']))?'':date('d-m-Y', strtotime($result['confirm_paid_date']));
         $deliverDate = (empty($result['deliver_date']))?'':date('d-m-Y', strtotime($result['deliver_date']));
         $cancelDate = (empty($result['cancel_date']))?'':date('d-m-Y', strtotime($result['cancel_date']));
         $cancelRemark = $result['cancel_remark'];
         $trackingId = $result['tracking_id'];
         $paidTime = $result['paid_time'];
+
+        echo '<input type="hidden" value="' .$paidDateCompare. '" id="paid-date"></input>';
 
 		$shirt1 = '<b>เสื้อ: </b>'. $result['shirt_name_1'] . '<b> เพศ: </b>' . (($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_1'] . '<b> สี: </b>' . $result['color_1'];
 		$shirt2 = '<b>เสื้อ: </b>'. $result['shirt_name_2'] . '<b> เพศ: </b>' . (($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_2'] . '<b> สี: </b>' . $result['color_2'];
@@ -86,7 +89,7 @@
 		if ($stmt->execute()){			
 			$printer = $stmt->fetch(PDO::FETCH_ASSOC);
 
-			echo '<input type="hidden" value="' .$printer['vat_rate']. '" id="vat-rate"></input>';
+			echo '<input type="hidden" value="' .$printer['vat_rate']. '" id="vat-rate"></input>';			
 		} else {
 			echo "error -> " .$stmt->errorInfo()[2];
 			die();
@@ -471,7 +474,7 @@
 	
 	<div class="row"></div>
 		<div class="col-xs-6">
-			<button type="button" class="btn btn-primary" id="btn-print">พิมพ์ใบงาน</button>
+			<button type="button" class="btn btn-primary <?php echo (empty($paidDate) || empty($confirmPaidDate)) ?'hidden':''; ?>" id="btn-print">พิมพ์ใบงาน</button>
 			<button type="button" class="btn btn-success <?php echo (!empty($paidDate) && empty($confirmPaidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-paid">ยืนยันการรับชำระเงิน</button>
 			<button type="button" class="btn btn-success <?php echo (!empty($paidDate) && !empty($confirmPaidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-deliver">ยืนยันการส่งสินค้า</button>
 			<button type="button" class="btn btn-warning <?php echo (empty($paidDate) && empty($confirmPaidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-cancel">ยกเลิกรายการสั่งซื้อ</button>
@@ -549,9 +552,21 @@
 	        		type: BootstrapDialog.TYPE_WARNING,
 	                title: 'Error',
 	                message : '<div class="alert alert-warning" role="alert"><strong>กรุราระบุวันที่ !!!</strong></div>'
-	        });//bootbox
+	        });
+	        return false;	        
+    	}
+
+    	//check paid date must < confirm paid date
+    	var paidDate = new Date($('#paid-date').val());
+    	var confirmDate = new Date(confirmPaidDate);
+    	if (paidDate > confirmDate) {
+    		BootstrapDialog.show({
+	        		type: BootstrapDialog.TYPE_WARNING,
+	                title: 'Error',
+	                message : '<div class="alert alert-warning" role="alert"><strong>วันที่ยืนยันชำระเงินต้องอยู่หลังจากวันที่แจ้งชำระเงิน !!!</strong></div>'
+	        });
 	        return false;
-    	}    	
+    	}
 
     	var orderId = document.getElementById('order-id').value;
     	$.ajax({
