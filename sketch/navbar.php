@@ -20,7 +20,7 @@
         <button type="button" id="btn-sign-in" class="btn btn-success">ล็อกอิน</button>
       </form>
 
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav" id="sign-up-link">
         <li><a href="signup.php">สมัครสมาชิก</a></li>
       </ul>
 
@@ -135,7 +135,7 @@ function doLogin(data){
   txtPassword.disabled =true;
   btnSignin.innerHTML = btnSignoutText;
   btnSignin.className = 'btn btn-danger';
-  //dropdown.style.display = 'block';
+  $('#sign-up-link').addClass('hidden');
   $(dropdown).removeClass('hidden');
 
   if (txtEmail.value === 'pk.manee@gmail.com') {
@@ -177,6 +177,8 @@ $(window).load(function(){
     btnSignin.innerHTML = btnSignoutText;
     btnSignin.className = 'btn btn-danger';    
     $(dropdown).removeClass('hidden');
+    $('#sign-up-link').addClass('hidden');
+
     $('a[href="design.php"]').removeClass('hidden');
 
     if (txtEmail.value === 'pk.manee@gmail.com') {
@@ -193,6 +195,8 @@ $(window).load(function(){
     // adminMenu.style.display =  'none';
     $(dropdown).addClass('hidden');
     $(adminMenu).addClass('hidden');
+
+    $('#sign-up-link').removeClass('hidden');
   }
 });
 
