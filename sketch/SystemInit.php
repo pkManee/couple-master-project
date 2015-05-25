@@ -50,6 +50,10 @@
     ?>
     <form id="system-init-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >    
     <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="index.php">Home</a>
+      <li class="active">ค่าตั้งต้น</li>
+    </ol>
     <div class="col-md-4">    
       <div class="form-group">        
         <label class="control-label" for="cbo-printer-size">ขนาด Printer</label>

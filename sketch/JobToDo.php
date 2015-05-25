@@ -41,6 +41,7 @@
 		$sql .= 'o.paid_date, o.deliver_date, o.cancel_date, o.cancel_remark, o.tracking_id, ';
 		$sql .= 'o.confirm_paid_date, o.slip, o.paid_time, ';
 		$sql .= 'o.screen_width_1, o.screen_height_1, o.screen_width_2, o.screen_height_2, o.color_area_1, o.color_area_2, ';
+		$sql .= 'o.receipt_date, ';
 		$sql .= 's1.shirt_name as shirt_name_1, s1.gender as gender_1, s1.shirt_type as shirt_type_1, s1.color_hex as color_hex_1, s1.shirt_price as shirt_price_1, ';
 		$sql .= 's2.shirt_name as shirt_name_2, s2.gender as gender_2, s2.shirt_type as shirt_type_2, s2.color_hex as color_hex_2, s2.shirt_price as shirt_price_2, ';
 		$sql .= 's1.material_type as material_type_1, s1.size_code as size_code_1, ';
@@ -70,16 +71,22 @@
 		echo '<input type="hidden" value="' .$result['slip']. '" id="slip"></input>';		
 
 		$orderDate = (empty($result['order_date']))?'':date('d-m-Y', strtotime($result['order_date']));
+
         $paidDate = (empty($result['paid_date']))?'':date('d-m-Y', strtotime($result['paid_date']));
         $paidDateCompare = (empty($result['paid_date']))?'':date('Y-m-d', strtotime($result['paid_date']));
+
         $confirmPaidDate = (empty($result['confirm_paid_date']))?'':date('d-m-Y', strtotime($result['confirm_paid_date']));
+        $receiptDate = (empty($result['receipt_date']))?'':date('Y-m-d', strtotime($result['receipt_date']));
+
         $deliverDate = (empty($result['deliver_date']))?'':date('d-m-Y', strtotime($result['deliver_date']));
         $cancelDate = (empty($result['cancel_date']))?'':date('d-m-Y', strtotime($result['cancel_date']));
         $cancelRemark = $result['cancel_remark'];
         $trackingId = $result['tracking_id'];
         $paidTime = $result['paid_time'];
+        $txtBreadcrumb  = 'รายการสั่งซื้อเลขที่ #' . $_GET['order_id'];
 
         echo '<input type="hidden" value="' .$paidDateCompare. '" id="paid-date"></input>';
+       	echo '<input type="hidden" value="' .$receiptDate. '" id="hidden-receipt-date"></input>';
 
 		$shirt1 = '<b>เสื้อ: </b>'. $result['shirt_name_1'] . '<b> เพศ: </b>' . (($result['gender_1'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_1'] . '<b> สี: </b>' . $result['color_1'];
 		$shirt2 = '<b>เสื้อ: </b>'. $result['shirt_name_2'] . '<b> เพศ: </b>' . (($result['gender_2'] == 'M') ? 'ชาย' : 'หญิง') . '<b> size: </b>' . $result['size_code_2'] . '<b> สี: </b>' . $result['color_2'];
@@ -98,6 +105,11 @@
     ?>
     
     <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="index.php">Home</a></li>
+      <li><a href="ListOrder.php">แสดงรายการสั่งซื้อ</a></li>
+      <li class="active"><?php echo $txtBreadcrumb; ?></li>
+    </ol>
    	<div id="print-area">   	
    	<style type="text/css">
     	@media print {
@@ -263,7 +275,7 @@
 	    <div>
 		    <p style="text-align: left;width: 100%;padding: 3px 10px;background: -moz-linear-gradient(center top, #069 5%, #00557F 100%);background-color: #069;color: #FFF;font-size: 15px;font-weight: bold;border-left: 1px solid #0070A8">
 		    	<?php 
-			    	echo 'เลขที่คำสั่งซื้อ: '.$result['order_id'];
+			    	echo 'รายการสั่งซื้อเลขที่ #'.$result['order_id'];
 	                if (!empty($paidDate)) echo ' แจ้งชำระเงินแล้ว: ' .$paidDate. ' เวลา: ' .$paidTime;
 	                if (!empty($confirmPaidDate)) echo ' ยืนยันชำระเงินแล้ว: ' .$confirmPaidDate;
 	                if (!empty($deliverDate)) echo ' ส่งสินค้าแล้ว: ' .$deliverDate;
@@ -303,7 +315,7 @@
    	<br/>
   	<div class="panel panel-info" >			
 	    <div class="panel-heading">
-		    <h4 class="panel-title"><?php echo 'รายการสั่งซื้อ ' . ' เลขที่#' . $_GET['order_id']; ?></h4>
+		    <h4 class="panel-title"><?php echo 'รายการสั่งซื้อเลขที่ #' . $_GET['order_id']; ?></h4>
 	    </div>
 	    		    	
     	<div class="panel-body">
@@ -475,6 +487,7 @@
 	<div class="row"></div>
 		<div class="col-xs-6">
 			<button type="button" class="btn btn-primary <?php echo (empty($paidDate) || empty($confirmPaidDate)) ?'hidden':''; ?>" id="btn-print">พิมพ์ใบงาน</button>
+			<button type="button" class="btn btn-primary <?php echo (!empty($receiptDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-receipt">พิมพ์ใบเสร็จ</button>
 			<button type="button" class="btn btn-success <?php echo (!empty($paidDate) && empty($confirmPaidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-paid">ยืนยันการรับชำระเงิน</button>
 			<button type="button" class="btn btn-success <?php echo (!empty($paidDate) && !empty($confirmPaidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-deliver">ยืนยันการส่งสินค้า</button>
 			<button type="button" class="btn btn-warning <?php echo (empty($paidDate) && empty($confirmPaidDate) && empty($deliverDate) && empty($cancelDate)) ?'':'hidden'; ?>" id="btn-cancel">ยกเลิกรายการสั่งซื้อ</button>
@@ -490,6 +503,17 @@
     btnPrint.onclick = function() {    	
     	var content = document.getElementById('print-area');
 		toPrint(content);
+    }
+
+    var btnReceipt = document.getElementById('btn-receipt');
+    btnReceipt.onclick = function() {
+    	var receiptDat = document.getElementById('hidden-receipt-date').value;
+    	var date = new Date(receiptDat);
+    	var day = pad(date.getDate(), 2);
+    	var month = pad(date.getMonth()+1, 2);
+    	var year = date.getFullYear();
+    	$('#receipt-date').html('วันที่ ' + day + '-' + month + '-' + year);
+    	printReceipt();
     }
 
     function toPrint(content) {    	

@@ -119,6 +119,11 @@
     ?>
     <form id="manage-shirts-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="index.php">Home</a></li>    
+      <li><a href="ListShirts.php">เสื้อ</a></li>    
+      <li class="active"><?php echo $shirts->shirt_name . ' ' . $shirts->size_code; ?></li>
+    </ol>
     <div class="col-xs-6 col-md-4">   
     
       <div class="form-group">        

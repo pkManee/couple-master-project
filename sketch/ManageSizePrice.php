@@ -75,6 +75,11 @@
     ?>
     <form id="manage-size-price-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="index.php">Home</a></li>    
+      <li><a href="ListSizePrice.php">ราคาลายสกรีน</a></li>    
+      <li class="active"><?php echo $size_price->description; ?></li>
+    </ol>
     <div class="col-xs-6 col-md-4">
       <div class="form-group">        
         <label class="control-label" for="txt-description">คำอธิบาย</label>

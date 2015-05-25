@@ -35,6 +35,10 @@ if (!isset($_SESSION["email"]) || empty($_SESSION["email"])){
   ?>  
   <form id="list-shirt-color-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
   <div class="container">
+  <ol class="breadcrumb">
+    <li><a href="index.php">Home</a></li>
+    <li class="active">แสดงรายการสั่งซื้อ</li>
+  </ol>
     <div class="col-md-3">
       <div class="form-group"> 
         <div class="input-group">

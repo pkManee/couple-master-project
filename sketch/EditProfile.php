@@ -60,6 +60,10 @@
       }
     ?>
     <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="index.php">Home</a></li>
+      <li class="active">จัดการข้อมูลสมาชิก</li>
+    </ol>
     <div role="tabpanel">
         <!-- Nav tabs -->
       <ul class="nav nav-pills" >
