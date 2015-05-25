@@ -32,6 +32,10 @@ require("header.php");
   ?>  
   <form class="form-inline" id="list-shirts-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
   <div class="container">
+  <ol class="breadcrumb">
+    <li><a href="index.php">Home</a></li>    
+    <li class="active">ราคาลายสกรีน</li>
+  </ol>
     <div class="col-xs-6 col-md-4">    
       <div class="input-group">
         <span class="input-group-btn">

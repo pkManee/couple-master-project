@@ -59,16 +59,25 @@
           $stmt->bindValue(":gender", $_GET["gender"]);
           if ($stmt->execute()){
             $stmt->setFetchMode(PDO::FETCH_CLASS, "Sizecode");
-            $sizecode = $stmt->fetch();           
+            $sizecode = $stmt->fetch();
+
+            $txtGender = ($sizecode->gender=="M")?"ชาย":"หญิง";
+            $txtGender = ' - ' . $txtGender;
           }else{
             echo "error -> " .$stmt->errorInfo()[2];
           }
       }else{
       	$sizecode = new Sizecode();
+        $txtGender = '';
       }
     ?>
     <form id="manage-shirt-size-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="index.php">Home</a></li>
+      <li><a href="ListShirtSize.php">ขนาดเสื้อ</a></li>
+      <li class="active"><?php echo $sizecode->size_code . $txtGender; ?></li>
+    </ol>
     <div class="col-xs-6 col-md-4">   
     
       <div class="form-group">        

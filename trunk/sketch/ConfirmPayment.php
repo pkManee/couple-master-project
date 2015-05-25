@@ -32,6 +32,10 @@
     ?>
     <form id="confirm-payment-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >    
     <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="index.php">Home</a></li>
+      <li class="active">แจ้งชำระเงิน</li>
+    </ol>
     <div class="col-xs-6 col-md-4">    
       <div class="form-group">        
         <label class="control-label" for="txt-order-id">เลขที่คำสั่งซื้อ</label>
@@ -56,7 +60,7 @@
         <label class="control-label" for="input-file">แนบหลักฐาน</label>
         <input type="file" class="form-control" id="input-file" placeholder="แนบหลักฐาน" name="FileInput" >
       </div>  
-      <button type="submit" class="btn btn-primary" id="btn-signup-submit">ยืนยันการโอน</button>
+      <button type="submit" class="btn btn-primary" id="btn-signup-submit">ยืนยันแจ้งชำระเงิน</button>
     </div>
     </div>
     </form>

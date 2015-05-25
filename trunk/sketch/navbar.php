@@ -29,9 +29,9 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ข้อมูลสมาชิก<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="EditProfile.php">จัดการข้อมูลสมาชิก</a></li>
-            <li><a href="ConfirmPayment.php">ยืนยันการชำระเงิน</a></li>
+            <li><a href="ConfirmPayment.php">แจ้งชำระเงิน</a></li>
             <li class="divider"></li>
-            <li><a href="#">เกี่ยวกับ</a></li>
+            <li><a href="HowTo.php">วิธีใช้งาน</a></li>
           </ul>
         </li>
       </ul>
@@ -39,15 +39,21 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">จัดการระบบ<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="listshirttype.php">แบบเสื้อ</a></li>
+            <li><a href="listshirttype.php" class="hidden">แบบเสื้อ</a></li>
             <li><a href="listmaterialtype.php">ประเภทผ้า</a></li>
             <li><a href="listshirtsize.php">ขนาดเสื้อ</a></li>
             <li><a href="listshirtcolor.php">สีเสื้อ</a></li>
             <li><a href="ListShirts.php">เสื้อ</a></li>
             <li><a href="ListSizePrice.php">ราคาลายสกรีน</a></li>
             <li><a href="SystemInit.php">ค่าตั้งต้น</a></li>
-            <li class="divider"></li>
-            <li><a href="ListOrder.php">รายการสั่งซื้อ</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul id="order-menu" class="nav navbar-nav navbar-right hidden">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">รายการสั่งซื้อ<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">           
+            <li><a href="ListOrder.php">แสดงรายการสั่งซื้อ</a></li>
           </ul>
         </li>
       </ul>
@@ -61,6 +67,7 @@ var txtPassword = document.getElementById('txt-password');
 var lbl = document.getElementById('lbl1');
 var dropdown = document.getElementById('member-menu');
 var adminMenu = document.getElementById('admin-menu');
+var orderMenu = document.getElementById('order-menu');
 var lblText = 'สมาชิก ล็อกอิน';
 var btnSigninText = 'ล็อกอิน';
 var btnSignoutText= 'ล็อกเอาท์';
@@ -141,6 +148,7 @@ function doLogin(data){
   if (txtEmail.value === 'pk.manee@gmail.com') {
     //adminMenu.style.display = 'block';
     $(adminMenu).removeClass('hidden');
+    $(orderMenu).removeClass('hidden');
   }
 
   $.post("member_session.php", {email: obj.email, member_name: obj.member_name});
@@ -184,9 +192,12 @@ $(window).load(function(){
     if (txtEmail.value === 'pk.manee@gmail.com') {
       //adminMenu.style.display = 'block';
       $(adminMenu).removeClass('hidden');
+      $(orderMenu).removeClass('hidden');
     } else {
       //adminMenu.style.display =  'none';
       $(adminMenu).addClass('hidden');
+      $(orderMenu).addClass('hidden');
+
     }    
   }
   //member not signed in
