@@ -262,7 +262,7 @@
           <div class="form-group">         
             <div id="recommend-color-1" class="recommend-color"></div>
             <select class="form-control selectpicker" id="cbo-color-style-1">
-              <option value="">เลือกรูปการการแนะนำสี</option>
+              <option value="">เลือกรูปแบบการแนะนำสี</option>
               <option value="analogous">Analogous: สีใกล้เคียง</option>
               <option value="triad">Triad: สีไตรสัมพันธ์ (สีสามเส้า)</option>
               <option value="complementary">Complementary: สีคู่ตรงข้าม</option>            
@@ -286,7 +286,7 @@
           <div class="form-group">         
             <div id="recommend-color-2" class="recommend-color"></div>
             <select class="form-control selectpicker" id="cbo-color-style-2">
-              <option value="">เลือกรูปการการแนะนำสี</option>
+              <option value="">เลือกรูปแบบการแนะนำสี</option>
               <option value="analogous">Analogous: สีใกล้เคียง</option>
               <option value="triad">Triad: สีไตรสัมพันธ์ (สีสามเส้า)</option>
               <option value="complementary">Complementary: สีคู่ตรงข้าม</option>            
