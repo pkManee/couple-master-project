@@ -372,6 +372,11 @@ function getJointColor() {
     heart.title = 'สีที่เหมาะกับทั้งคู่';
     heart.style.color = 'rgb(255,0,0)';
     divColor.appendChild(heart);
+    var h5 = document.createElement('h5');
+    var small = document.createElement('small');
+    small.innerHTML = 'สีที่เหมาะกับทั้งคู่';
+    h5.appendChild(small);
+    divColor.appendChild(small);
 
     var span = document.createElement('span');    
     span.className = 'span-color form-control';
@@ -400,7 +405,7 @@ function getJointColor() {
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
-                span.title = "เปลี่ยนสีเสื้อ";
+                span.title = "เปลี่ยนสีเสื้อเป็นสีนี้";
                 span.setAttribute('data-toggle', 'tooltip');
                 span.addEventListener('click', setBothColor, false);               
                 
@@ -428,7 +433,7 @@ function getJointColor() {
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
-                span.title = "เปลี่ยนสีเสื้อ";
+                span.title = "เปลี่ยนสีเสื้อเป็นสีนี้";
                 span.setAttribute('data-toggle', 'tooltip');
                 span.addEventListener('click', setBothColor, false);
                 
@@ -456,7 +461,7 @@ function getJointColor() {
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
-                span.title = "เปลี่ยนสีเสื้อ";
+                span.title = "เปลี่ยนสีเสื้อเป็นสีนี้";
                 span.setAttribute('data-toggle', 'tooltip');
                 span.addEventListener('click', setBothColor, false);
                 
@@ -538,7 +543,7 @@ cboColorStyle_1.onchange = function() {
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
-                span.title = "เปลี่ยนสีเสื้อ";
+                span.title = "เปลี่ยนสีเสื้อเป็นสีนี้";
                 span.setAttribute('data-toggle', 'tooltip');
                 span.addEventListener('click', selectColor1, false);               
                 
@@ -570,7 +575,7 @@ cboColorStyle_1.onchange = function() {
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
-                span.title = "เปลี่ยนสีเสื้อ";
+                span.title = "เปลี่ยนสีเสื้อเป็นสีนี้";
                 span.setAttribute('data-toggle', 'tooltip');
                 span.addEventListener('click', selectColor1, false);
                 
@@ -602,7 +607,7 @@ cboColorStyle_1.onchange = function() {
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
-                span.title = "เปลี่ยนสีเสื้อ";
+                span.title = "เปลี่ยนสีเสื้อเป็นสีนี้";
                 span.setAttribute('data-toggle', 'tooltip');
                 span.addEventListener('click', selectColor1, false);
                 
@@ -669,7 +674,7 @@ cboColorStyle_2.onchange = function() {
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
-                span.title = "เปลี่ยนสีเสื้อ";
+                span.title = "เปลี่ยนสีเสื้อเป็นสีนี้";
                 span.setAttribute('data-toggle', 'tooltip');
                 span.addEventListener('click', selectColor2, false);               
                 
@@ -701,7 +706,7 @@ cboColorStyle_2.onchange = function() {
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
-                span.title = "เปลี่ยนสีเสื้อ";
+                span.title = "เปลี่ยนสีเสื้อเป็นสีนี้";
                 span.setAttribute('data-toggle', 'tooltip');
                 span.addEventListener('click', selectColor2, false);
                 
@@ -733,7 +738,7 @@ cboColorStyle_2.onchange = function() {
                 var span = document.createElement('span');
                 span.className = 'span-color form-control clickable';
                 span.style.background = nearestColor;
-                span.title = "เปลี่ยนสีเสื้อ";
+                span.title = "เปลี่ยนสีเสื้อเป็นสีนี้";
                 span.setAttribute('data-toggle', 'tooltip');
                 span.addEventListener('click', selectColor2, false);
                 
