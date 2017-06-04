@@ -103,7 +103,7 @@ function toggleMode(){
     var panelColor = document.getElementById('panel-color');    
     //to shirt mode
     if (isShirtMode){
-        alert('switching to shirt mode')
+        //alert('switching to shirt mode')
         canvas.wrapperEl.style.zIndex = -1;
         shirtCanvas.wrapperEl.style.display = 'inline-block';
         shirtCanvas.wrapperEl.style.zIndex = 1;
@@ -113,27 +113,18 @@ function toggleMode(){
         $('.nav-tabs > .active').next('li').find('a').trigger('click');
         PICKER.toggle(false);
         divImagePicker.className =  'hidden';
-        //toggle picker
-        // if (PICKER) { 
-        //     PICKER.toggle(false);
-        //     isShowPicker = false;
-        // }
+       
     }else{
     //to design mode
-        alert('switching to design mode')
+        //alert('switching to design mode')
         canvas.wrapperEl.style.zIndex = 1;
         shirtCanvas.wrapperEl.style.zIndex = -1;
         shirtCanvas.wrapperEl.style.display = 'none';
         drawTools.style.display = 'inline-block';
         panelColor.style.display = 'none';
         //toggle tab page
-        $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-        
-        //toggle picker
-        // if (PICKER) {
-        //     PICKER.toggle(true);
-        //     isShowPicker = true;
-        // }
+        $('.nav-tabs > .active').prev('li').find('a').trigger('click');        
+       
     }
 }
 //============================================================================================================
