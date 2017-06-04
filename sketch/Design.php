@@ -51,7 +51,7 @@
     <div role="tabpanel" class="tab-pane active" id="design-shelf">
       <div class="upper-shelf">
         <div id="brush-image-shelf">
-          <button id="btn-shirt" title="Shirt view" class="geo-button icon-shirt" type="button" data-toggle="tooltip" data-placement="bottom"></button>
+          <button id="btn-shirt" title="Shirt view XXX" class="geo-button icon-shirt" type="button" data-toggle="tooltip" data-placement="bottom"></button>
           <button id="btn-color-picker" title="Color PIcker" class="geo-button icon-color-picker" data-toggle="tooltip" data-placement="bottom"></button> 
           <button id="btn-pencil" title="Pencil" class="geo-button icon-pencil" data-toggle="tooltip" data-placement="bottom"></button>      
           <button id="btn-brush" title="Circle" class="geo-button icon-brush" data-toggle="tooltip" data-placement="bottom"></button>
