@@ -43,7 +43,6 @@ if (!isset($_SESSION['email'])){
       <!-- Wrapper for slides -->
       <div class="carousel-inner" role="listbox">
         <div class="item active">
-         
             <img class="center-block" src="img/carousel/c3.jpg" alt="">
             <div class="container">
               <div class="carousel-caption">
