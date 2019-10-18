@@ -27,7 +27,7 @@
 	<script src="js/fabric.js"></script>
   </head>
   <body>  
-    <div class="alert alert-success" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
+    <div class="alert alert-success testclass" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
       <span></span>
     </div>
     <div class="alert alert-danger" role="alert" style="display:none; z-index: 1000; position: absolute; left: 0px; top: 50px;">
