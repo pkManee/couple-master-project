@@ -376,7 +376,7 @@
       .on('success.form.bv', function(e){
          // Prevent form submission
           e.preventDefault();
-
+          // test branches
           // Get the form instance
           var $form = $(e.target);
 
