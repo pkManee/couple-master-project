@@ -383,10 +383,7 @@
     var canvas = new fabric.Canvas('c');  //normal event
 	fabric.Object.prototype.selectable = false;	
 	canvas.selection = false;
-	//now implement cart to abel to view more than 1 time
-	//I aready finished coding
-	//additional viewcart
-	//end of implement cart view
+
     var scaleX_1 = document.getElementById('scale-x-1');
 	var scaleY_1 = document.getElementById('scale-y-1');
 	var scaleX_2 = document.getElementById('scale-x-2');
