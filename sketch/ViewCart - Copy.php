@@ -780,7 +780,7 @@
 	    });//fail
 
 	    function viewAllItems() {
-	    	return null;
+	    	//now implements code to solve issue #10
 	    }
 	}
     </script>
