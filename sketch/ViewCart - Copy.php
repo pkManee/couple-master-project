@@ -778,6 +778,12 @@
 	                message : '<div class="alert alert-danger" role="alert"><strong>Error in Confirm !!!</strong></div>'
 	        });//bootbox
 	    });//fail
+
+	    function viewAllItems() {
+	    	//now implements code to solve issue #10
+	    	//code line 1
+	    	//code line 2
+	    }
 	}
     </script>
   </body>
