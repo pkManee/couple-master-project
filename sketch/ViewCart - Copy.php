@@ -783,6 +783,7 @@
 	    function implement_1() {
 	    	//now code to solve issue #12
 	    	//code line ....
+	    	//code line
 	    }
 
 	    function implement_2() {
