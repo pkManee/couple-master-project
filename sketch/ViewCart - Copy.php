@@ -781,14 +781,15 @@
 
 
 	    function implement_1() {
-	    	//now code to solve issue #12
-	    	//code line ....
-	    	//code line
+	    	//implement function 01
+	    	//coding 01
+	    	//coding 01
 	    }
 
 	    function implement_2() {
-	    	//now code to solve issue #12
-	    	//code line ....
+	    	//implement function 02
+	    	//coding 02
+	    	//coding 02
 	    }
 	}
     </script>
