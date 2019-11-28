@@ -781,9 +781,11 @@
 
 
 	    function implement_1() {
+	    	//implement function 01
 	    }
 
 	    function implement_2() {
+	    	//implement function 02
 	    }
 	}
     </script>
