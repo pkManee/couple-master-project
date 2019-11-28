@@ -781,11 +781,9 @@
 
 
 	    function implement_1() {
-	    	
 	    }
 
 	    function implement_2() {
-	    	
 	    }
 	}
     </script>
