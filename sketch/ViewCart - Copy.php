@@ -782,14 +782,14 @@
 
 	    function implement_1() {
 	    	//implement function 01
-	    	//coding
-	    	//coding
+	    	//coding 01
+	    	//coding 01
 	    }
 
 	    function implement_2() {
 	    	//implement function 02
-	    	//coding
-	    	//coding
+	    	//coding 02
+	    	//coding 02
 	    }
 	}
     </script>
